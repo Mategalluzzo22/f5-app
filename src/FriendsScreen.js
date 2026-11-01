@@ -8,23 +8,15 @@ import {
   acceptFriendRequest,
   fetchFriendships,
   fetchFriendsMatches,
+  otherSide,
   removeFriendship,
   searchProfiles,
   sendFriendRequest,
 } from './api';
 import { isoToDisplay } from './dates';
 import { FONTS } from './fonts';
+import { goalsText, scoreText } from './matches';
 import { RESULTS } from './results';
-
-// The other person in a friendship, seen from my side.
-function otherSide(friendship, myId) {
-  const iSent = friendship.requester_id === myId;
-  return {
-    id: iSent ? friendship.addressee_id : friendship.requester_id,
-    username: iSent ? friendship.addressee.username : friendship.requester.username,
-    iSent,
-  };
-}
 
 export default function FriendsScreen({ myId }) {
   const [friendships, setFriendships] = useState([]);
@@ -153,7 +145,7 @@ export default function FriendsScreen({ myId }) {
             </Text>
           ) : (
             feed.map((match) => (
-              <FeedRow key={match.id} match={match} username={usernameById[match.user_id]} />
+              <FeedRow key={match.id} match={match} username={usernameById[match.friendId]} />
             ))
           )}
         </View>
@@ -199,12 +191,11 @@ function FeedRow({ match, username }) {
       <View style={styles.feedInfo}>
         <Text style={styles.username}>@{username}</Text>
         <Text style={styles.feedDetail}>
-          vs {match.opponent} · {isoToDisplay(match.date)}
+          {scoreText(match)}
+          {match.group ? ` · ${match.group}` : ''} · {isoToDisplay(match.date)}
         </Text>
       </View>
-      <Text style={styles.feedGoals}>
-        {match.goals} {match.goals === 1 ? 'gol' : 'goles'}
-      </Text>
+      <Text style={styles.feedGoals}>{match.goals === null ? '–' : goalsText(match.goals)}</Text>
     </View>
   );
 }

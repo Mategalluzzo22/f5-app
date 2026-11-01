@@ -2,9 +2,9 @@
 // so it can be tested on its own; notifications.js does the actual scheduling.
 
 const NO_MATCH_DAYS = 10;
-const RIVAL_DAYS = 30;
-const MAX_RIVAL_REMINDERS = 5;
-const MIN_MATCHES_WITH_RIVAL = 2;
+const GROUP_DAYS = 30;
+const MAX_GROUP_REMINDERS = 5;
+const MIN_MATCHES_WITH_GROUP = 2;
 const REMINDER_HOUR = 19;
 
 // 'YYYY-MM-DD' + N days, at the reminder hour (local time).
@@ -24,29 +24,30 @@ export function planReminders(matches, now = new Date()) {
     body: `Hace ${NO_MATCH_DAYS} días que no cargás ninguno. ¡Anotalo!`,
   });
 
-  // Group matches by rival, ignoring upper/lower case.
-  const rivals = new Map();
+  // Count matches per group (like "Los del martes"), ignoring upper/lower case.
+  const groups = new Map();
   for (const match of matches) {
-    const key = match.opponent.toLowerCase();
-    const rival = rivals.get(key) ?? { name: match.opponent, count: 0, lastDate: match.date };
-    rival.count += 1;
-    if (match.date >= rival.lastDate) {
-      rival.lastDate = match.date;
-      rival.name = match.opponent;
+    if (!match.group) continue;
+    const key = match.group.toLowerCase();
+    const group = groups.get(key) ?? { name: match.group, count: 0, lastDate: match.date };
+    group.count += 1;
+    if (match.date >= group.lastDate) {
+      group.lastDate = match.date;
+      group.name = match.group;
     }
-    rivals.set(key, rival);
+    groups.set(key, group);
   }
 
-  // Only rivals you play often, the most frequent first.
-  [...rivals.values()]
-    .filter((rival) => rival.count >= MIN_MATCHES_WITH_RIVAL)
+  // Only groups you play with often, the most frequent first.
+  [...groups.values()]
+    .filter((group) => group.count >= MIN_MATCHES_WITH_GROUP)
     .sort((a, b) => b.count - a.count)
-    .slice(0, MAX_RIVAL_REMINDERS)
-    .forEach((rival) => {
+    .slice(0, MAX_GROUP_REMINDERS)
+    .forEach((group) => {
       reminders.push({
-        date: reminderDate(rival.lastDate, RIVAL_DAYS),
-        title: `¿Y ${rival.name}? 🤔`,
-        body: `Hace un mes que no jugás contra ${rival.name}. ¿Qué onda?`,
+        date: reminderDate(group.lastDate, GROUP_DAYS),
+        title: `¿Y ${group.name}? 🤔`,
+        body: `Hace un mes que no jugás con ${group.name}. ¿Qué onda?`,
       });
     });
 

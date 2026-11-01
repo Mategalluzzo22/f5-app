@@ -5,16 +5,24 @@ import Header from './Header';
 import PressableScale from './PressableScale';
 import { isoToLongDisplay } from './dates';
 import { FONTS } from './fonts';
+import { scoreText } from './matches';
 import { RESULTS } from './results';
 
-export default function MatchDetailScreen({ match, onBack, onDelete }) {
-  // Deleting asks for confirmation first, so a stray tap can't lose a match.
-  const [confirmingDelete, setConfirmingDelete] = useState(false);
+export default function MatchDetailScreen({ match, myId, onBack, onDelete, onLeave }) {
+  // Deleting or leaving asks for confirmation first, so a stray tap can't lose a match.
+  const [confirming, setConfirming] = useState(false);
   const result = RESULTS[match.result];
+  const isCreator = match.createdBy === myId;
+  const myTeam = match.players.filter((p) => p.team === match.team);
+  const rivals = match.players.filter((p) => p.team !== match.team);
 
   return (
     <View style={styles.screen}>
-      <Header title={`vs ${match.opponent}`} subtitle="Detalle del partido" onBack={onBack} />
+      <Header
+        title={scoreText(match)}
+        subtitle={match.group ? `${match.group} · Fútbol ${match.format}` : `Fútbol ${match.format}`}
+        onBack={onBack}
+      />
       <ScrollView style={styles.content} contentContainerStyle={styles.contentInner}>
         <View style={[styles.card, styles.resultCard]}>
           <View style={[styles.resultBadge, { backgroundColor: result.color }]}>
@@ -25,9 +33,9 @@ export default function MatchDetailScreen({ match, onBack, onDelete }) {
 
         <View style={[styles.card, styles.goalsCard]}>
           <Ionicons name="football" size={28} color="#1f7a4d" />
-          <Text style={styles.goalsNumber}>{match.goals}</Text>
+          <Text style={styles.goalsNumber}>{match.goals === null ? '–' : match.goals}</Text>
           <Text style={styles.cardLabel}>
-            {match.goals === 1 ? 'Tu gol' : 'Tus goles'}
+            {match.goals === null ? 'Goles sin dato' : match.goals === 1 ? 'Tu gol' : 'Tus goles'}
           </Text>
         </View>
 
@@ -36,25 +44,64 @@ export default function MatchDetailScreen({ match, onBack, onDelete }) {
           <Text style={styles.dateText}>{isoToLongDisplay(match.date)}</Text>
         </View>
 
-        {confirmingDelete ? (
+        {match.players.length > 1 ? (
+          <View style={styles.card}>
+            <TeamList title="Tu equipo" players={myTeam} myId={myId} />
+            {rivals.length > 0 ? <TeamList title="Rival" players={rivals} myId={myId} /> : null}
+          </View>
+        ) : null}
+
+        {confirming ? (
           <View style={[styles.card, styles.confirmCard]}>
-            <Text style={styles.confirmText}>¿Seguro que querés eliminar este partido?</Text>
+            <Text style={styles.confirmText}>
+              {isCreator
+                ? '¿Seguro que querés eliminar este partido? Se borra para todos los jugadores.'
+                : '¿No jugaste este partido? Vas a salir y no va a contar en tus estadísticas.'}
+            </Text>
             <View style={styles.confirmButtons}>
-              <PressableScale style={styles.cancelButton} onPress={() => setConfirmingDelete(false)}>
+              <PressableScale style={styles.cancelButton} onPress={() => setConfirming(false)}>
                 <Text style={styles.cancelText}>Cancelar</Text>
               </PressableScale>
-              <PressableScale style={styles.confirmDeleteButton} onPress={() => onDelete(match.id)}>
-                <Text style={styles.confirmDeleteText}>Eliminar</Text>
+              <PressableScale
+                style={styles.confirmDeleteButton}
+                onPress={() => (isCreator ? onDelete(match.id) : onLeave(match.id))}
+              >
+                <Text style={styles.confirmDeleteText}>{isCreator ? 'Eliminar' : 'Salir'}</Text>
               </PressableScale>
             </View>
           </View>
         ) : (
-          <PressableScale style={styles.deleteButton} onPress={() => setConfirmingDelete(true)}>
-            <Ionicons name="trash-outline" size={20} color="#d64545" />
-            <Text style={styles.deleteText}>Eliminar partido</Text>
+          <PressableScale style={styles.deleteButton} onPress={() => setConfirming(true)}>
+            <Ionicons name={isCreator ? 'trash-outline' : 'exit-outline'} size={20} color="#d64545" />
+            <Text style={styles.deleteText}>{isCreator ? 'Eliminar partido' : 'No jugué este partido'}</Text>
           </PressableScale>
         )}
       </ScrollView>
+    </View>
+  );
+}
+
+function TeamList({ title, players, myId }) {
+  return (
+    <View style={styles.team}>
+      <Text style={styles.teamTitle}>{title}</Text>
+      {players.map((player) => (
+        <View key={player.user_id} style={styles.playerRow}>
+          <Text style={styles.playerName}>
+            @{player.profile.username}
+            {player.user_id === myId ? ' (vos)' : ''}
+          </Text>
+          {player.status === 'pending' ? (
+            <Text style={styles.pendingText}>Pendiente</Text>
+          ) : player.goals !== null ? (
+            <Text style={styles.playerGoals}>
+              {player.goals} {player.goals === 1 ? 'gol' : 'goles'}
+            </Text>
+          ) : (
+            <Ionicons name="checkmark-circle" size={18} color="#1f9d55" />
+          )}
+        </View>
+      ))}
     </View>
   );
 }
@@ -88,6 +135,12 @@ const styles = StyleSheet.create({
   cardLabel: { fontSize: 15, color: '#666' },
   dateCard: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   dateText: { fontSize: 17, fontWeight: '600', flex: 1 },
+  team: { marginBottom: 8 },
+  teamTitle: { fontSize: 22, fontFamily: FONTS.bold, marginBottom: 4 },
+  playerRow: { flexDirection: 'row', alignItems: 'center', paddingVertical: 6 },
+  playerName: { flex: 1, fontSize: 15, fontWeight: '600' },
+  playerGoals: { fontSize: 14, fontWeight: '600', color: '#1f7a4d' },
+  pendingText: { fontSize: 13, fontWeight: '600', color: '#8a8f98' },
   deleteButton: {
     flexDirection: 'row',
     alignItems: 'center',
