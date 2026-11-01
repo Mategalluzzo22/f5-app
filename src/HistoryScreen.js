@@ -1,7 +1,9 @@
 import { Ionicons } from '@expo/vector-icons';
-import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
+import { FlatList, StyleSheet, Text, View } from 'react-native';
 import Header from './Header';
+import PressableScale from './PressableScale';
 import { isoToDisplay } from './dates';
+import { FONTS } from './fonts';
 import { RESULTS } from './results';
 
 export default function HistoryScreen({ matches, onSelect }) {
@@ -33,7 +35,7 @@ export default function HistoryScreen({ matches, onSelect }) {
 function MatchRow({ match, onPress }) {
   const result = RESULTS[match.result];
   return (
-    <Pressable style={styles.matchRow} onPress={onPress}>
+    <PressableScale style={styles.matchRow} onPress={onPress}>
       <View style={[styles.badge, { backgroundColor: result.color }]}>
         <Text style={styles.badgeText}>{result.short}</Text>
       </View>
@@ -45,7 +47,7 @@ function MatchRow({ match, onPress }) {
         {match.goals} {match.goals === 1 ? 'gol' : 'goles'}
       </Text>
       <Ionicons name="chevron-forward" size={18} color="#b0b5bc" style={styles.chevron} />
-    </Pressable>
+    </PressableScale>
   );
 }
 
@@ -75,7 +77,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginRight: 12,
   },
-  badgeText: { color: '#fff', fontWeight: '700', fontSize: 16 },
+  badgeText: { color: '#fff', fontFamily: FONTS.extraBold, fontSize: 20 },
   matchInfo: { flex: 1 },
   opponent: { fontSize: 16, fontWeight: '600' },
   date: { fontSize: 13, color: '#666', marginTop: 2 },

@@ -1,19 +1,27 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import * as Haptics from 'expo-haptics';
+import { StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import PressableScale from './PressableScale';
 
 // Tab bar with a raised round "+" button in the middle (like Mercado Pago's QR button).
 export default function BottomBar({ current, onNavigate, onAdd }) {
   const insets = useSafeAreaInsets();
+
+  function handleAdd() {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    onAdd();
+  }
+
   return (
     <View style={[styles.bar, { paddingBottom: insets.bottom + 6 }]}>
       <Tab icon="home" label="Inicio" active={current === 'home'} onPress={() => onNavigate('home')} />
       <View style={styles.addSlot}>
-        <Pressable style={styles.addHalo} onPress={onAdd} accessibilityLabel="Nuevo partido">
+        <PressableScale style={styles.addHalo} onPress={handleAdd} accessibilityLabel="Nuevo partido">
           <View style={styles.addButton}>
             <Ionicons name="add" size={34} color="#fff" />
           </View>
-        </Pressable>
+        </PressableScale>
       </View>
       <Tab
         icon="list"
@@ -28,10 +36,10 @@ export default function BottomBar({ current, onNavigate, onAdd }) {
 function Tab({ icon, label, active, onPress }) {
   const color = active ? '#1f7a4d' : '#8a8f98';
   return (
-    <Pressable style={styles.tab} onPress={onPress}>
+    <PressableScale style={styles.tab} onPress={onPress}>
       <Ionicons name={active ? icon : `${icon}-outline`} size={26} color={color} />
       <Text style={[styles.tabLabel, { color }]}>{label}</Text>
-    </Pressable>
+    </PressableScale>
   );
 }
 
@@ -63,5 +71,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#1f9d55',
     alignItems: 'center',
     justifyContent: 'center',
+    shadowColor: '#1f7a4d',
+    shadowOpacity: 0.35,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 4,
   },
 });
