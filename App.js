@@ -9,17 +9,20 @@ import HistoryScreen from './src/HistoryScreen';
 import HomeScreen from './src/HomeScreen';
 import MatchDetailScreen from './src/MatchDetailScreen';
 import MatchForm from './src/MatchForm';
+import RecordScreen from './src/RecordScreen';
 import { FONT_FILES } from './src/fonts';
 import { recentOpponents } from './src/opponents';
-import { computeStats } from './src/stats';
+import { bestGoalsMatch, computeStats } from './src/stats';
 import { loadMatches, saveMatches } from './src/storage';
 
 export default function App() {
   const [fontsLoaded] = useFonts(FONT_FILES);
   const [matches, setMatches] = useState([]);
-  // 'home' | 'history' | 'new' | 'detail'
+  // 'home' | 'history' | 'new' | 'detail' | 'record'
   const [screen, setScreen] = useState('home');
   const [selectedId, setSelectedId] = useState(null);
+  // Set when a saved match beats the goals record: { goals, previousBest }
+  const [newRecord, setNewRecord] = useState(null);
 
   useEffect(() => {
     loadMatches().then(setMatches);
@@ -32,7 +35,14 @@ export default function App() {
 
   async function handleSave(match) {
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-    setScreen('home');
+    // Your first match can't beat a record, and tying it doesn't count.
+    const best = bestGoalsMatch(matches);
+    if (best && match.goals > best.goals) {
+      setNewRecord({ goals: match.goals, previousBest: best.goals });
+      setScreen('record');
+    } else {
+      setScreen('home');
+    }
     await updateMatches([...matches, match]);
   }
 
@@ -59,6 +69,14 @@ export default function App() {
         opponents={recentOpponents(matches)}
         onSave={handleSave}
         onCancel={() => setScreen('home')}
+      />
+    );
+  } else if (screen === 'record' && newRecord) {
+    content = (
+      <RecordScreen
+        goals={newRecord.goals}
+        previousBest={newRecord.previousBest}
+        onClose={() => setScreen('home')}
       />
     );
   } else if (screen === 'detail' && selectedMatch) {

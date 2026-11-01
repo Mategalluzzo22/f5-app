@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import Header from './Header';
+import { isoToDisplay } from './dates';
 import { FONTS } from './fonts';
 import { RESULTS } from './results';
 
@@ -22,6 +23,7 @@ export default function HomeScreen({ stats }) {
               <StatCard icon="football" value={stats.goals} label={stats.goals === 1 ? 'gol' : 'goles'} />
               <StatCard icon="trending-up" value={stats.goalsPerMatch} label="goles por partido" />
             </View>
+            <RecordsCard bestMatch={stats.bestMatch} winStreak={stats.winStreak} />
             <StatCard
               icon="calendar"
               value={stats.played}
@@ -65,6 +67,45 @@ function WinRateCard({ stats }) {
   );
 }
 
+function RecordsCard({ bestMatch, winStreak }) {
+  return (
+    <View style={styles.card}>
+      <View style={styles.recordsTitleRow}>
+        <Ionicons name="trophy" size={20} color="#e0a800" />
+        <Text style={styles.recordsTitle}>Tus récords</Text>
+      </View>
+      <RecordRow
+        icon="football"
+        value={bestMatch.goals}
+        label="Más goles en un partido"
+        detail={`vs ${bestMatch.opponent} · ${isoToDisplay(bestMatch.date)}`}
+      />
+      <View style={styles.divider} />
+      <RecordRow
+        icon="flame"
+        value={winStreak}
+        label="Mejor racha ganando"
+        detail={winStreak === 1 ? 'partido seguido' : 'partidos seguidos'}
+      />
+    </View>
+  );
+}
+
+function RecordRow({ icon, value, label, detail }) {
+  return (
+    <View style={styles.recordRow}>
+      <View style={styles.recordIcon}>
+        <Ionicons name={icon} size={22} color="#1f7a4d" />
+      </View>
+      <View style={styles.recordInfo}>
+        <Text style={styles.recordLabel}>{label}</Text>
+        <Text style={styles.recordDetail}>{detail}</Text>
+      </View>
+      <Text style={styles.recordValue}>{value}</Text>
+    </View>
+  );
+}
+
 function StatCard({ icon, value, label }) {
   return (
     <View style={[styles.card, styles.statCard]}>
@@ -103,6 +144,22 @@ const styles = StyleSheet.create({
   legendItem: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   dot: { width: 10, height: 10, borderRadius: 5 },
   legendText: { fontSize: 14, color: '#333' },
+  recordsTitleRow: { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 12 },
+  recordsTitle: { fontSize: 22, fontFamily: FONTS.bold },
+  recordRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  recordIcon: {
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    backgroundColor: '#e8f3ec',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  recordInfo: { flex: 1 },
+  recordLabel: { fontSize: 15, fontWeight: '600', color: '#222' },
+  recordDetail: { fontSize: 13, color: '#666', marginTop: 2 },
+  recordValue: { fontSize: 40, fontFamily: FONTS.extraBold, color: '#1f7a4d' },
+  divider: { height: 1, backgroundColor: '#eef0f2', marginVertical: 12 },
   statCard: { flex: 1 },
   statValue: { fontSize: 44, fontFamily: FONTS.extraBold, marginTop: 6, lineHeight: 48 },
   emptyCard: { alignItems: 'center', paddingVertical: 32 },
