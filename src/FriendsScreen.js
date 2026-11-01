@@ -18,7 +18,7 @@ import { FONTS } from './fonts';
 import { goalsText, scoreText } from './matches';
 import { RESULTS } from './results';
 
-export default function FriendsScreen({ myId }) {
+export default function FriendsScreen({ myId, onOpenFriend }) {
   const [friendships, setFriendships] = useState([]);
   const [feed, setFeed] = useState([]);
   const [query, setQuery] = useState('');
@@ -26,9 +26,13 @@ export default function FriendsScreen({ myId }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  const friends = friendships.filter((f) => f.status === 'accepted').map((f) => otherSide(f, myId));
+  // Accepted friends with the friendship id (needed to remove them), by username.
+  const friends = friendships
+    .filter((f) => f.status === 'accepted')
+    .map((f) => ({ ...otherSide(f, myId), friendshipId: f.id }))
+    .sort((a, b) => a.username.localeCompare(b.username));
   const incoming = friendships.filter((f) => f.status === 'pending' && f.addressee_id === myId);
-  const usernameById = Object.fromEntries(friends.map((f) => [f.id, f.username]));
+  const friendById = Object.fromEntries(friends.map((f) => [f.id, f]));
 
   async function load() {
     try {
@@ -135,6 +139,25 @@ export default function FriendsScreen({ myId }) {
           </View>
         ) : null}
 
+        {friends.length > 0 ? (
+          <View style={styles.card}>
+            <Text style={styles.cardTitle}>Tus amigos</Text>
+            {friends.map((friend) => (
+              <PressableScale
+                key={friend.id}
+                style={styles.friendRow}
+                onPress={() => onOpenFriend(friend)}
+              >
+                <View style={styles.friendAvatar}>
+                  <Text style={styles.friendAvatarText}>{friend.username[0].toUpperCase()}</Text>
+                </View>
+                <Text style={styles.username}>@{friend.username}</Text>
+                <Ionicons name="chevron-forward" size={18} color="#b0b5bc" />
+              </PressableScale>
+            ))}
+          </View>
+        ) : null}
+
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Partidos de tus amigos</Text>
           {loading ? null : feed.length === 0 ? (
@@ -144,9 +167,17 @@ export default function FriendsScreen({ myId }) {
                 : 'Tus amigos todavía no cargaron partidos.'}
             </Text>
           ) : (
-            feed.map((match) => (
-              <FeedRow key={match.id} match={match} username={usernameById[match.friendId]} />
-            ))
+            feed.map((match) => {
+              const friend = friendById[match.friendId];
+              return (
+                <FeedRow
+                  key={match.id}
+                  match={match}
+                  username={friend?.username}
+                  onPress={() => friend && onOpenFriend(friend)}
+                />
+              );
+            })
           )}
         </View>
       </View>
@@ -181,10 +212,10 @@ function SearchResult({ profile, friendship, myId, onAdd, onAccept }) {
   );
 }
 
-function FeedRow({ match, username }) {
+function FeedRow({ match, username, onPress }) {
   const result = RESULTS[match.result];
   return (
-    <View style={styles.feedRow}>
+    <PressableScale style={styles.feedRow} onPress={onPress}>
       <View style={[styles.badge, { backgroundColor: result.color }]}>
         <Text style={styles.badgeText}>{result.short}</Text>
       </View>
@@ -196,7 +227,7 @@ function FeedRow({ match, username }) {
         </Text>
       </View>
       <Text style={styles.feedGoals}>{match.goals === null ? '–' : goalsText(match.goals)}</Text>
-    </View>
+    </PressableScale>
   );
 }
 
@@ -238,6 +269,23 @@ const styles = StyleSheet.create({
   textPill: { paddingVertical: 7, paddingHorizontal: 8 },
   textPillText: { color: '#8a8f98', fontSize: 14, fontWeight: '600' },
   statusText: { color: '#1f7a4d', fontSize: 14, fontWeight: '600' },
+  friendRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    paddingVertical: 10,
+    borderTopWidth: 1,
+    borderTopColor: '#eef0f2',
+  },
+  friendAvatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#1f9d55',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  friendAvatarText: { color: '#fff', fontSize: 20, fontFamily: FONTS.extraBold },
   feedRow: {
     flexDirection: 'row',
     alignItems: 'center',

@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import BottomBar from './src/BottomBar';
+import FriendProfileScreen from './src/FriendProfileScreen';
 import FriendsScreen from './src/FriendsScreen';
 import HistoryScreen from './src/HistoryScreen';
 import HomeScreen from './src/HomeScreen';
@@ -22,6 +23,7 @@ import {
   fetchMyMatches,
   fetchProfile,
   leaveMatch,
+  removeFriendship,
 } from './src/api';
 import { FONT_FILES } from './src/fonts';
 import { recentGroups } from './src/groups';
@@ -39,9 +41,11 @@ export default function App() {
   // Matches friends added you to, waiting for you to confirm.
   const [pending, setPending] = useState([]);
   const [loadFailed, setLoadFailed] = useState(false);
-  // 'home' | 'history' | 'friends' | 'profile' | 'new' | 'detail' | 'record'
+  // 'home' | 'history' | 'friends' | 'profile' | 'new' | 'detail' | 'record' | 'friend'
   const [screen, setScreen] = useState('home');
   const [selectedId, setSelectedId] = useState(null);
+  // The friend whose profile is open: { id, username, friendshipId }
+  const [selectedFriend, setSelectedFriend] = useState(null);
   // Set when a saved match beats the goals record: { goals, previousBest }
   const [newRecord, setNewRecord] = useState(null);
 
@@ -135,6 +139,22 @@ export default function App() {
     setScreen('detail');
   }
 
+  function openFriend(friend) {
+    setSelectedFriend(friend);
+    setScreen('friend');
+  }
+
+  async function handleRemoveFriend(friendshipId) {
+    try {
+      await removeFriendship(friendshipId);
+    } catch {
+      Alert.alert('No se pudo eliminar', 'Revisá tu conexión e intentá de nuevo.');
+      return;
+    }
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+    setScreen('friends');
+  }
+
   // Wait for the custom font and the saved login so nothing flashes.
   if (!fontsLoaded || session === undefined) return null;
 
@@ -168,6 +188,15 @@ export default function App() {
         onClose={() => setScreen('home')}
       />
     );
+  } else if (screen === 'friend' && selectedFriend) {
+    content = (
+      <FriendProfileScreen
+        friend={selectedFriend}
+        myMatches={matches}
+        onBack={() => setScreen('friends')}
+        onRemove={handleRemoveFriend}
+      />
+    );
   } else if (screen === 'detail' && selectedMatch) {
     content = (
       <MatchDetailScreen
@@ -190,7 +219,7 @@ export default function App() {
             onLeave={handleLeave}
           />
         ) : screen === 'friends' ? (
-          <FriendsScreen myId={userId} />
+          <FriendsScreen myId={userId} onOpenFriend={openFriend} />
         ) : screen === 'profile' ? (
           <ProfileScreen
             username={profile.username}
