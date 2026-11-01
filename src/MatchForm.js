@@ -1,7 +1,11 @@
 import DateTimePicker, { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
+import * as Haptics from 'expo-haptics';
 import { useState } from 'react';
-import { Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Platform, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import Header from './Header';
+import PressableScale from './PressableScale';
 import { dateToISO, isoToDisplay, todayISO } from './dates';
+import { FONTS } from './fonts';
 import { RESULTS } from './results';
 
 const MAX_SUGGESTIONS = 6;
@@ -33,6 +37,16 @@ export default function MatchForm({ opponents, onSave, onCancel }) {
     });
   }
 
+  function chooseResult(key) {
+    Haptics.selectionAsync();
+    setResult(key);
+  }
+
+  function changeGoals(newGoals) {
+    Haptics.selectionAsync();
+    setGoals(Math.max(0, newGoals));
+  }
+
   function handleSave() {
     const isoDate = dateToISO(date);
     if (isoDate > todayISO()) return setError('No podés cargar un partido que todavía no se jugó.');
@@ -42,87 +56,99 @@ export default function MatchForm({ opponents, onSave, onCancel }) {
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
-      <Text style={styles.title}>Nuevo partido</Text>
+    <ScrollView style={styles.screen} keyboardShouldPersistTaps="handled">
+      <Header title="Nuevo partido" subtitle="Anotá cómo te fue" onBack={onCancel} />
 
-      <Text style={styles.label}>Fecha</Text>
-      {Platform.OS === 'ios' ? (
-        <DateTimePicker
-          value={date}
-          mode="date"
-          display="compact"
-          maximumDate={new Date()}
-          onChange={handleDateChange}
-          locale="es-AR"
-          themeVariant="light"
-          style={styles.datePicker}
+      <View style={styles.card}>
+        <Text style={[styles.label, styles.firstLabel]}>Fecha</Text>
+        {Platform.OS === 'ios' ? (
+          <DateTimePicker
+            value={date}
+            mode="date"
+            display="compact"
+            maximumDate={new Date()}
+            onChange={handleDateChange}
+            locale="es-AR"
+            themeVariant="light"
+            style={styles.datePicker}
+          />
+        ) : (
+          <PressableScale style={styles.input} onPress={openAndroidPicker}>
+            <Text style={styles.dateText}>{isoToDisplay(dateToISO(date))}</Text>
+          </PressableScale>
+        )}
+
+        <Text style={styles.label}>Rival</Text>
+        <TextInput
+          style={styles.input}
+          value={opponent}
+          onChangeText={setOpponent}
+          placeholder="Ej: Los del martes"
         />
-      ) : (
-        <Pressable style={styles.input} onPress={openAndroidPicker}>
-          <Text style={styles.dateText}>{isoToDisplay(dateToISO(date))}</Text>
-        </Pressable>
-      )}
+        {suggestions.length > 0 && (
+          <View style={styles.chips}>
+            {suggestions.map((name) => (
+              <PressableScale key={name} style={styles.chip} onPress={() => setOpponent(name)}>
+                <Text style={styles.chipText}>{name}</Text>
+              </PressableScale>
+            ))}
+          </View>
+        )}
 
-      <Text style={styles.label}>Rival</Text>
-      <TextInput
-        style={styles.input}
-        value={opponent}
-        onChangeText={setOpponent}
-        placeholder="Ej: Los del martes"
-      />
-      {suggestions.length > 0 && (
-        <View style={styles.chips}>
-          {suggestions.map((name) => (
-            <Pressable key={name} style={styles.chip} onPress={() => setOpponent(name)}>
-              <Text style={styles.chipText}>{name}</Text>
-            </Pressable>
-          ))}
+        <Text style={styles.label}>Resultado</Text>
+        <View style={styles.row}>
+          {Object.entries(RESULTS).map(([key, { label, color }]) => {
+            const selected = result === key;
+            return (
+              <PressableScale
+                key={key}
+                onPress={() => chooseResult(key)}
+                style={[styles.option, { borderColor: color }, selected && { backgroundColor: color }]}
+              >
+                <Text style={[styles.optionText, { color: selected ? '#fff' : color }]}>{label}</Text>
+              </PressableScale>
+            );
+          })}
         </View>
-      )}
 
-      <Text style={styles.label}>Resultado</Text>
-      <View style={styles.row}>
-        {Object.entries(RESULTS).map(([key, { label, color }]) => {
-          const selected = result === key;
-          return (
-            <Pressable
-              key={key}
-              onPress={() => setResult(key)}
-              style={[styles.option, { borderColor: color }, selected && { backgroundColor: color }]}
-            >
-              <Text style={[styles.optionText, { color: selected ? '#fff' : color }]}>{label}</Text>
-            </Pressable>
-          );
-        })}
+        <Text style={styles.label}>Mis goles</Text>
+        <View style={styles.stepper}>
+          <PressableScale style={styles.stepButton} onPress={() => changeGoals(goals - 1)}>
+            <Text style={styles.stepText}>−</Text>
+          </PressableScale>
+          <Text style={styles.goals}>{goals}</Text>
+          <PressableScale style={styles.stepButton} onPress={() => changeGoals(goals + 1)}>
+            <Text style={styles.stepText}>+</Text>
+          </PressableScale>
+        </View>
+
+        {error ? <Text style={styles.error}>{error}</Text> : null}
+
+        <PressableScale style={styles.saveButton} onPress={handleSave}>
+          <Text style={styles.saveText}>Guardar partido</Text>
+        </PressableScale>
       </View>
-
-      <Text style={styles.label}>Mis goles</Text>
-      <View style={styles.stepper}>
-        <Pressable style={styles.stepButton} onPress={() => setGoals(Math.max(0, goals - 1))}>
-          <Text style={styles.stepText}>−</Text>
-        </Pressable>
-        <Text style={styles.goals}>{goals}</Text>
-        <Pressable style={styles.stepButton} onPress={() => setGoals(goals + 1)}>
-          <Text style={styles.stepText}>+</Text>
-        </Pressable>
-      </View>
-
-      {error ? <Text style={styles.error}>{error}</Text> : null}
-
-      <Pressable style={styles.saveButton} onPress={handleSave}>
-        <Text style={styles.saveText}>Guardar partido</Text>
-      </Pressable>
-      <Pressable style={styles.cancelButton} onPress={onCancel}>
-        <Text style={styles.cancelText}>Cancelar</Text>
-      </Pressable>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { padding: 20 },
-  title: { fontSize: 28, fontWeight: '700', marginBottom: 12 },
-  label: { fontSize: 15, fontWeight: '600', color: '#444', marginTop: 16, marginBottom: 6 },
+  screen: { flex: 1 },
+  card: {
+    marginTop: -32,
+    marginHorizontal: 20,
+    marginBottom: 40,
+    padding: 20,
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    shadowColor: '#000',
+    shadowOpacity: 0.06,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 2,
+  },
+  label: { fontSize: 15, fontWeight: '600', color: '#444', marginTop: 20, marginBottom: 8 },
+  firstLabel: { marginTop: 0 },
   input: {
     borderWidth: 1,
     borderColor: '#d0d4da',
@@ -149,7 +175,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   stepText: { fontSize: 26, color: '#1f7a4d', fontWeight: '600' },
-  goals: { fontSize: 32, fontWeight: '700', minWidth: 40, textAlign: 'center' },
+  goals: { fontSize: 44, fontFamily: FONTS.extraBold, minWidth: 40, textAlign: 'center' },
   error: { color: '#d64545', marginTop: 16, fontSize: 15 },
   saveButton: {
     backgroundColor: '#1f7a4d',
@@ -159,6 +185,4 @@ const styles = StyleSheet.create({
     marginTop: 28,
   },
   saveText: { color: '#fff', fontSize: 17, fontWeight: '700' },
-  cancelButton: { paddingVertical: 14, alignItems: 'center' },
-  cancelText: { color: '#666', fontSize: 16 },
 });

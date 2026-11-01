@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import Header from './Header';
+import { FONTS } from './fonts';
 import { RESULTS } from './results';
 
 export default function HomeScreen({ stats }) {
@@ -88,7 +89,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     elevation: 2,
   },
-  bigNumber: { fontSize: 48, fontWeight: '800', color: '#1f7a4d' },
+  bigNumber: { fontSize: 64, fontFamily: FONTS.extraBold, color: '#1f7a4d', lineHeight: 68 },
   cardLabel: { fontSize: 14, color: '#666' },
   bar: {
     flexDirection: 'row',
@@ -103,8 +104,8 @@ const styles = StyleSheet.create({
   dot: { width: 10, height: 10, borderRadius: 5 },
   legendText: { fontSize: 14, color: '#333' },
   statCard: { flex: 1 },
-  statValue: { fontSize: 32, fontWeight: '700', marginTop: 8 },
+  statValue: { fontSize: 44, fontFamily: FONTS.extraBold, marginTop: 6, lineHeight: 48 },
   emptyCard: { alignItems: 'center', paddingVertical: 32 },
-  emptyTitle: { fontSize: 18, fontWeight: '700', marginTop: 12 },
+  emptyTitle: { fontSize: 24, fontFamily: FONTS.bold, marginTop: 12 },
   emptyText: { fontSize: 15, color: '#666', marginTop: 6, textAlign: 'center' },
 });

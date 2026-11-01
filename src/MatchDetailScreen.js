@@ -1,8 +1,10 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import Header from './Header';
+import PressableScale from './PressableScale';
 import { isoToLongDisplay } from './dates';
+import { FONTS } from './fonts';
 import { RESULTS } from './results';
 
 export default function MatchDetailScreen({ match, onBack, onDelete }) {
@@ -38,19 +40,19 @@ export default function MatchDetailScreen({ match, onBack, onDelete }) {
           <View style={[styles.card, styles.confirmCard]}>
             <Text style={styles.confirmText}>¿Seguro que querés eliminar este partido?</Text>
             <View style={styles.confirmButtons}>
-              <Pressable style={styles.cancelButton} onPress={() => setConfirmingDelete(false)}>
+              <PressableScale style={styles.cancelButton} onPress={() => setConfirmingDelete(false)}>
                 <Text style={styles.cancelText}>Cancelar</Text>
-              </Pressable>
-              <Pressable style={styles.confirmDeleteButton} onPress={() => onDelete(match.id)}>
+              </PressableScale>
+              <PressableScale style={styles.confirmDeleteButton} onPress={() => onDelete(match.id)}>
                 <Text style={styles.confirmDeleteText}>Eliminar</Text>
-              </Pressable>
+              </PressableScale>
             </View>
           </View>
         ) : (
-          <Pressable style={styles.deleteButton} onPress={() => setConfirmingDelete(true)}>
+          <PressableScale style={styles.deleteButton} onPress={() => setConfirmingDelete(true)}>
             <Ionicons name="trash-outline" size={20} color="#d64545" />
             <Text style={styles.deleteText}>Eliminar partido</Text>
-          </Pressable>
+          </PressableScale>
         )}
       </ScrollView>
     </View>
@@ -79,10 +81,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  resultBadgeText: { color: '#fff', fontSize: 28, fontWeight: '800' },
-  resultLabel: { fontSize: 30, fontWeight: '800' },
+  resultBadgeText: { color: '#fff', fontSize: 34, fontFamily: FONTS.extraBold },
+  resultLabel: { fontSize: 40, fontFamily: FONTS.extraBold },
   goalsCard: { alignItems: 'center', paddingVertical: 28 },
-  goalsNumber: { fontSize: 64, fontWeight: '800', marginTop: 4 },
+  goalsNumber: { fontSize: 88, fontFamily: FONTS.extraBold, lineHeight: 94, marginTop: 4 },
   cardLabel: { fontSize: 15, color: '#666' },
   dateCard: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   dateText: { fontSize: 17, fontWeight: '600', flex: 1 },
