@@ -17,3 +17,16 @@ export function isoToDisplay(iso) {
   const [year, month, day] = iso.split('-');
   return `${day}/${month}/${year}`;
 }
+
+const WEEKDAYS = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+const MONTHS = [
+  'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+  'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre',
+];
+
+// '2026-10-30' -> 'Jueves 30 de octubre de 2026'
+export function isoToLongDisplay(iso) {
+  const [year, month, day] = iso.split('-').map(Number);
+  const weekday = WEEKDAYS[new Date(year, month - 1, day).getDay()];
+  return `${weekday[0].toUpperCase()}${weekday.slice(1)} ${day} de ${MONTHS[month - 1]} de ${year}`;
+}

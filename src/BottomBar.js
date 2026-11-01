@@ -17,7 +17,7 @@ export default function BottomBar({ current, onNavigate, onAdd }) {
       </View>
       <Tab
         icon="list"
-        label="Historial"
+        label="Partidos"
         active={current === 'history'}
         onPress={() => onNavigate('history')}
       />

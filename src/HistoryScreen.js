@@ -1,16 +1,17 @@
-import { FlatList, StyleSheet, Text, View } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import Header from './Header';
 import { isoToDisplay } from './dates';
 import { RESULTS } from './results';
 
-export default function HistoryScreen({ matches }) {
+export default function HistoryScreen({ matches, onSelect }) {
   // Newest first.
   const sortedMatches = [...matches].sort((a, b) => b.date.localeCompare(a.date));
 
   return (
     <View style={styles.screen}>
       <Header
-        title="Historial"
+        title="Partidos"
         subtitle={`${matches.length} ${matches.length === 1 ? 'partido' : 'partidos'}`}
       />
       <FlatList
@@ -23,16 +24,16 @@ export default function HistoryScreen({ matches }) {
             <Text style={styles.empty}>Todavía no cargaste partidos.</Text>
           </View>
         }
-        renderItem={({ item }) => <MatchRow match={item} />}
+        renderItem={({ item }) => <MatchRow match={item} onPress={() => onSelect(item.id)} />}
       />
     </View>
   );
 }
 
-function MatchRow({ match }) {
+function MatchRow({ match, onPress }) {
   const result = RESULTS[match.result];
   return (
-    <View style={styles.matchRow}>
+    <Pressable style={styles.matchRow} onPress={onPress}>
       <View style={[styles.badge, { backgroundColor: result.color }]}>
         <Text style={styles.badgeText}>{result.short}</Text>
       </View>
@@ -43,7 +44,8 @@ function MatchRow({ match }) {
       <Text style={styles.matchGoals}>
         {match.goals} {match.goals === 1 ? 'gol' : 'goles'}
       </Text>
-    </View>
+      <Ionicons name="chevron-forward" size={18} color="#b0b5bc" style={styles.chevron} />
+    </Pressable>
   );
 }
 
@@ -78,4 +80,5 @@ const styles = StyleSheet.create({
   opponent: { fontSize: 16, fontWeight: '600' },
   date: { fontSize: 13, color: '#666', marginTop: 2 },
   matchGoals: { fontSize: 15, fontWeight: '600', color: '#1f7a4d' },
+  chevron: { marginLeft: 6 },
 });
