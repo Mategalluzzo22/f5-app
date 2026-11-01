@@ -195,6 +195,7 @@ export default function App() {
           <ProfileScreen
             username={profile.username}
             email={session.user.email}
+            stats={computeStats(matches)}
             onSignOut={handleSignOut}
           />
         ) : (
