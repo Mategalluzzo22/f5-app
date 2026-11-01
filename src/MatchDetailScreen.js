@@ -27,7 +27,7 @@ export default function MatchDetailScreen({ match, onBack, onDelete }) {
           <Ionicons name="football" size={28} color="#1f7a4d" />
           <Text style={styles.goalsNumber}>{match.goals}</Text>
           <Text style={styles.cardLabel}>
-            {match.goals === 1 ? 'gol que metiste' : 'goles que metiste'}
+            {match.goals === 1 ? 'Tu gol' : 'Tus goles'}
           </Text>
         </View>
 
