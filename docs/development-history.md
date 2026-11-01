@@ -19,7 +19,7 @@ Repositorio: https://github.com/Mategalluzzo22/f5-app
 | 4. Cuentas y nube | Login y partidos guardados en internet | ✅ | #7 |
 | 5. Amigos | Buscar, agregar y ver partidos de amigos | ✅ | #8 |
 | 6. Identidad Doparti | Nombre, estudio de mercado y login solo con Google | ✅ | #9 |
-| 7. Partido compartido | Marcador, equipos, jugadores y confirmaciones | 🔄 En prueba | rama `feature/shared-matches` |
+| 7. Partido compartido | Marcador, equipos, jugadores y confirmaciones | ✅ Probado | rama `feature/shared-matches` |
 | 8. Publicación | App en TestFlight y en las tiendas | ⏳ Pendiente | — |
 
 Todas las etapas se hicieron el 1 de noviembre de 2026.
@@ -134,7 +134,7 @@ Todas las etapas se hicieron el 1 de noviembre de 2026.
 
 ---
 
-## Etapa 7: Partido compartido (en prueba)
+## Etapa 7: Partido compartido
 
 **Objetivo:** el diferencial de Doparti: un partido con varios jugadores, que los amigos confirman.
 
@@ -146,8 +146,9 @@ Todas las etapas se hicieron el 1 de noviembre de 2026.
 - **Goles "sin dato"**, distinto de 0: si no te acordás cuántos hiciste, el partido no te baja el promedio.
 - "Rival" pasó a ser **"Grupo"** (por ejemplo "Los del martes"), que sirve de contexto y para los recordatorios.
 - Los partidos viejos pasaron al formato nuevo **sin marcador**, conservando su resultado.
+- **Rediseño para aprovechar el espacio:** tarjeta "Para confirmar" con el marcador grande, lista de partidos con el grupo como título, Perfil con una tarjeta centrada y tus números, y Login de pantalla completa sobre la cancha.
 
-**Cómo se probó:** pruebas automáticas de los cálculos (resultado según marcador y equipo, goles sin dato, récords, grupos y recordatorios). Falta correr la migración en Supabase y probarlo con dos cuentas.
+**Cómo se probó:** pruebas automáticas de los cálculos (resultado según marcador y equipo, goles sin dato, récords, grupos y recordatorios). Se corrió la migración en Supabase y se probó en el iPhone con dos cuentas: una cargó un partido, la otra lo recibió para confirmar con el resultado desde su lado.
 
 ---
 
