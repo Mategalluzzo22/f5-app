@@ -55,18 +55,6 @@ Hola. Necesito que me guíes en el navegador para activar el login con Google en
    - `f5app://**` (para cuando la app esté publicada)
 3. Guardá.
 
-## Paso 6: mandar los mails con código desde el Gmail de la app
-
-Ahora los mails con código salen de mi Gmail personal. Hay que cambiarlo:
-
-1. Con el **Gmail de la app** iniciado, abrí https://myaccount.google.com/apppasswords y creá una contraseña de aplicación llamada `Supabase F5`. Tiene que estar activa la verificación en 2 pasos. **La contraseña la copio y la pego yo.**
-2. En Supabase, andá a **Authentication → Emails → SMTP Settings** y cambiá:
-   - **Username:** el Gmail de la app
-   - **Sender email:** el Gmail de la app
-   - **Sender name:** `F5`
-   - **Password:** la contraseña de aplicación nueva, sin espacios (la pego yo)
-3. Guardá.
-
 ## Al terminar
 
 Haceme un resumen con:
@@ -76,4 +64,3 @@ Haceme un resumen con:
 - [ ] Cliente OAuth "Web application" creado, con la Callback URL de Supabase
 - [ ] Google activado en Supabase, con Client ID y Client Secret
 - [ ] Redirect URLs `exp://**` y `f5app://**` agregadas
-- [ ] SMTP de Supabase usando el Gmail de la app
