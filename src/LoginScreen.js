@@ -19,7 +19,10 @@ export default function LoginScreen() {
     setLoading(true);
     const { error: sendError } = await supabase.auth.signInWithOtp({ email: cleanEmail });
     setLoading(false);
-    if (sendError) return setError('No pudimos mandar el código. Esperá un minuto y probá de nuevo.');
+    if (sendError) {
+      if (__DEV__) console.warn('[login] send code failed:', sendError.status, sendError.code, sendError.message);
+      return setError('No pudimos mandar el código. Esperá un minuto y probá de nuevo.');
+    }
     setEmail(cleanEmail);
     setCodeSent(true);
   }
@@ -35,7 +38,10 @@ export default function LoginScreen() {
     });
     setLoading(false);
     // On success App hears about the new session and moves on by itself.
-    if (verifyError) setError('El código no es correcto o ya venció.');
+    if (verifyError) {
+      if (__DEV__) console.warn('[login] verify code failed:', verifyError.status, verifyError.code, verifyError.message);
+      setError('El código no es correcto o ya venció.');
+    }
   }
 
   function changeEmail() {
