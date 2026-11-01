@@ -222,9 +222,10 @@ export default function App() {
           <FriendsScreen myId={userId} onOpenFriend={openFriend} />
         ) : screen === 'profile' ? (
           <ProfileScreen
-            username={profile.username}
+            profile={profile}
             email={session.user.email}
             stats={computeStats(matches)}
+            onAvatarChange={(url) => setProfile({ ...profile, avatar_url: url })}
             onSignOut={handleSignOut}
           />
         ) : (

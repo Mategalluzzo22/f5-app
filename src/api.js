@@ -7,14 +7,35 @@ function unwrap({ data, error }) {
   return data;
 }
 
+const PROFILE_COLUMNS = 'id, username, avatar_url';
+
 export async function fetchProfile(userId) {
-  return unwrap(await supabase.from('profiles').select('id, username').eq('id', userId).maybeSingle());
+  return unwrap(await supabase.from('profiles').select(PROFILE_COLUMNS).eq('id', userId).maybeSingle());
 }
 
 export async function createProfile(userId, username) {
   return unwrap(
-    await supabase.from('profiles').insert({ id: userId, username }).select('id, username').single(),
+    await supabase.from('profiles').insert({ id: userId, username }).select(PROFILE_COLUMNS).single(),
   );
+}
+
+// Uploads a JPEG (local file uri) as the user's photo and saves its public link.
+// Each upload gets a new file name, so phones never show an old cached photo.
+export async function uploadAvatar(userId, fileUri) {
+  const bytes = await fetch(fileUri).then((res) => res.arrayBuffer());
+  const path = `${userId}/${Date.now()}.jpg`;
+  unwrap(await supabase.storage.from('avatars').upload(path, bytes, { contentType: 'image/jpeg' }));
+  const { publicUrl } = supabase.storage.from('avatars').getPublicUrl(path).data;
+  unwrap(await supabase.from('profiles').update({ avatar_url: publicUrl }).eq('id', userId));
+
+  // Old photos aren't needed anymore. If cleaning up fails, the new photo still works.
+  const { data: files } = await supabase.storage.from('avatars').list(userId);
+  const oldPaths = (files ?? [])
+    .map((file) => `${userId}/${file.name}`)
+    .filter((filePath) => filePath !== path);
+  if (oldPaths.length > 0) await supabase.storage.from('avatars').remove(oldPaths);
+
+  return publicUrl;
 }
 
 // --- Matches ---
@@ -74,7 +95,7 @@ export async function leaveMatch(matchId, userId) {
 // --- Friends ---
 
 const FRIENDSHIP_COLUMNS =
-  'id, status, requester_id, addressee_id, requester:profiles!requester_id(username), addressee:profiles!addressee_id(username)';
+  'id, status, requester_id, addressee_id, requester:profiles!requester_id(username, avatar_url), addressee:profiles!addressee_id(username, avatar_url)';
 
 // The other person in a friendship, seen from my side.
 export function otherSide(friendship, myId) {
@@ -82,6 +103,7 @@ export function otherSide(friendship, myId) {
   return {
     id: iSent ? friendship.addressee_id : friendship.requester_id,
     username: iSent ? friendship.addressee.username : friendship.requester.username,
+    avatarUrl: iSent ? friendship.addressee.avatar_url : friendship.requester.avatar_url,
     iSent,
   };
 }
@@ -91,7 +113,7 @@ export async function searchProfiles(text, myId) {
   return unwrap(
     await supabase
       .from('profiles')
-      .select('id, username')
+      .select('id, username, avatar_url')
       .ilike('username', `${text}%`)
       .neq('id', myId)
       .order('username')

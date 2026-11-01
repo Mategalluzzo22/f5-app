@@ -30,7 +30,13 @@
           "enableRemoteNotifications": false
         }
       ],
-      "expo-web-browser"
+      "expo-web-browser",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Doparti usa tus fotos para que elijas tu foto de perfil."
+        }
+      ]
     ]
   }
 }

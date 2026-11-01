@@ -57,6 +57,7 @@ export function FriendProfileView({ friend, myMatches, friendMatches, error, onB
       <>
         <PlayerCard
           username={friend.username}
+          avatarUrl={friend.avatarUrl}
           subtitle={`${shared} ${shared === 1 ? 'partido' : 'partidos'} en común con vos`}
           stats={computeStats(friendMatches)}
         />

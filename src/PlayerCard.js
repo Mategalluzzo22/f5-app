@@ -1,14 +1,34 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import Avatar from './Avatar';
+import PressableScale from './PressableScale';
 import { FONTS } from './fonts';
 
-// Centered card with a player's initial, username, a line below it and their
-// main numbers. Used for your own profile and for a friend's.
-export default function PlayerCard({ username, subtitle, stats }) {
+const AVATAR_SIZE = 104;
+
+// Centered card with a player's photo (or initial), username, a line below it
+// and their main numbers. Used for your own profile and for a friend's.
+// With onAvatarPress, the photo shows a camera badge and can be tapped to change it.
+export default function PlayerCard({ username, avatarUrl, subtitle, stats, onAvatarPress, uploading = false }) {
+  const avatar = <Avatar username={username} url={avatarUrl} size={AVATAR_SIZE} ring />;
+
   return (
     <View style={styles.card}>
-      <View style={styles.avatar}>
-        <Text style={styles.avatarText}>{username[0].toUpperCase()}</Text>
-      </View>
+      {onAvatarPress ? (
+        <PressableScale onPress={onAvatarPress} disabled={uploading} accessibilityLabel="Cambiar foto">
+          {avatar}
+          {uploading ? (
+            <View style={styles.uploading}>
+              <ActivityIndicator color="#fff" />
+            </View>
+          ) : null}
+          <View style={styles.cameraBadge}>
+            <Ionicons name="camera" size={18} color="#fff" />
+          </View>
+        </PressableScale>
+      ) : (
+        avatar
+      )}
       <Text style={styles.username}>@{username}</Text>
       {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
 
@@ -45,17 +65,26 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     elevation: 2,
   },
-  avatar: {
-    width: 104,
-    height: 104,
-    borderRadius: 52,
-    backgroundColor: '#1f9d55',
+  uploading: {
+    ...StyleSheet.absoluteFillObject,
+    borderRadius: AVATAR_SIZE / 2,
+    backgroundColor: 'rgba(0,0,0,0.35)',
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 5,
-    borderColor: '#d4eedf',
   },
-  avatarText: { color: '#fff', fontSize: 52, fontFamily: FONTS.extraBold, lineHeight: 58 },
+  cameraBadge: {
+    position: 'absolute',
+    right: 0,
+    bottom: 0,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: '#1f7a4d',
+    borderWidth: 3,
+    borderColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   username: { fontSize: 32, fontFamily: FONTS.extraBold, marginTop: 14 },
   subtitle: { fontSize: 15, color: '#666', marginTop: 2 },
   divider: { alignSelf: 'stretch', height: 1, backgroundColor: '#eef0f2', marginVertical: 20 },

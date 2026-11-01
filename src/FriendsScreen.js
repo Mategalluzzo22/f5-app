@@ -2,6 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { useEffect, useState } from 'react';
 import { RefreshControl, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import Avatar from './Avatar';
 import Header from './Header';
 import PressableScale from './PressableScale';
 import {
@@ -121,6 +122,11 @@ export default function FriendsScreen({ myId, onOpenFriend }) {
             <Text style={styles.cardTitle}>Solicitudes</Text>
             {incoming.map((request) => (
               <View key={request.id} style={styles.personRow}>
+                <Avatar
+                  username={request.requester.username}
+                  url={request.requester.avatar_url}
+                  size={36}
+                />
                 <Text style={styles.username}>@{request.requester.username}</Text>
                 <PressableScale
                   style={styles.primaryPill}
@@ -148,9 +154,7 @@ export default function FriendsScreen({ myId, onOpenFriend }) {
                 style={styles.friendRow}
                 onPress={() => onOpenFriend(friend)}
               >
-                <View style={styles.friendAvatar}>
-                  <Text style={styles.friendAvatarText}>{friend.username[0].toUpperCase()}</Text>
-                </View>
+                <Avatar username={friend.username} url={friend.avatarUrl} size={40} />
                 <Text style={styles.username}>@{friend.username}</Text>
                 <Ionicons name="chevron-forward" size={18} color="#b0b5bc" />
               </PressableScale>
@@ -206,6 +210,7 @@ function SearchResult({ profile, friendship, myId, onAdd, onAccept }) {
   }
   return (
     <View style={styles.personRow}>
+      <Avatar username={profile.username} url={profile.avatar_url} size={36} />
       <Text style={styles.username}>@{profile.username}</Text>
       {action}
     </View>
@@ -277,15 +282,6 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: '#eef0f2',
   },
-  friendAvatar: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#1f9d55',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  friendAvatarText: { color: '#fff', fontSize: 20, fontFamily: FONTS.extraBold },
   feedRow: {
     flexDirection: 'row',
     alignItems: 'center',
