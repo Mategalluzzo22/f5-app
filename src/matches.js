@@ -19,10 +19,10 @@ export function playerView(row, userId) {
   };
 }
 
-// Win/draw/loss from the score and the player's team. Old matches saved before
-// scores existed keep the result that was picked by hand.
+// Win/draw/loss from the score and the player's team. Matches without a score
+// (old ones, or when nobody remembered it) use the result picked by hand.
 export function resultFor(row, player) {
-  if (row.score_a === null) return player.legacy_result;
+  if (row.score_a === null) return player.manual_result;
   const diff = player.team === 'A' ? row.score_a - row.score_b : row.score_b - row.score_a;
   if (diff > 0) return 'win';
   if (diff < 0) return 'loss';
@@ -31,6 +31,11 @@ export function resultFor(row, player) {
 
 export function scoreText(match) {
   return match.scoreFor === null ? 'Sin marcador' : `${match.scoreFor} - ${match.scoreAgainst}`;
+}
+
+// Highest number of goals a player can have: their team's goals, when the score is known.
+export function maxGoals(match) {
+  return match.scoreFor === null ? Infinity : match.scoreFor;
 }
 
 export function goalsText(goals) {

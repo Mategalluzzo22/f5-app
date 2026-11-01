@@ -7,6 +7,7 @@ import PressableScale from './PressableScale';
 import { fetchFriends } from './api';
 import { dateToISO, isoToDisplay, todayISO } from './dates';
 import { FONTS } from './fonts';
+import { RESULTS } from './results';
 
 const MAX_SUGGESTIONS = 6;
 const FORMATS = [5, 7, 8, 11];
@@ -17,8 +18,12 @@ export default function MatchForm({ myId, groups, onSave, onCancel }) {
   const [group, setGroup] = useState('');
   const [scoreFor, setScoreFor] = useState(0);
   const [scoreAgainst, setScoreAgainst] = useState(0);
+  // Without the exact score, the user picks win/draw/loss by hand instead.
+  const [scoreUnknown, setScoreUnknown] = useState(false);
+  const [result, setResult] = useState(null);
   const [goals, setGoals] = useState(0);
   const [goalsUnknown, setGoalsUnknown] = useState(false);
+  const [goalsHint, setGoalsHint] = useState('');
   // friendId -> 'A' (my team) | 'B' (rivals)
   const [teams, setTeams] = useState({});
   const [friends, setFriends] = useState(null);
@@ -28,6 +33,21 @@ export default function MatchForm({ myId, groups, onSave, onCancel }) {
   useEffect(() => {
     fetchFriends(myId).then(setFriends, () => setFriends([]));
   }, []);
+
+  // You can't score more goals than your team: lowering your team's score lowers
+  // your goals with it.
+  const maxGoals = scoreUnknown ? Infinity : scoreFor;
+  useEffect(() => {
+    if (goals > maxGoals) setGoals(maxGoals);
+    setGoalsHint('');
+  }, [maxGoals]);
+
+  function showGoalsLimit() {
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+    setGoalsHint(
+      `Tu equipo hizo ${scoreFor} ${scoreFor === 1 ? 'gol' : 'goles'}: no podés haber hecho más.`,
+    );
+  }
 
   // Past groups that match what was typed, hidden once one is fully chosen.
   const typed = group.trim().toLowerCase();
@@ -63,6 +83,7 @@ export default function MatchForm({ myId, groups, onSave, onCancel }) {
   async function handleSave() {
     const isoDate = dateToISO(date);
     if (isoDate > todayISO()) return setError('No podés cargar un partido que todavía no se jugó.');
+    if (scoreUnknown && !result) return setError('Elegí si ganaste, empataste o perdiste.');
     setError('');
     setSaving(true);
     try {
@@ -70,8 +91,9 @@ export default function MatchForm({ myId, groups, onSave, onCancel }) {
         date: isoDate,
         format,
         group: group.trim(),
-        scoreFor,
-        scoreAgainst,
+        scoreFor: scoreUnknown ? null : scoreFor,
+        scoreAgainst: scoreUnknown ? null : scoreAgainst,
+        result: scoreUnknown ? result : null,
         goals: goalsUnknown ? null : goals,
         players: Object.entries(teams).map(([userId, team]) => ({ user_id: userId, team })),
       });
@@ -119,16 +141,50 @@ export default function MatchForm({ myId, groups, onSave, onCancel }) {
           ))}
         </View>
 
-        <Text style={styles.label}>Marcador</Text>
-        <View style={styles.scoreRow}>
-          <ScoreStepper label="Tu equipo" value={scoreFor} onChange={setScoreFor} />
-          <Text style={styles.scoreDash}>-</Text>
-          <ScoreStepper label="Rival" value={scoreAgainst} onChange={setScoreAgainst} />
-        </View>
+        <Text style={styles.label}>{scoreUnknown ? 'Resultado' : 'Marcador'}</Text>
+        {scoreUnknown ? (
+          <View style={styles.row}>
+            {Object.entries(RESULTS).map(([key, { label, color }]) => {
+              const selected = result === key;
+              return (
+                <PressableScale
+                  key={key}
+                  onPress={() => {
+                    Haptics.selectionAsync();
+                    setResult(key);
+                  }}
+                  style={[styles.option, { borderColor: color }, selected && { backgroundColor: color }]}
+                >
+                  <Text style={[styles.optionText, { color: selected ? '#fff' : color }]}>{label}</Text>
+                </PressableScale>
+              );
+            })}
+          </View>
+        ) : (
+          <View style={styles.scoreRow}>
+            <ScoreStepper label="Tu equipo" value={scoreFor} onChange={setScoreFor} />
+            <Text style={styles.scoreDash}>-</Text>
+            <ScoreStepper label="Rival" value={scoreAgainst} onChange={setScoreAgainst} />
+          </View>
+        )}
+        <PressableScale style={styles.linkButton} onPress={() => setScoreUnknown(!scoreUnknown)}>
+          <Text style={styles.linkText}>
+            {scoreUnknown ? 'Sí me acuerdo el marcador' : 'No me acuerdo el marcador'}
+          </Text>
+        </PressableScale>
 
         <Text style={styles.label}>Tus goles</Text>
         <View style={styles.goalsRow}>
-          <Stepper value={goals} onChange={setGoals} disabled={goalsUnknown} />
+          <Stepper
+            value={goals}
+            onChange={(value) => {
+              setGoalsHint('');
+              setGoals(value);
+            }}
+            max={maxGoals}
+            onLimit={showGoalsLimit}
+            disabled={goalsUnknown}
+          />
           <PressableScale
             style={[styles.unknownChip, goalsUnknown && styles.optionSelected]}
             onPress={() => setGoalsUnknown(!goalsUnknown)}
@@ -136,6 +192,7 @@ export default function MatchForm({ myId, groups, onSave, onCancel }) {
             <Text style={[styles.unknownText, goalsUnknown && styles.optionTextSelected]}>Sin dato</Text>
           </PressableScale>
         </View>
+        {goalsHint && !goalsUnknown ? <Text style={styles.hint}>{goalsHint}</Text> : null}
 
         <Text style={styles.label}>
           Grupo <Text style={styles.optional}>(opcional)</Text>
@@ -206,8 +263,13 @@ export default function MatchForm({ myId, groups, onSave, onCancel }) {
   );
 }
 
-function Stepper({ value, onChange, disabled = false }) {
+// Number picker with − and +. Going past `max` doesn't change the value; it calls onLimit.
+function Stepper({ value, onChange, max = Infinity, onLimit, disabled = false }) {
   function change(newValue) {
+    if (newValue > max) {
+      onLimit?.();
+      return;
+    }
     Haptics.selectionAsync();
     onChange(Math.max(0, newValue));
   }
@@ -312,6 +374,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   teamChipText: { fontSize: 13, fontWeight: '700', color: '#444' },
+  linkButton: { alignSelf: 'center', paddingVertical: 10, paddingHorizontal: 12, marginTop: 4 },
+  linkText: { color: '#1f7a4d', fontSize: 15, fontWeight: '700' },
+  hint: { color: '#b7791f', fontSize: 14, marginTop: 8 },
   error: { color: '#d64545', marginTop: 16, fontSize: 15 },
   saveButton: {
     backgroundColor: '#1f7a4d',

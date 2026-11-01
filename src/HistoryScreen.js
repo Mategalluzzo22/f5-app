@@ -6,7 +6,7 @@ import Header from './Header';
 import PressableScale from './PressableScale';
 import { isoToDisplay } from './dates';
 import { FONTS } from './fonts';
-import { goalsText, scoreText } from './matches';
+import { goalsText, maxGoals, scoreText } from './matches';
 import { RESULTS } from './results';
 
 export default function HistoryScreen({ matches, pending, onSelect, onConfirm, onLeave }) {
@@ -77,8 +77,10 @@ function MatchRow({ match, onPress }) {
 function PendingCard({ match, onConfirm, onLeave }) {
   const [goals, setGoals] = useState(0);
   const [busy, setBusy] = useState(false);
+  const [hint, setHint] = useState('');
   const creator = match.players.find((p) => p.user_id === match.createdBy);
   const result = RESULTS[match.result];
+  const limit = maxGoals(match);
 
   async function run(action) {
     setBusy(true);
@@ -89,8 +91,15 @@ function PendingCard({ match, onConfirm, onLeave }) {
     }
   }
 
+  // You can't score more goals than your team did.
   function changeGoals(value) {
+    if (value > limit) {
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+      setHint(`Tu equipo hizo ${limit} ${limit === 1 ? 'gol' : 'goles'}: no podés haber hecho más.`);
+      return;
+    }
     Haptics.selectionAsync();
+    setHint('');
     setGoals(Math.max(0, value));
   }
 
@@ -128,6 +137,7 @@ function PendingCard({ match, onConfirm, onLeave }) {
           <Text style={styles.stepText}>+</Text>
         </PressableScale>
       </View>
+      {hint ? <Text style={styles.hint}>{hint}</Text> : null}
 
       <View style={styles.pendingButtons}>
         <PressableScale
@@ -213,6 +223,7 @@ const styles = StyleSheet.create({
   },
   stepText: { fontSize: 22, color: '#1f7a4d', fontWeight: '600' },
   stepValue: { fontSize: 32, fontFamily: FONTS.extraBold, minWidth: 30, textAlign: 'center' },
+  hint: { color: '#b7791f', fontSize: 14, marginTop: 8 },
   pendingButtons: { flexDirection: 'row', gap: 10, marginTop: 16 },
   leaveButton: {
     flex: 1,

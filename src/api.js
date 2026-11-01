@@ -21,7 +21,7 @@ export async function createProfile(userId, username) {
 
 const MATCH_FIELDS =
   'id, date, format, group_name, score_a, score_b, created_by, ' +
-  'players:match_players(user_id, team, goals, status, legacy_result, profile:profiles(username))';
+  'players:match_players(user_id, team, goals, status, manual_result, profile:profiles(username))';
 
 async function fetchMatchesByIds(ids) {
   if (ids.length === 0) return [];
@@ -40,8 +40,9 @@ export async function fetchMyMatches(userId, status) {
 
 // Saves the match and its players in one go. The creator plays for their own team
 // and is confirmed; every friend added has to confirm.
+// Without a score (scoreFor/scoreAgainst null) the hand-picked `result` is used instead.
 // players: [{ user_id, team: 'A' (my team) | 'B' (rivals) }]
-export async function createMatch({ date, format, group, scoreFor, scoreAgainst, goals, players }) {
+export async function createMatch({ date, format, group, scoreFor, scoreAgainst, result, goals, players }) {
   return unwrap(
     await supabase.rpc('create_match', {
       match_date: date,
@@ -49,6 +50,7 @@ export async function createMatch({ date, format, group, scoreFor, scoreAgainst,
       match_group: group,
       my_team_score: scoreFor,
       rival_score: scoreAgainst,
+      my_result: result,
       my_goals: goals,
       players,
     }),

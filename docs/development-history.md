@@ -146,6 +146,7 @@ Todas las etapas se hicieron el 1 de noviembre de 2026.
 - **Goles "sin dato"**, distinto de 0: si no te acordás cuántos hiciste, el partido no te baja el promedio.
 - "Rival" pasó a ser **"Grupo"** (por ejemplo "Los del martes"), que sirve de contexto y para los recordatorios.
 - Los partidos viejos pasaron al formato nuevo **sin marcador**, conservando su resultado.
+- **Goles con sentido:** nadie puede tener más goles que su equipo, ni al cargar ni al confirmar; se controla en la app y en la base de datos. Si el que carga **no se acuerda del marcador**, elige solo ganado, empatado o perdido (con goles sin límite), y a cada amigo le llega el resultado desde su lado. Se prefirió eso a un marcador "aproximado", que ensuciaría los datos.
 - **Rediseño para aprovechar el espacio:** tarjeta "Para confirmar" con el marcador grande, lista de partidos con el grupo como título, Perfil con una tarjeta centrada y tus números, y Login de pantalla completa sobre la cancha.
 
 **Cómo se probó:** pruebas automáticas de los cálculos (resultado según marcador y equipo, goles sin dato, récords, grupos y recordatorios). Se corrió la migración en Supabase y se probó en el iPhone con dos cuentas: una cargó un partido, la otra lo recibió para confirmar con el resultado desde su lado.
@@ -187,7 +188,7 @@ Todas las etapas se hicieron el 1 de noviembre de 2026.
 - `src/api.js`: todo lo que habla con Supabase.
 - `src/matches.js` y `src/stats.js`: cálculos (resultado de cada jugador, estadísticas y récords).
 - `src/reminders.js`: qué recordatorios programar.
-- `supabase/*.sql`: la base de datos. Se corren en orden: `schema.sql` → `friends.sql` → `shared-matches.sql`.
+- `supabase/*.sql`: la base de datos. Se corren en orden: `schema.sql` → `friends.sql` → `shared-matches.sql` → `match-validation.sql`.
 - `docs/`: guías de configuración de Supabase y Google, y este documento.
 
 **Para correr la app en desarrollo**
