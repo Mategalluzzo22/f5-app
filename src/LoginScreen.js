@@ -1,10 +1,12 @@
+import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
 import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import Header from './Header';
 import PressableScale from './PressableScale';
+import { signInWithGoogle } from './googleAuth';
 import { supabase } from './supabase';
 
-// Passwordless login: we email a 6-digit code and the user types it here.
+// Login with Google, or passwordless: we email a 6-digit code and the user types it here.
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
@@ -44,6 +46,19 @@ export default function LoginScreen() {
     }
   }
 
+  async function loginWithGoogle() {
+    setError('');
+    setLoading(true);
+    try {
+      // On success App hears about the new session and moves on by itself.
+      await signInWithGoogle();
+    } catch (e) {
+      if (__DEV__) console.warn('[login] Google login failed:', e.message);
+      setError('No pudimos entrar con Google. Probá de nuevo.');
+    }
+    setLoading(false);
+  }
+
   function changeEmail() {
     setCodeSent(false);
     setCode('');
@@ -71,6 +86,21 @@ export default function LoginScreen() {
           </>
         ) : (
           <>
+            <PressableScale
+              style={[styles.googleButton, loading && styles.buttonDisabled]}
+              onPress={loginWithGoogle}
+              disabled={loading}
+            >
+              <Ionicons name="logo-google" size={20} color="#222" />
+              <Text style={styles.googleText}>Continuar con Google</Text>
+            </PressableScale>
+
+            <View style={styles.dividerRow}>
+              <View style={styles.dividerLine} />
+              <Text style={styles.dividerText}>o con tu email</Text>
+              <View style={styles.dividerLine} />
+            </View>
+
             <Text style={styles.label}>Tu email</Text>
             <TextInput
               style={styles.input}
@@ -122,6 +152,20 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     elevation: 2,
   },
+  googleButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
+    borderWidth: 1.5,
+    borderColor: '#d0d4da',
+    borderRadius: 12,
+    paddingVertical: 14,
+  },
+  googleText: { fontSize: 16, fontWeight: '700', color: '#222' },
+  dividerRow: { flexDirection: 'row', alignItems: 'center', gap: 10, marginVertical: 20 },
+  dividerLine: { flex: 1, height: 1, backgroundColor: '#e6e8eb' },
+  dividerText: { fontSize: 13, color: '#8a8f98' },
   label: { fontSize: 15, fontWeight: '600', color: '#444', marginBottom: 8 },
   email: { fontSize: 16, fontWeight: '700', marginBottom: 16 },
   input: {
