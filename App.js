@@ -11,6 +11,7 @@ import MatchDetailScreen from './src/MatchDetailScreen';
 import MatchForm from './src/MatchForm';
 import RecordScreen from './src/RecordScreen';
 import { FONT_FILES } from './src/fonts';
+import { requestNotificationPermission, rescheduleReminders } from './src/notifications';
 import { recentOpponents } from './src/opponents';
 import { bestGoalsMatch, computeStats } from './src/stats';
 import { loadMatches, saveMatches } from './src/storage';
@@ -25,12 +26,17 @@ export default function App() {
   const [newRecord, setNewRecord] = useState(null);
 
   useEffect(() => {
-    loadMatches().then(setMatches);
+    requestNotificationPermission();
+    loadMatches().then((loaded) => {
+      setMatches(loaded);
+      rescheduleReminders(loaded);
+    });
   }, []);
 
   async function updateMatches(updated) {
     setMatches(updated);
     await saveMatches(updated);
+    await rescheduleReminders(updated);
   }
 
   async function handleSave(match) {
