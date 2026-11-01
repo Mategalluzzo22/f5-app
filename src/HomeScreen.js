@@ -3,6 +3,7 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import Header from './Header';
 import { isoToDisplay } from './dates';
 import { FONTS } from './fonts';
+import { scoreText } from './matches';
 import { RESULTS } from './results';
 
 export default function HomeScreen({ stats, username }) {
@@ -76,9 +77,13 @@ function RecordsCard({ bestMatch, winStreak }) {
       </View>
       <RecordRow
         icon="football"
-        value={bestMatch.goals}
+        value={bestMatch ? bestMatch.goals : '–'}
         label="Más goles en un partido"
-        detail={`vs ${bestMatch.opponent} · ${isoToDisplay(bestMatch.date)}`}
+        detail={
+          bestMatch
+            ? [scoreText(bestMatch), bestMatch.group, isoToDisplay(bestMatch.date)].filter(Boolean).join(' · ')
+            : 'Todavía no cargaste tus goles'
+        }
       />
       <View style={styles.divider} />
       <RecordRow

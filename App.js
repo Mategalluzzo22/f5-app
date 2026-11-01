@@ -15,10 +15,17 @@ import PressableScale from './src/PressableScale';
 import ProfileScreen from './src/ProfileScreen';
 import RecordScreen from './src/RecordScreen';
 import UsernameScreen from './src/UsernameScreen';
-import { addMatch, deleteMatch, fetchMatches, fetchProfile, migrateLocalMatches } from './src/api';
+import {
+  confirmMatch,
+  createMatch,
+  deleteMatch,
+  fetchMyMatches,
+  fetchProfile,
+  leaveMatch,
+} from './src/api';
 import { FONT_FILES } from './src/fonts';
+import { recentGroups } from './src/groups';
 import { requestNotificationPermission, rescheduleReminders } from './src/notifications';
-import { recentOpponents } from './src/opponents';
 import { bestGoalsMatch, computeStats } from './src/stats';
 import { supabase } from './src/supabase';
 
@@ -27,8 +34,10 @@ export default function App() {
   // undefined = still checking; null = logged out / no profile yet.
   const [session, setSession] = useState(undefined);
   const [profile, setProfile] = useState(undefined);
-  // null until the account's matches are loaded.
+  // Matches you confirmed (they count in your stats); null until loaded.
   const [matches, setMatches] = useState(null);
+  // Matches friends added you to, waiting for you to confirm.
+  const [pending, setPending] = useState([]);
   const [loadFailed, setLoadFailed] = useState(false);
   // 'home' | 'history' | 'friends' | 'profile' | 'new' | 'detail' | 'record'
   const [screen, setScreen] = useState('home');
@@ -57,48 +66,63 @@ export default function App() {
     setLoadFailed(false);
     try {
       const loadedProfile = await fetchProfile(userId);
-      if (loadedProfile) {
-        await migrateLocalMatches();
-        const loaded = await fetchMatches(userId);
-        setMatches(loaded);
-        rescheduleReminders(loaded);
-      }
+      if (loadedProfile) await reloadMatches();
       setProfile(loadedProfile);
     } catch {
       setLoadFailed(true);
     }
   }
 
-  function updateMatches(updated) {
-    setMatches(updated);
-    rescheduleReminders(updated);
+  async function reloadMatches() {
+    const [mine, waiting] = await Promise.all([
+      fetchMyMatches(userId, 'confirmed'),
+      fetchMyMatches(userId, 'pending'),
+    ]);
+    setMatches(mine);
+    setPending(waiting);
+    rescheduleReminders(mine);
   }
 
   // If saving fails this throws, and MatchForm shows the error.
-  async function handleSave(match) {
-    const saved = await addMatch(match);
+  async function handleSave(form) {
+    await createMatch(form);
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-    // Your first match can't beat a record, and tying it doesn't count.
+    // Your first match can't beat a record, tying it doesn't count, and neither
+    // does a match without recorded goals.
     const best = bestGoalsMatch(matches);
-    if (best && saved.goals > best.goals) {
-      setNewRecord({ goals: saved.goals, previousBest: best.goals });
+    if (best && form.goals !== null && form.goals > best.goals) {
+      setNewRecord({ goals: form.goals, previousBest: best.goals });
       setScreen('record');
     } else {
       setScreen('home');
     }
-    updateMatches([...matches, saved]);
+    await reloadMatches();
+  }
+
+  // Shared by delete (creator), leave and confirm: run it, then reload everything.
+  async function changeMatch(action, feedback) {
+    try {
+      await action();
+      Haptics.notificationAsync(feedback);
+      await reloadMatches();
+    } catch {
+      Alert.alert('No se pudo completar', 'Revisá tu conexión e intentá de nuevo.');
+      throw new Error('Match change failed');
+    }
   }
 
   async function handleDelete(id) {
-    try {
-      await deleteMatch(id);
-    } catch {
-      Alert.alert('No se pudo eliminar', 'Revisá tu conexión e intentá de nuevo.');
-      return;
-    }
-    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+    await changeMatch(() => deleteMatch(id), Haptics.NotificationFeedbackType.Warning);
     setScreen('history');
-    updateMatches(matches.filter((m) => m.id !== id));
+  }
+
+  async function handleLeave(id) {
+    await changeMatch(() => leaveMatch(id, userId), Haptics.NotificationFeedbackType.Warning);
+    setScreen('history');
+  }
+
+  async function handleConfirm(id, goals) {
+    await changeMatch(() => confirmMatch(id, goals), Haptics.NotificationFeedbackType.Success);
   }
 
   async function handleSignOut() {
@@ -114,7 +138,7 @@ export default function App() {
   // Wait for the custom font and the saved login so nothing flashes.
   if (!fontsLoaded || session === undefined) return null;
 
-  const selectedMatch = matches?.find((m) => m.id === selectedId);
+  const selectedMatch = [...(matches ?? []), ...pending].find((m) => m.id === selectedId);
 
   let content;
   if (!session) {
@@ -130,7 +154,8 @@ export default function App() {
   } else if (screen === 'new') {
     content = (
       <MatchForm
-        opponents={recentOpponents(matches)}
+        myId={userId}
+        groups={recentGroups(matches)}
         onSave={handleSave}
         onCancel={() => setScreen('home')}
       />
@@ -147,15 +172,23 @@ export default function App() {
     content = (
       <MatchDetailScreen
         match={selectedMatch}
+        myId={userId}
         onBack={() => setScreen('history')}
         onDelete={handleDelete}
+        onLeave={handleLeave}
       />
     );
   } else {
     content = (
       <>
         {screen === 'history' ? (
-          <HistoryScreen matches={matches} onSelect={openMatch} />
+          <HistoryScreen
+            matches={matches}
+            pending={pending}
+            onSelect={openMatch}
+            onConfirm={handleConfirm}
+            onLeave={handleLeave}
+          />
         ) : screen === 'friends' ? (
           <FriendsScreen myId={userId} />
         ) : screen === 'profile' ? (
