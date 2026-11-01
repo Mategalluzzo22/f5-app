@@ -1,4 +1,4 @@
--- F5 app database, stage 2: friends.
+-- Doparti database, stage 2: friends.
 -- Run once in Supabase after schema.sql: SQL Editor -> New query -> paste -> Run.
 
 -- A friend request from requester to addressee. 'pending' until the addressee accepts.

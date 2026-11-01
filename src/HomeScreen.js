@@ -8,7 +8,7 @@ import { RESULTS } from './results';
 export default function HomeScreen({ stats, username }) {
   return (
     <ScrollView style={styles.screen}>
-      <Header title="Hola 👋" subtitle={`@${username} · Así venís en el F5`} />
+      <Header title="Hola 👋" subtitle={`@${username} · Así venís en la cancha`} />
       <View style={styles.cards}>
         {stats.played === 0 ? (
           <View style={[styles.card, styles.emptyCard]}>
