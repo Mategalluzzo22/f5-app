@@ -16,6 +16,12 @@ export default function BottomBar({ current, onNavigate, onAdd }) {
   return (
     <View style={[styles.bar, { paddingBottom: insets.bottom + 6 }]}>
       <Tab icon="home" label="Inicio" active={current === 'home'} onPress={() => onNavigate('home')} />
+      <Tab
+        icon="list"
+        label="Partidos"
+        active={current === 'history'}
+        onPress={() => onNavigate('history')}
+      />
       <View style={styles.addSlot}>
         <PressableScale style={styles.addHalo} onPress={handleAdd} accessibilityLabel="Nuevo partido">
           <View style={styles.addButton}>
@@ -24,10 +30,16 @@ export default function BottomBar({ current, onNavigate, onAdd }) {
         </PressableScale>
       </View>
       <Tab
-        icon="list"
-        label="Partidos"
-        active={current === 'history'}
-        onPress={() => onNavigate('history')}
+        icon="people"
+        label="Amigos"
+        active={current === 'friends'}
+        onPress={() => onNavigate('friends')}
+      />
+      <Tab
+        icon="person"
+        label="Perfil"
+        active={current === 'profile'}
+        onPress={() => onNavigate('profile')}
       />
     </View>
   );

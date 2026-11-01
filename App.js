@@ -5,12 +5,14 @@ import { useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import BottomBar from './src/BottomBar';
+import FriendsScreen from './src/FriendsScreen';
 import HistoryScreen from './src/HistoryScreen';
 import HomeScreen from './src/HomeScreen';
 import LoginScreen from './src/LoginScreen';
 import MatchDetailScreen from './src/MatchDetailScreen';
 import MatchForm from './src/MatchForm';
 import PressableScale from './src/PressableScale';
+import ProfileScreen from './src/ProfileScreen';
 import RecordScreen from './src/RecordScreen';
 import UsernameScreen from './src/UsernameScreen';
 import { addMatch, deleteMatch, fetchMatches, fetchProfile, migrateLocalMatches } from './src/api';
@@ -28,7 +30,7 @@ export default function App() {
   // null until the account's matches are loaded.
   const [matches, setMatches] = useState(null);
   const [loadFailed, setLoadFailed] = useState(false);
-  // 'home' | 'history' | 'new' | 'detail' | 'record'
+  // 'home' | 'history' | 'friends' | 'profile' | 'new' | 'detail' | 'record'
   const [screen, setScreen] = useState('home');
   const [selectedId, setSelectedId] = useState(null);
   // Set when a saved match beats the goals record: { goals, previousBest }
@@ -57,7 +59,7 @@ export default function App() {
       const loadedProfile = await fetchProfile(userId);
       if (loadedProfile) {
         await migrateLocalMatches();
-        const loaded = await fetchMatches();
+        const loaded = await fetchMatches(userId);
         setMatches(loaded);
         rescheduleReminders(loaded);
       }
@@ -152,14 +154,18 @@ export default function App() {
   } else {
     content = (
       <>
-        {screen === 'home' ? (
-          <HomeScreen
-            stats={computeStats(matches)}
+        {screen === 'history' ? (
+          <HistoryScreen matches={matches} onSelect={openMatch} />
+        ) : screen === 'friends' ? (
+          <FriendsScreen myId={userId} />
+        ) : screen === 'profile' ? (
+          <ProfileScreen
             username={profile.username}
+            email={session.user.email}
             onSignOut={handleSignOut}
           />
         ) : (
-          <HistoryScreen matches={matches} onSelect={openMatch} />
+          <HomeScreen stats={computeStats(matches)} username={profile.username} />
         )}
         <BottomBar current={screen} onNavigate={setScreen} onAdd={() => setScreen('new')} />
       </>

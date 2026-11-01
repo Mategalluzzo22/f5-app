@@ -1,12 +1,11 @@
 import { Ionicons } from '@expo/vector-icons';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import Header from './Header';
-import PressableScale from './PressableScale';
 import { isoToDisplay } from './dates';
 import { FONTS } from './fonts';
 import { RESULTS } from './results';
 
-export default function HomeScreen({ stats, username, onSignOut }) {
+export default function HomeScreen({ stats, username }) {
   return (
     <ScrollView style={styles.screen}>
       <Header title="Hola 👋" subtitle={`@${username} · Así venís en el F5`} />
@@ -32,9 +31,6 @@ export default function HomeScreen({ stats, username, onSignOut }) {
             />
           </>
         )}
-        <PressableScale style={styles.signOutButton} onPress={onSignOut}>
-          <Text style={styles.signOutText}>Cerrar sesión</Text>
-        </PressableScale>
       </View>
     </ScrollView>
   );
@@ -166,8 +162,6 @@ const styles = StyleSheet.create({
   divider: { height: 1, backgroundColor: '#eef0f2', marginVertical: 12 },
   statCard: { flex: 1 },
   statValue: { fontSize: 44, fontFamily: FONTS.extraBold, marginTop: 6, lineHeight: 48 },
-  signOutButton: { alignSelf: 'center', paddingVertical: 12, paddingHorizontal: 20, marginTop: 4 },
-  signOutText: { color: '#8a8f98', fontSize: 15, fontWeight: '600' },
   emptyCard: { alignItems: 'center', paddingVertical: 32 },
   emptyTitle: { fontSize: 24, fontFamily: FONTS.bold, marginTop: 12 },
   emptyText: { fontSize: 15, color: '#666', marginTop: 6, textAlign: 'center' },
