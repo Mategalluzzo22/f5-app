@@ -1,6 +1,13 @@
 import { makeRedirectUri } from 'expo-auth-session';
 import * as WebBrowser from 'expo-web-browser';
+import { Platform } from 'react-native';
 import { supabase } from './supabase';
+
+// Supabase rejects redirect URLs whose host is an IP address, like Expo Go's
+// exp://192.168.x.x:8081, and falls back to the Site URL. On iOS the login window
+// catches f5app:// by itself, so this works in Expo Go and in the real app.
+// (Android in Expo Go can't catch it; a real Android build can, since it owns the scheme.)
+const REDIRECT_URL = Platform.OS === 'web' ? makeRedirectUri() : 'f5app://auth';
 
 WebBrowser.maybeCompleteAuthSession(); // needed on web only
 
@@ -19,11 +26,9 @@ function paramsFromUrl(url) {
 }
 
 // Opens Google in an in-app browser. Supabase sends the session back in the
-// redirect URL (exp://... in Expo Go, f5app://... in a real build), and we keep it.
-// Returns false if the user closed the window without logging in.
+// redirect URL, and we keep it. Returns false if the user closed the window.
 export async function signInWithGoogle() {
-  const redirectTo = makeRedirectUri();
-  if (__DEV__) console.log('[login] Google redirect URL:', redirectTo);
+  const redirectTo = REDIRECT_URL;
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
