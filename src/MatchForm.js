@@ -4,12 +4,20 @@ import { Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } fr
 import { dateToISO, isoToDisplay, todayISO } from './dates';
 import { RESULTS } from './results';
 
-export default function MatchForm({ onSave, onCancel }) {
+const MAX_SUGGESTIONS = 6;
+
+export default function MatchForm({ opponents, onSave, onCancel }) {
   const [date, setDate] = useState(new Date());
   const [opponent, setOpponent] = useState('');
   const [result, setResult] = useState(null);
   const [goals, setGoals] = useState(0);
   const [error, setError] = useState('');
+
+  // Past rivals that match what was typed, hidden once one is fully chosen.
+  const typed = opponent.trim().toLowerCase();
+  const suggestions = opponents
+    .filter((name) => name.toLowerCase().includes(typed) && name.toLowerCase() !== typed)
+    .slice(0, MAX_SUGGESTIONS);
 
   function handleDateChange(event, selectedDate) {
     if (selectedDate) setDate(selectedDate);
@@ -62,6 +70,15 @@ export default function MatchForm({ onSave, onCancel }) {
         onChangeText={setOpponent}
         placeholder="Ej: Los del martes"
       />
+      {suggestions.length > 0 && (
+        <View style={styles.chips}>
+          {suggestions.map((name) => (
+            <Pressable key={name} style={styles.chip} onPress={() => setOpponent(name)}>
+              <Text style={styles.chipText}>{name}</Text>
+            </Pressable>
+          ))}
+        </View>
+      )}
 
       <Text style={styles.label}>Resultado</Text>
       <View style={styles.row}>
@@ -116,6 +133,9 @@ const styles = StyleSheet.create({
   },
   datePicker: { alignSelf: 'flex-start' },
   dateText: { fontSize: 16 },
+  chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 10 },
+  chip: { backgroundColor: '#e8f3ec', borderRadius: 16, paddingVertical: 7, paddingHorizontal: 14 },
+  chipText: { color: '#1f7a4d', fontSize: 14, fontWeight: '600' },
   row: { flexDirection: 'row', gap: 8 },
   option: { flex: 1, borderWidth: 2, borderRadius: 10, paddingVertical: 12, alignItems: 'center' },
   optionText: { fontSize: 15, fontWeight: '600' },
