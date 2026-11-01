@@ -4,6 +4,7 @@ import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import MatchForm from './src/MatchForm';
 import { isoToDisplay } from './src/dates';
+import { recentOpponents } from './src/opponents';
 import { RESULTS } from './src/results';
 import { computeStats } from './src/stats';
 import { loadMatches, saveMatches } from './src/storage';
@@ -31,7 +32,11 @@ export default function App() {
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
         {isAdding ? (
-          <MatchForm onSave={handleSave} onCancel={() => setIsAdding(false)} />
+          <MatchForm
+            opponents={recentOpponents(matches)}
+            onSave={handleSave}
+            onCancel={() => setIsAdding(false)}
+          />
         ) : (
           <>
             <FlatList
