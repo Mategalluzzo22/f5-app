@@ -20,8 +20,8 @@ export function planReminders(matches, now = new Date()) {
   const lastDate = matches.reduce((latest, m) => (m.date > latest ? m.date : latest), matches[0].date);
   reminders.push({
     date: reminderDate(lastDate, NO_MATCH_DAYS),
-    title: '¿Jugaste algún partido estos días y no anotaste el/los resultados? ⚽',
-    body: `Hace ${NO_MATCH_DAYS} días que no cargás ninguno. ¡Anotalos!`,
+    title: '¿Jugaste algún partido estos días y no anotaste el resultado? ⚽',
+    body: `Hace ${NO_MATCH_DAYS} días que no cargás ninguno. ¡Anotalo!`,
   });
 
   // Group matches by rival, ignoring upper/lower case.
