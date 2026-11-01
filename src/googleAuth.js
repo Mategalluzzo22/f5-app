@@ -5,9 +5,9 @@ import { supabase } from './supabase';
 
 // Supabase rejects redirect URLs whose host is an IP address, like Expo Go's
 // exp://192.168.x.x:8081, and falls back to the Site URL. On iOS the login window
-// catches f5app:// by itself, so this works in Expo Go and in the real app.
+// catches doparti:// by itself, so this works in Expo Go and in the real app.
 // (Android in Expo Go can't catch it; a real Android build can, since it owns the scheme.)
-const REDIRECT_URL = Platform.OS === 'web' ? makeRedirectUri() : 'f5app://auth';
+const REDIRECT_URL = Platform.OS === 'web' ? makeRedirectUri() : 'doparti://auth';
 
 WebBrowser.maybeCompleteAuthSession(); // needed on web only
 

@@ -10,10 +10,10 @@ Esta guía arma un **Gmail solo para la app**, para que los mails con el código
 
 1. Abrí una **ventana de incógnito** para no mezclarla con tu cuenta personal y entrá a https://accounts.google.com/signup
 2. Completá:
-   - **Nombre:** `F5`
+   - **Nombre:** `Doparti`
    - **Apellido:** `App` (o vacío)
 3. Fecha de nacimiento y género: lo que quieras.
-4. **Dirección de Gmail:** elegí una propia, por ejemplo `f5app.oficial@gmail.com`. Si está tomada, probá variantes como `f5.app.ar` o `f5app.contacto`. Como todavía no hay nombre definitivo, elegí una genérica que te sirva igual.
+4. **Dirección de Gmail:** elegí una propia, por ejemplo `doparti.app@gmail.com`. Si está tomada, probá variantes como `doparti.oficial` o `hola.doparti`.
 5. **Contraseña:** inventá una fuerte y **guardala en un lugar seguro**, por ejemplo en el gestor de contraseñas de tu celu o de Chrome.
 6. Google te va a pedir un **número de teléfono** para verificar. Usá el tuyo, sirve para varias cuentas.
 7. Aceptá las condiciones y terminá.
@@ -38,7 +38,7 @@ Sin esto, Google no te deja crear la contraseña de aplicación de la Parte 3.
 Es una clave especial de 16 letras que **solo sirve para mandar mails desde Supabase**. Si algún día la querés anular, la borrás y listo, sin tocar la contraseña principal.
 
 1. Con el **Gmail de la app** iniciado, entrá a https://myaccount.google.com/apppasswords
-2. En **"Nombre de la app"** escribí `Supabase F5` y tocá **Crear**.
+2. En **"Nombre de la app"** escribí `Supabase Doparti` y tocá **Crear**.
 3. Google te muestra una clave como `abcd efgh ijkl mnop`.
 4. **Copiala ahora:** Google la muestra **una sola vez**. Si la perdés, creás otra.
 
@@ -46,14 +46,14 @@ Es una clave especial de 16 letras que **solo sirve para mandar mails desde Supa
 
 ## Parte 4: conectar el Gmail en Supabase
 
-1. Entrá a https://supabase.com/dashboard y abrí el proyecto **f5-app**.
+1. Entrá a https://supabase.com/dashboard y abrí tu proyecto.
 2. Andá a **Authentication → Emails → SMTP Settings**.
 3. Fijate que **"Enable custom SMTP"** esté **activado** y completá:
 
    | Campo | Valor |
    |---|---|
-   | **Sender email** | el Gmail de la app (ej. `f5app.oficial@gmail.com`) |
-   | **Sender name** | `F5` |
+   | **Sender email** | el Gmail de la app (ej. `doparti.app@gmail.com`) |
+   | **Sender name** | `Doparti` |
    | **Host** | `smtp.gmail.com` |
    | **Port number** | `465` |
    | **Username** | el Gmail de la app, completo |
@@ -67,7 +67,7 @@ Es una clave especial de 16 letras que **solo sirve para mandar mails desde Supa
 
 1. En la app del iPhone, si estás adentro, tocá **"Cerrar sesión"** al final del Inicio.
 2. Escribí tu email personal y tocá **"Enviarme el código"**.
-3. Te tiene que llegar un mail de **F5** desde el Gmail de la app, con el código de 6 números. Revisá también **spam**.
+3. Te tiene que llegar un mail de **Doparti** desde el Gmail de la app, con el código de 6 números. Revisá también **spam**.
 4. Escribí el código y entrá. 🎉
 
 ### Si no llega o da error

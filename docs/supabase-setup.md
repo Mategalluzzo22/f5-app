@@ -1,4 +1,4 @@
-# Configurar Supabase para la app F5
+# Configurar Supabase para la app Doparti
 
 Hola. Necesito ayuda para preparar **Supabase** para mi app de celular (hecha con Expo / React Native), donde la gente anota sus partidos de fútbol 5. Guiame paso a paso en el navegador.
 
@@ -20,7 +20,7 @@ Hola. Necesito ayuda para preparar **Supabase** para mi app de celular (hecha co
 
 1. Si Supabase pide crear una **organización**, usá el nombre de mi usuario, plan **Free**.
 2. Tocá **"New project"** y completá:
-   - **Project name:** `f5-app`
+   - **Project name:** `doparti`
    - **Database password:** la escribo yo. También puedo tocar "Generate a password" y guardarla. Vos no la leas ni la copies.
    - **Region:** **South America (São Paulo)**, porque estoy en Argentina.
    - **Plan:** Free.
@@ -36,7 +36,7 @@ La app va a iniciar sesión con **email + un código de 6 números**, sin contra
 3. Andá a **Authentication → Emails** (o **Email Templates**) y abrí la plantilla **"Magic Link"**.
 4. La plantilla tiene que mostrar el **código**, así que tiene que incluir `{{ .Token }}`. Mostrame cómo está ahora y proponeme este texto antes de guardar:
 
-   - **Asunto:** `Tu código para entrar a F5`
+   - **Asunto:** `Tu código para entrar a Doparti`
    - **Cuerpo:**
      ```html
      <h2>Tu código para entrar</h2>
@@ -59,7 +59,7 @@ La app va a iniciar sesión con **email + un código de 6 números**, sin contra
 
 Haceme un resumen con:
 
-- [ ] Proyecto `f5-app` creado en São Paulo, plan Free
+- [ ] Proyecto `doparti` creado en São Paulo, plan Free
 - [ ] Login por email activado
 - [ ] Plantillas de email con `{{ .Token }}`
 - [ ] Project URL: `...`

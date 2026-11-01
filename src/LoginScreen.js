@@ -67,7 +67,7 @@ export default function LoginScreen() {
 
   return (
     <ScrollView style={styles.screen} keyboardShouldPersistTaps="handled">
-      <Header title="Bienvenido ⚽" subtitle="Entrá con tu email para guardar tus partidos" />
+      <Header title="Doparti ⚽" subtitle="Tu historial futbolístico. Entrá para guardar tus partidos." />
       <View style={styles.card}>
         {codeSent ? (
           <>

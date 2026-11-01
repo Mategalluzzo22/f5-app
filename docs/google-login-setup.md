@@ -1,6 +1,6 @@
 # Configurar "Continuar con Google" (Supabase + Google Cloud)
 
-Hola. Necesito que me guíes en el navegador para activar el login con Google en mi app de fútbol 5. La app usa **Supabase** (proyecto `f5-app`, URL `https://tjxbjgnelylloynfsbxk.supabase.co`) y se prueba con **Expo Go** en iPhone.
+Hola. Necesito que me guíes en el navegador para activar el login con Google en mi app **Doparti** (registro de partidos de fútbol amateur). La app usa **Supabase** (URL `https://tjxbjgnelylloynfsbxk.supabase.co`) y se prueba con **Expo Go** en iPhone.
 
 ## Qué cuenta usar
 
@@ -16,12 +16,12 @@ Hola. Necesito que me guíes en el navegador para activar el login con Google en
 ## Paso 1: proyecto en Google Cloud
 
 1. Abrí https://console.cloud.google.com/ (yo inicio sesión con el **Gmail de la app**).
-2. Creá un proyecto nuevo llamado `F5 App`, o usá uno existente si te digo cuál.
+2. Creá un proyecto nuevo llamado `Doparti`, o usá uno existente si te digo cuál.
 
 ## Paso 2: pantalla de consentimiento (Google Auth Platform)
 
 1. Andá a https://console.cloud.google.com/auth/branding y completá:
-   - **App name:** `F5`
+   - **App name:** `Doparti`
    - **User support email:** el Gmail de la app
    - **Developer contact email:** el Gmail de la app
 2. En **Audience** (https://console.cloud.google.com/auth/audience):
@@ -34,7 +34,7 @@ Hola. Necesito que me guíes en el navegador para activar el login con Google en
 1. En Supabase, abrí **Authentication → Sign In / Providers → Google** y copiá la **Callback URL**. Es algo como `https://tjxbjgnelylloynfsbxk.supabase.co/auth/v1/callback`.
 2. Abrí https://console.cloud.google.com/auth/clients/create
    - **Application type:** **Web application**
-   - **Name:** `F5 Supabase`
+   - **Name:** `Doparti Supabase`
    - **Authorized redirect URIs:** pegá la Callback URL de Supabase del punto 1.
    - **Authorized JavaScript origins:** dejalo vacío. Si te lo pide, poné `https://tjxbjgnelylloynfsbxk.supabase.co`.
 3. Tocá **Create**. Google muestra el **Client ID** y el **Client Secret**.
@@ -50,9 +50,7 @@ Hola. Necesito que me guíes en el navegador para activar el login con Google en
 ## Paso 5: permitir volver a la app
 
 1. En Supabase, andá a **Authentication → URL Configuration**.
-2. En **Redirect URLs**, agregá estas dos:
-   - `exp://**` (para probar con Expo Go)
-   - `f5app://**` (para cuando la app esté publicada)
+2. En **Redirect URLs**, agregá `doparti://**`. La app vuelve por `doparti://auth`, tanto en Expo Go (iPhone) como publicada. Supabase no acepta las direcciones `exp://` de Expo Go porque tienen una IP.
 3. Guardá.
 
 ## Al terminar
@@ -63,4 +61,4 @@ Haceme un resumen con:
 - [ ] Pantalla de consentimiento lista, con mi Gmail personal como test user
 - [ ] Cliente OAuth "Web application" creado, con la Callback URL de Supabase
 - [ ] Google activado en Supabase, con Client ID y Client Secret
-- [ ] Redirect URLs `exp://**` y `f5app://**` agregadas
+- [ ] Redirect URL `doparti://**` agregada

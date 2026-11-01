@@ -1,4 +1,4 @@
--- F5 app database schema (stage 1: accounts + own matches).
+-- Doparti database schema (stage 1: accounts + own matches).
 -- Run once in Supabase: SQL Editor -> New query -> paste -> Run.
 
 -- One profile per user, with the public username friends will search by.
