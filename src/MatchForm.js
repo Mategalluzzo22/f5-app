@@ -16,6 +16,7 @@ export default function MatchForm({ opponents, onSave, onCancel }) {
   const [result, setResult] = useState(null);
   const [goals, setGoals] = useState(0);
   const [error, setError] = useState('');
+  const [saving, setSaving] = useState(false);
 
   // Past rivals that match what was typed, hidden once one is fully chosen.
   const typed = opponent.trim().toLowerCase();
@@ -47,12 +48,19 @@ export default function MatchForm({ opponents, onSave, onCancel }) {
     setGoals(Math.max(0, newGoals));
   }
 
-  function handleSave() {
+  async function handleSave() {
     const isoDate = dateToISO(date);
     if (isoDate > todayISO()) return setError('No podés cargar un partido que todavía no se jugó.');
     if (!opponent.trim()) return setError('Escribí contra quién jugaste.');
     if (!result) return setError('Elegí el resultado.');
-    onSave({ id: String(Date.now()), date: isoDate, opponent: opponent.trim(), result, goals });
+    setError('');
+    setSaving(true);
+    try {
+      await onSave({ date: isoDate, opponent: opponent.trim(), result, goals });
+    } catch {
+      setSaving(false);
+      setError('No se pudo guardar el partido. Revisá tu conexión e intentá de nuevo.');
+    }
   }
 
   return (
@@ -124,8 +132,12 @@ export default function MatchForm({ opponents, onSave, onCancel }) {
 
         {error ? <Text style={styles.error}>{error}</Text> : null}
 
-        <PressableScale style={styles.saveButton} onPress={handleSave}>
-          <Text style={styles.saveText}>Guardar partido</Text>
+        <PressableScale
+          style={[styles.saveButton, saving && styles.saveButtonDisabled]}
+          onPress={handleSave}
+          disabled={saving}
+        >
+          <Text style={styles.saveText}>{saving ? 'Guardando…' : 'Guardar partido'}</Text>
         </PressableScale>
       </View>
     </ScrollView>
@@ -184,5 +196,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 28,
   },
+  saveButtonDisabled: { opacity: 0.6 },
   saveText: { color: '#fff', fontSize: 17, fontWeight: '700' },
 });
