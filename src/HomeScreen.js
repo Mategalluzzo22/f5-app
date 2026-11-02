@@ -5,12 +5,13 @@ import ProBadge from './ProBadge';
 import PressableScale from './PressableScale';
 import { isoToDisplay } from './dates';
 import { FONTS } from './fonts';
+import { playerFacts } from './facts';
 import { formSentence, recentForm } from './insights';
 import { scoreText } from './matches';
 import { RESULTS } from './results';
 import { useColors, useStyles } from './theme';
 
-export default function HomeScreen({ stats, matches, username, onOpenPro }) {
+export default function HomeScreen({ stats, matches, myId, username, onOpenPro }) {
   const styles = useStyles(makeStyles);
   const colors = useColors();
   return (
@@ -37,6 +38,8 @@ export default function HomeScreen({ stats, matches, username, onOpenPro }) {
               value={stats.played}
               label={stats.played === 1 ? 'partido jugado' : 'partidos jugados'}
             />
+            {/* Free cards above, Pro cards below. */}
+            <FactsCard matches={matches} myId={myId} />
             <ProCard onOpen={onOpenPro} />
           </>
         )}
@@ -62,6 +65,33 @@ function FormCard({ matches }) {
         ))}
       </View>
       <Text style={styles.formText}>{formSentence(streak)}</Text>
+    </View>
+  );
+}
+
+// Pro: facts about how you play, built from your matches.
+function FactsCard({ matches, myId }) {
+  const styles = useStyles(makeStyles);
+  const colors = useColors();
+  const facts = playerFacts(matches, myId);
+  return (
+    <View style={styles.card}>
+      <View style={styles.titleRow}>
+        <Text style={styles.cardTitle}>Datos sobre vos</Text>
+        <ProBadge />
+      </View>
+      {facts.length === 0 ? (
+        <Text style={styles.recordDetail}>
+          Seguí cargando partidos (con grupo, goles y marcador) y acá van a aparecer datos sobre cómo jugás.
+        </Text>
+      ) : (
+        facts.map((fact) => (
+          <View key={fact} style={styles.factRow}>
+            <Ionicons name="bulb" size={18} color={colors.gold} />
+            <Text style={styles.factText}>{fact}</Text>
+          </View>
+        ))
+      )}
     </View>
   );
 }
@@ -241,6 +271,8 @@ const makeStyles = (c) => StyleSheet.create({
   formRow: { flexDirection: 'row', gap: 8 },
   formBadge: { width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center' },
   formBadgeText: { color: c.onPrimary, fontFamily: FONTS.extraBold, fontSize: 20 },
+  factRow: { flexDirection: 'row', gap: 10, paddingVertical: 6 },
+  factText: { flex: 1, fontSize: 15, color: c.text, lineHeight: 21 },
   formText: { fontSize: 15, fontWeight: '600', color: c.textSoft, marginTop: 12 },
   statCard: { flex: 1 },
   statValue: { fontSize: 44, fontFamily: FONTS.extraBold, marginTop: 6, lineHeight: 48, color: c.text },

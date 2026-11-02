@@ -257,6 +257,7 @@ function Main() {
           <HomeScreen
             stats={computeStats(matches)}
             matches={matches}
+            myId={userId}
             username={profile.username}
             onOpenPro={setScreen}
           />

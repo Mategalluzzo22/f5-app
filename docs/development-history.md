@@ -27,9 +27,10 @@ Repositorio: https://github.com/Mategalluzzo22/f5-app
 | 12. Tu mes a mes (Pro) | Mejores meses, calendario de partidos y grupos por mes | ✅ | #17 |
 | 13. Más análisis | Tu forma (gratis), Tus grupos y Tu año en Doparti (Pro) | ✅ | #18 |
 | 14. Tus gráficos (Pro) | Partidos y goles por mes, evolución del %, goles por partido y por formato | ✅ | #19 |
-| 15. Publicación | App en TestFlight y en las tiendas | ⏳ Pendiente | — |
+| 15. Datos sobre vos (Pro) | Frases sobre cómo jugás, armadas con tus partidos | ✅ | #20 |
+| 16. Publicación | App en TestFlight y en las tiendas | ⏳ Pendiente | — |
 
-Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026 y de la 10 a la 14 el 2 de noviembre.
+Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026 y de la 10 a la 15 el 2 de noviembre.
 
 ---
 
@@ -274,9 +275,28 @@ Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026 y de la 10 a la 14 el 2 d
 
 ---
 
+## Etapa 15: Datos sobre vos (Pro)
+
+**Objetivo:** que la app te cuente cosas de vos que no sabías. Segunda de las cinco etapas de gráficos y personalización.
+
+**Qué se hizo:** una tarjeta **"Datos sobre vos"** en Inicio con frases armadas con tus partidos. Cada una aparece solo si hay al menos 3 partidos de cada lado de la comparación, para que no diga cosas sin sentido:
+- **Tu día:** *"Los martes ganás el 75% de tus partidos."*
+- **Tus goles:** *"Cuando hacés un gol ganás el 80% de los partidos. Cuando no, el 20%."*
+- **Tus grupos:** *"Con Los del martes ganás el 75%, con Fútbol del laburo el 25%."*
+- **Formatos:** *"En F7 hacés más goles que en F5 (1.3 contra 1.0 por partido)."*
+- **Tu cábala:** *"Con @labomba22 en tu equipo ganás el 100%. Es tu cábala 🍀"* (solo si ganás más con esa persona que en general, y si los dos confirmaron el partido).
+- **Partidos parejos:** *"En partidos por un gol ganaste 3 de 5."*
+- Si todavía no hay datos suficientes, la tarjeta invita a cargar partidos con grupo, goles y marcador.
+- **Orden de Inicio** (pedido del fundador): primero todas las tarjetas gratis y abajo las Pro (Datos sobre vos y Doparti PRO), para no mezclarlas.
+- Los cálculos están en `src/facts.js`, con pruebas.
+
+**Cómo se probó:** pruebas automáticas de cada frase, incluidos los casos en que no tiene que aparecer, y la tarjeta en el navegador con partidos de ejemplo, en claro y en oscuro.
+
+---
+
 ## Próximas etapas
 
-**Etapa 15: Publicación** (necesita la cuenta de desarrollador de Apple, USD 99 por año)
+**Etapa 16: Publicación** (necesita la cuenta de desarrollador de Apple, USD 99 por año)
 - Compilar la app con **EAS** (el servicio de Expo que compila en la nube).
 - Login nativo de Google y **"Continuar con Apple"**.
 - **Aviso push "te sumaron a un partido"** en el momento (Expo Go no soporta push).
@@ -290,7 +310,7 @@ Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026 y de la 10 a la 14 el 2 d
 - **Privacidad:** elegir quién ve tu perfil.
 - **Asistencias** opcionales.
 - **Tarjetas para compartir** en WhatsApp e Instagram.
-- **Plan Pro:** cobrar con pagos dentro de la app (por ejemplo con RevenueCat) y bloquear las funciones Pro para quien no pague. Hoy son Tu mes a mes, Tus gráficos, Tus grupos y Tu año. Al activar los pagos, pasarle a Tu año los meses pagos de cada usuario.
+- **Plan Pro:** cobrar con pagos dentro de la app (por ejemplo con RevenueCat) y bloquear las funciones Pro para quien no pague. Hoy son Tu mes a mes, Tus gráficos, Datos sobre vos, Tus grupos y Tu año. Al activar los pagos, pasarle a Tu año los meses pagos de cada usuario.
 
 ---
 
