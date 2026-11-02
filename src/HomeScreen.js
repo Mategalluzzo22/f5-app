@@ -1,14 +1,17 @@
 import { Ionicons } from '@expo/vector-icons';
+import { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import Header from './Header';
 import ProBadge from './ProBadge';
 import PressableScale from './PressableScale';
-import { isoToDisplay } from './dates';
+import { isoToDisplay, todayISO } from './dates';
 import { FONTS } from './fonts';
 import { playerFacts } from './facts';
+import { goalProgress, goalsForYear } from './goals';
 import { formSentence, recentForm } from './insights';
 import { scoreText } from './matches';
 import { RESULTS } from './results';
+import { loadYearGoals } from './settings';
 import { useColors, useStyles } from './theme';
 
 export default function HomeScreen({ stats, matches, myId, username, onOpenPro }) {
@@ -39,6 +42,7 @@ export default function HomeScreen({ stats, matches, myId, username, onOpenPro }
               label={stats.played === 1 ? 'partido jugado' : 'partidos jugados'}
             />
             {/* Free cards above, Pro cards below. */}
+            <GoalsCard matches={matches} onSetGoals={() => onOpenPro('profile')} />
             <FactsCard matches={matches} myId={myId} />
             <ProCard onOpen={onOpenPro} />
           </>
@@ -65,6 +69,60 @@ function FormCard({ matches }) {
         ))}
       </View>
       <Text style={styles.formText}>{formSentence(streak)}</Text>
+    </View>
+  );
+}
+
+const GOAL_LABELS = { goals: ['gol', 'goles'], matches: ['partido', 'partidos'] };
+
+// Pro: progress towards this year's goals, picked in Profile.
+function GoalsCard({ matches, onSetGoals }) {
+  const styles = useStyles(makeStyles);
+  const colors = useColors();
+  const year = todayISO().slice(0, 4);
+  // null until the saved goals are loaded.
+  const [targets, setTargets] = useState(null);
+
+  useEffect(() => {
+    loadYearGoals().then((saved) => setTargets(goalsForYear(saved, year)));
+  }, [year]);
+
+  if (!targets) return null;
+  const progress = goalProgress(matches, targets, year);
+  return (
+    <View style={styles.card}>
+      <View style={styles.titleRow}>
+        <Text style={styles.cardTitle}>Tus metas {year}</Text>
+        <ProBadge />
+      </View>
+      {progress.length === 0 ? (
+        <PressableScale onPress={onSetGoals}>
+          <Text style={styles.recordDetail}>
+            Ponete una meta de goles o de partidos para este año. <Text style={styles.link}>Elegila en tu Perfil</Text>
+          </Text>
+        </PressableScale>
+      ) : (
+        progress.map((goal) => {
+          const [one, many] = GOAL_LABELS[goal.kind];
+          return (
+            <View key={goal.kind} style={styles.goal}>
+              <View style={styles.goalHeader}>
+                <Text style={styles.recordLabel}>
+                  {goal.current} de {goal.target} {goal.target === 1 ? one : many}
+                </Text>
+                <Text style={styles.goalStatus}>
+                  {goal.done ? '¡Meta cumplida! 🎉' : `Te ${goal.remaining === 1 ? 'falta' : 'faltan'} ${goal.remaining}`}
+                </Text>
+              </View>
+              <View style={styles.goalTrack}>
+                <View
+                  style={[styles.goalFill, { width: `${goal.percent}%`, backgroundColor: goal.done ? colors.gold : colors.accent }]}
+                />
+              </View>
+            </View>
+          );
+        })
+      )}
     </View>
   );
 }
@@ -271,6 +329,12 @@ const makeStyles = (c) => StyleSheet.create({
   formRow: { flexDirection: 'row', gap: 8 },
   formBadge: { width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center' },
   formBadgeText: { color: c.onPrimary, fontFamily: FONTS.extraBold, fontSize: 20 },
+  link: { color: c.accent, fontWeight: '700' },
+  goal: { marginTop: 6, marginBottom: 6 },
+  goalHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 6 },
+  goalStatus: { fontSize: 13, color: c.muted },
+  goalTrack: { height: 12, borderRadius: 6, backgroundColor: c.divider, overflow: 'hidden' },
+  goalFill: { height: '100%', borderRadius: 6 },
   factRow: { flexDirection: 'row', gap: 10, paddingVertical: 6 },
   factText: { flex: 1, fontSize: 15, color: c.text, lineHeight: 21 },
   formText: { fontSize: 15, fontWeight: '600', color: c.textSoft, marginTop: 12 },

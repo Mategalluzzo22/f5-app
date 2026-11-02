@@ -28,9 +28,10 @@ Repositorio: https://github.com/Mategalluzzo22/f5-app
 | 13. Más análisis | Tu forma (gratis), Tus grupos y Tu año en Doparti (Pro) | ✅ | #18 |
 | 14. Tus gráficos (Pro) | Partidos y goles por mes, evolución del %, goles por partido y por formato | ✅ | #19 |
 | 15. Datos sobre vos (Pro) | Frases sobre cómo jugás, armadas con tus partidos | ✅ | #20 |
-| 16. Publicación | App en TestFlight y en las tiendas | ⏳ Pendiente | — |
+| 16. Metas personales (Pro) | Metas de goles y partidos del año, con barra de progreso | 🔄 En prueba | rama `feature/year-goals` |
+| 17. Publicación | App en TestFlight y en las tiendas | ⏳ Pendiente | — |
 
-Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026 y de la 10 a la 15 el 2 de noviembre.
+Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026 y de la 10 a la 16 el 2 de noviembre.
 
 ---
 
@@ -294,9 +295,26 @@ Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026 y de la 10 a la 15 el 2 d
 
 ---
 
+## Etapa 16: Metas personales (Pro, en prueba)
+
+**Objetivo:** darte un objetivo para el año y que tengas ganas de cargar cada partido para verlo avanzar. Tercera de las cinco etapas de gráficos y personalización.
+
+**Qué se hizo:**
+- **Perfil → Tus metas del año:** dos contadores, goles y partidos, que suben y bajan de a 5. En 0 dice "Sin meta".
+- **Inicio → Tus metas** (en la parte Pro): una barra de progreso por meta, *"18 de 20 goles · Te faltan 2"*. Al cumplirla la barra se pone dorada y dice *"¡Meta cumplida! 🎉"*. Si no tenés metas, la tarjeta te lleva a Perfil para elegirlas.
+- Las metas son del año en que las ponés: cuando cambia el año arrancan en cero.
+- **Decisión:** se guardan en el celular, porque son solo tuyas. Si cambiás de celular se pierden; si eso molesta, se pueden pasar a Supabase.
+- Los cálculos están en `src/goals.js`, con pruebas.
+
+**Problemas y soluciones:** probando en el navegador, al tocar "+" rápido se perdían toques, y además lo guardado no coincidía con la pantalla (se guardaba doble). Se arregló calculando cada cambio sobre el último valor y guardando aparte, cuando el valor ya cambió.
+
+**Cómo se probó:** pruebas automáticas del progreso (solo cuenta el año actual, goles sin cargar, meta superada, metas de otro año) y en el navegador: elegir metas en Perfil, revisar que lo guardado coincida y ver el progreso en Inicio, en claro y en oscuro.
+
+---
+
 ## Próximas etapas
 
-**Etapa 16: Publicación** (necesita la cuenta de desarrollador de Apple, USD 99 por año)
+**Etapa 17: Publicación** (necesita la cuenta de desarrollador de Apple, USD 99 por año)
 - Compilar la app con **EAS** (el servicio de Expo que compila en la nube).
 - Login nativo de Google y **"Continuar con Apple"**.
 - **Aviso push "te sumaron a un partido"** en el momento (Expo Go no soporta push).
@@ -310,7 +328,7 @@ Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026 y de la 10 a la 15 el 2 d
 - **Privacidad:** elegir quién ve tu perfil.
 - **Asistencias** opcionales.
 - **Tarjetas para compartir** en WhatsApp e Instagram.
-- **Plan Pro:** cobrar con pagos dentro de la app (por ejemplo con RevenueCat) y bloquear las funciones Pro para quien no pague. Hoy son Tu mes a mes, Tus gráficos, Datos sobre vos, Tus grupos y Tu año. Al activar los pagos, pasarle a Tu año los meses pagos de cada usuario.
+- **Plan Pro:** cobrar con pagos dentro de la app (por ejemplo con RevenueCat) y bloquear las funciones Pro para quien no pague. Hoy son Tu mes a mes, Tus gráficos, Datos sobre vos, Tus metas, Tus grupos y Tu año. Al activar los pagos, pasarle a Tu año los meses pagos de cada usuario.
 
 ---
 
