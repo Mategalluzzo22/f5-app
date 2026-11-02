@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
 import Header from './Header';
 import PlayerCard from './PlayerCard';
+import PlayerInfoForm from './PlayerInfoForm';
 import ProBadge from './ProBadge';
 import PressableScale from './PressableScale';
 import { uploadAvatar } from './api';
@@ -11,6 +12,7 @@ import { todayISO } from './dates';
 import { FONTS } from './fonts';
 import { GOAL_STEP, goalsForYear } from './goals';
 import { pickSquarePhoto } from './photo';
+import { cardLabels } from './playerInfo';
 import { TEAM_COLORS } from './teamColors';
 import { loadFunnyReminders, loadYearGoals, saveFunnyReminders, saveYearGoals } from './settings';
 import { useColors, useStyles, useTheme } from './theme';
@@ -26,6 +28,7 @@ export default function ProfileScreen({
   email,
   stats,
   onAvatarChange,
+  onProfileChange,
   onRemindersChange,
   onSignOut,
 }) {
@@ -79,11 +82,14 @@ export default function ProfileScreen({
           username={profile.username}
           avatarUrl={profile.avatar_url}
           subtitle={email}
+          info={cardLabels(profile)}
           stats={stats}
           onAvatarPress={changePhoto}
           uploading={uploading}
         />
         {error ? <Text style={styles.error}>{error}</Text> : null}
+
+        <PlayerInfoForm profile={profile} onSaved={onProfileChange} />
 
         <GoalsCard />
 

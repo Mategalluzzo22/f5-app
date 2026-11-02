@@ -4,26 +4,30 @@ import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-nat
 import Header from './Header';
 import PlayerCard from './PlayerCard';
 import PressableScale from './PressableScale';
-import { fetchMyMatches } from './api';
+import { fetchMyMatches, fetchProfile } from './api';
 import { better, headToHead } from './compare';
 import { isoToDisplay } from './dates';
 import { FONTS } from './fonts';
 import { goalsText, scoreText } from './matches';
+import { cardLabels } from './playerInfo';
 import { RESULTS } from './results';
 import { computeStats } from './stats';
 import { useColors, useStyles } from './theme';
 
 const RECENT_MATCHES = 5;
 
-// Loads the friend's confirmed matches and shows their profile.
+// Loads the friend's confirmed matches and player card, and shows their profile.
 export default function FriendProfileScreen({ friend, myMatches, onBack, onRemove }) {
   const [friendMatches, setFriendMatches] = useState(null);
+  const [friendProfile, setFriendProfile] = useState(null);
   const [error, setError] = useState('');
 
   useEffect(() => {
     fetchMyMatches(friend.id, 'confirmed').then(setFriendMatches, () =>
       setError('No pudimos cargar el perfil. Revisá tu conexión.'),
     );
+    // Without the player card the rest of the profile still works.
+    fetchProfile(friend.id).then(setFriendProfile, () => {});
   }, [friend.id]);
 
   return (
@@ -31,6 +35,7 @@ export default function FriendProfileScreen({ friend, myMatches, onBack, onRemov
       friend={friend}
       myMatches={myMatches}
       friendMatches={friendMatches}
+      friendProfile={friendProfile}
       error={error}
       onBack={onBack}
       onRemove={onRemove}
@@ -38,7 +43,7 @@ export default function FriendProfileScreen({ friend, myMatches, onBack, onRemov
   );
 }
 
-export function FriendProfileView({ friend, myMatches, friendMatches, error, onBack, onRemove }) {
+export function FriendProfileView({ friend, myMatches, friendMatches, friendProfile = null, error, onBack, onRemove }) {
   const styles = useStyles(makeStyles);
   const colors = useColors();
   // Removing a friend asks for confirmation first.
@@ -62,6 +67,7 @@ export function FriendProfileView({ friend, myMatches, friendMatches, error, onB
           username={friend.username}
           avatarUrl={friend.avatarUrl}
           subtitle={`${shared} ${shared === 1 ? 'partido' : 'partidos'} en común con vos`}
+          info={cardLabels(friendProfile)}
           stats={computeStats(friendMatches)}
         />
         <HeadToHeadCard h2h={h2h} username={friend.username} />

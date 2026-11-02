@@ -10,7 +10,8 @@ const AVATAR_SIZE = 104;
 // Centered card with a player's photo (or initial), username, a line below it
 // and their main numbers. Used for your own profile and for a friend's.
 // With onAvatarPress, the photo shows a camera badge and can be tapped to change it.
-export default function PlayerCard({ username, avatarUrl, subtitle, stats, onAvatarPress, uploading = false }) {
+// info: the player card labels (position, foot, number, team), see playerInfo.js.
+export default function PlayerCard({ username, avatarUrl, subtitle, info = [], stats, onAvatarPress, uploading = false }) {
   const styles = useStyles(makeStyles);
   const avatar = <Avatar username={username} url={avatarUrl} size={AVATAR_SIZE} ring />;
 
@@ -33,6 +34,15 @@ export default function PlayerCard({ username, avatarUrl, subtitle, stats, onAva
       )}
       <Text style={styles.username}>@{username}</Text>
       {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
+      {info.length > 0 ? (
+        <View style={styles.info}>
+          {info.map((text) => (
+            <View key={text} style={styles.infoChip}>
+              <Text style={styles.infoText}>{text}</Text>
+            </View>
+          ))}
+        </View>
+      ) : null}
 
       <View style={styles.divider} />
 
@@ -90,6 +100,9 @@ const makeStyles = (c) => StyleSheet.create({
   },
   username: { fontSize: 32, fontFamily: FONTS.extraBold, marginTop: 14, color: c.text },
   subtitle: { fontSize: 15, color: c.muted, marginTop: 2 },
+  info: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', gap: 6, marginTop: 12 },
+  infoChip: { backgroundColor: c.tint, borderRadius: 12, paddingVertical: 4, paddingHorizontal: 10 },
+  infoText: { fontSize: 13, fontWeight: '700', color: c.accent },
   divider: { alignSelf: 'stretch', height: 1, backgroundColor: c.divider, marginVertical: 20 },
   statsGrid: { flexDirection: 'row', flexWrap: 'wrap', alignSelf: 'stretch', rowGap: 18 },
   stat: { width: '50%', alignItems: 'center' },
