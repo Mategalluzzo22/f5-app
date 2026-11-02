@@ -24,3 +24,18 @@ export async function loadThemeMode() {
 export async function saveThemeMode(mode) {
   await AsyncStorage.setItem(THEME_MODE_KEY, mode);
 }
+
+const YEAR_GOALS_KEY = 'settings.yearGoals';
+
+// { year: '2026', goals: 30, matches: 40 } or null when never set.
+export async function loadYearGoals() {
+  try {
+    return JSON.parse(await AsyncStorage.getItem(YEAR_GOALS_KEY));
+  } catch {
+    return null;
+  }
+}
+
+export async function saveYearGoals(yearGoals) {
+  await AsyncStorage.setItem(YEAR_GOALS_KEY, JSON.stringify(yearGoals));
+}

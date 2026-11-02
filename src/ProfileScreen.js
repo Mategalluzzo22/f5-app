@@ -1,14 +1,17 @@
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
 import Header from './Header';
 import PlayerCard from './PlayerCard';
+import ProBadge from './ProBadge';
 import PressableScale from './PressableScale';
 import { uploadAvatar } from './api';
+import { todayISO } from './dates';
 import { FONTS } from './fonts';
+import { GOAL_STEP, goalsForYear } from './goals';
 import { pickSquarePhoto } from './photo';
-import { loadFunnyReminders, saveFunnyReminders } from './settings';
+import { loadFunnyReminders, loadYearGoals, saveFunnyReminders, saveYearGoals } from './settings';
 import { useColors, useStyles, useTheme } from './theme';
 
 const THEME_MODES = [
@@ -81,6 +84,8 @@ export default function ProfileScreen({
         />
         {error ? <Text style={styles.error}>{error}</Text> : null}
 
+        <GoalsCard />
+
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Notificaciones</Text>
           <View style={styles.settingRow}>
@@ -141,6 +146,74 @@ export default function ProfileScreen({
   );
 }
 
+// Pro: pick this year's goals (goals and/or matches). Saved on the phone.
+function GoalsCard() {
+  const styles = useStyles(makeStyles);
+  const year = todayISO().slice(0, 4);
+  // null until the saved goals are loaded.
+  const [targets, setTargets] = useState(null);
+  const changed = useRef(false);
+
+  useEffect(() => {
+    loadYearGoals().then((saved) => setTargets(goalsForYear(saved, year)));
+  }, [year]);
+
+  // Save after each change (not on the first load).
+  useEffect(() => {
+    if (changed.current) saveYearGoals({ year, ...targets });
+  }, [targets, year]);
+
+  // Builds on the latest value, so quick repeated taps all count.
+  function change(kind, delta) {
+    Haptics.selectionAsync();
+    changed.current = true;
+    setTargets((current) => ({ ...current, [kind]: Math.max(0, current[kind] + delta) }));
+  }
+
+  return (
+    <View style={styles.card}>
+      <View style={styles.titleRow}>
+        <Text style={[styles.cardTitle, styles.inlineTitle]}>Tus metas {year}</Text>
+        <ProBadge />
+      </View>
+      <Text style={styles.goalsHelp}>Ponete un objetivo y seguí tu progreso en Inicio.</Text>
+      {targets ? (
+        <>
+          <GoalStepper label="Goles" value={targets.goals} onChange={(d) => change('goals', d)} />
+          <GoalStepper label="Partidos" value={targets.matches} onChange={(d) => change('matches', d)} />
+        </>
+      ) : null}
+    </View>
+  );
+}
+
+function GoalStepper({ label, value, onChange }) {
+  const styles = useStyles(makeStyles);
+  return (
+    <View style={styles.goalRow}>
+      <Text style={styles.settingLabel}>{label}</Text>
+      <View style={styles.goalStepper}>
+        <PressableScale
+          style={[styles.stepButton, value === 0 && styles.stepDisabled]}
+          onPress={() => onChange(-GOAL_STEP)}
+          disabled={value === 0}
+          accessibilityLabel={`Menos ${label.toLowerCase()}`}
+        >
+          <Text style={styles.stepText}>−</Text>
+        </PressableScale>
+        <Text style={styles.goalValue}>{value === 0 ? 'Sin meta' : value}</Text>
+        <PressableScale
+          style={styles.stepButton}
+          onPress={() => onChange(GOAL_STEP)}
+          accessibilityLabel={`Más ${label.toLowerCase()}`}
+        >
+          <Text style={styles.stepText}>+</Text>
+        </PressableScale>
+      </View>
+    </View>
+  );
+}
+
 const makeStyles = (c) => StyleSheet.create({
   screen: { flex: 1 },
   cards: { marginTop: -32, paddingHorizontal: 20, paddingBottom: 24, gap: 14 },
@@ -156,6 +229,22 @@ const makeStyles = (c) => StyleSheet.create({
     elevation: 2,
   },
   cardTitle: { fontSize: 24, fontFamily: FONTS.bold, marginBottom: 10, color: c.text },
+  titleRow: { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 4 },
+  inlineTitle: { marginBottom: 0 },
+  goalsHelp: { fontSize: 13, color: c.muted, marginBottom: 8 },
+  goalRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: 8 },
+  goalStepper: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  stepButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: c.tint,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  stepDisabled: { opacity: 0.4 },
+  stepText: { fontSize: 22, color: c.accent, fontWeight: '600' },
+  goalValue: { minWidth: 76, textAlign: 'center', fontSize: 22, fontFamily: FONTS.extraBold, color: c.text },
   settingRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   settingIcon: {
     width: 42,
