@@ -27,7 +27,7 @@ Repositorio: https://github.com/Mategalluzzo22/f5-app
 | 12. Tu mes a mes (Pro) | Mejores meses, calendario de partidos y grupos por mes | ✅ | #17 |
 | 13. Más análisis | Tu forma (gratis), Tus grupos y Tu año en Doparti (Pro) | ✅ | #18 |
 | 14. Tus gráficos (Pro) | Partidos y goles por mes, evolución del %, goles por partido y por formato | ✅ | #19 |
-| 15. Datos sobre vos (Pro) | Frases sobre cómo jugás, armadas con tus partidos | 🔄 En prueba | rama `feature/player-facts` |
+| 15. Datos sobre vos (Pro) | Frases sobre cómo jugás, armadas con tus partidos | ✅ | #20 |
 | 16. Publicación | App en TestFlight y en las tiendas | ⏳ Pendiente | — |
 
 Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026 y de la 10 a la 15 el 2 de noviembre.
@@ -275,7 +275,7 @@ Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026 y de la 10 a la 15 el 2 d
 
 ---
 
-## Etapa 15: Datos sobre vos (Pro, en prueba)
+## Etapa 15: Datos sobre vos (Pro)
 
 **Objetivo:** que la app te cuente cosas de vos que no sabías. Segunda de las cinco etapas de gráficos y personalización.
 
@@ -287,6 +287,7 @@ Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026 y de la 10 a la 15 el 2 d
 - **Tu cábala:** *"Con @labomba22 en tu equipo ganás el 100%. Es tu cábala 🍀"* (solo si ganás más con esa persona que en general, y si los dos confirmaron el partido).
 - **Partidos parejos:** *"En partidos por un gol ganaste 3 de 5."*
 - Si todavía no hay datos suficientes, la tarjeta invita a cargar partidos con grupo, goles y marcador.
+- **Orden de Inicio** (pedido del fundador): primero todas las tarjetas gratis y abajo las Pro (Datos sobre vos y Doparti PRO), para no mezclarlas.
 - Los cálculos están en `src/facts.js`, con pruebas.
 
 **Cómo se probó:** pruebas automáticas de cada frase, incluidos los casos en que no tiene que aparecer, y la tarjeta en el navegador con partidos de ejemplo, en claro y en oscuro.
