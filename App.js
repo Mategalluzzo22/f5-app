@@ -7,6 +7,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import BottomBar from './src/BottomBar';
 import FriendProfileScreen from './src/FriendProfileScreen';
 import FriendsScreen from './src/FriendsScreen';
+import GroupsScreen from './src/GroupsScreen';
 import HistoryScreen from './src/HistoryScreen';
 import HomeScreen from './src/HomeScreen';
 import LoginScreen from './src/LoginScreen';
@@ -17,6 +18,7 @@ import PressableScale from './src/PressableScale';
 import ProfileScreen from './src/ProfileScreen';
 import RecordScreen from './src/RecordScreen';
 import UsernameScreen from './src/UsernameScreen';
+import YearScreen from './src/YearScreen';
 import {
   confirmMatch,
   createMatch,
@@ -54,7 +56,7 @@ function Main() {
   // Matches friends added you to, waiting for you to confirm.
   const [pending, setPending] = useState([]);
   const [loadFailed, setLoadFailed] = useState(false);
-  // 'home' | 'history' | 'friends' | 'profile' | 'new' | 'detail' | 'record' | 'friend' | 'monthly'
+  // 'home' | 'history' | 'friends' | 'profile' | 'new' | 'detail' | 'record' | 'friend' | 'monthly' | 'groups' | 'year'
   const [screen, setScreen] = useState('home');
   const [selectedId, setSelectedId] = useState(null);
   // The friend whose profile is open: { id, username, friendshipId }
@@ -203,6 +205,10 @@ function Main() {
     );
   } else if (screen === 'monthly') {
     content = <MonthlyScreen matches={matches} onBack={() => setScreen('home')} />;
+  } else if (screen === 'groups') {
+    content = <GroupsScreen matches={matches} onBack={() => setScreen('home')} />;
+  } else if (screen === 'year') {
+    content = <YearScreen matches={matches} myId={userId} onBack={() => setScreen('home')} />;
   } else if (screen === 'friend' && selectedFriend) {
     content = (
       <FriendProfileScreen
@@ -247,8 +253,9 @@ function Main() {
         ) : (
           <HomeScreen
             stats={computeStats(matches)}
+            matches={matches}
             username={profile.username}
-            onOpenMonthly={() => setScreen('monthly')}
+            onOpenPro={setScreen}
           />
         )}
         <BottomBar current={screen} onNavigate={setScreen} onAdd={() => setScreen('new')} />
