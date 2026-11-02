@@ -1,12 +1,12 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import Header from './Header';
 import ProBadge from './ProBadge';
 import PressableScale from './PressableScale';
 import { isoToDisplay, todayISO } from './dates';
 import { FONTS } from './fonts';
-import { playerFacts } from './facts';
+import { pickFacts, playerFacts } from './facts';
 import { goalProgress, goalsForYear } from './goals';
 import { formSentence, recentForm } from './insights';
 import { scoreText } from './matches';
@@ -128,12 +128,18 @@ function GoalsCard({ matches, onSetGoals }) {
 }
 
 // Pro: facts about how you play, built from your matches.
+// Shows 3 at a time; tapping the card shows 3 others.
+const FACTS_SHOWN = 3;
+
 function FactsCard({ matches, myId }) {
   const styles = useStyles(makeStyles);
   const colors = useColors();
-  const facts = playerFacts(matches, myId);
+  const facts = useMemo(() => playerFacts(matches, myId), [matches, myId]);
+  const [round, setRound] = useState(0);
+  const shown = useMemo(() => pickFacts(facts, FACTS_SHOWN), [facts, round]);
+  const canShuffle = facts.length > FACTS_SHOWN;
   return (
-    <View style={styles.card}>
+    <PressableScale style={styles.card} onPress={() => setRound(round + 1)} disabled={!canShuffle}>
       <View style={styles.titleRow}>
         <Text style={styles.cardTitle}>Datos sobre vos</Text>
         <ProBadge />
@@ -143,14 +149,17 @@ function FactsCard({ matches, myId }) {
           Seguí cargando partidos (con grupo, goles y marcador) y acá van a aparecer datos sobre cómo jugás.
         </Text>
       ) : (
-        facts.map((fact) => (
-          <View key={fact} style={styles.factRow}>
+        shown.map((fact) => (
+          <View key={fact.id} style={styles.factRow}>
             <Ionicons name="bulb" size={18} color={colors.gold} />
-            <Text style={styles.factText}>{fact}</Text>
+            <Text style={styles.factText}>
+              {fact.text} <Text style={styles.factJoke}>{fact.joke}</Text>
+            </Text>
           </View>
         ))
       )}
-    </View>
+      {canShuffle ? <Text style={styles.factHint}>Tocá para ver otros datos</Text> : null}
+    </PressableScale>
   );
 }
 
@@ -337,6 +346,8 @@ const makeStyles = (c) => StyleSheet.create({
   goalFill: { height: '100%', borderRadius: 6 },
   factRow: { flexDirection: 'row', gap: 10, paddingVertical: 6 },
   factText: { flex: 1, fontSize: 15, color: c.text, lineHeight: 21 },
+  factJoke: { fontWeight: '700', color: c.accent },
+  factHint: { fontSize: 12, color: c.faint, textAlign: 'center', marginTop: 8 },
   formText: { fontSize: 15, fontWeight: '600', color: c.textSoft, marginTop: 12 },
   statCard: { flex: 1 },
   statValue: { fontSize: 44, fontFamily: FONTS.extraBold, marginTop: 6, lineHeight: 48, color: c.text },
