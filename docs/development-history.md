@@ -31,9 +31,10 @@ Repositorio: https://github.com/Mategalluzzo22/f5-app
 | 16. Metas personales (Pro) | Metas de goles y partidos del año, con barra de progreso | ✅ | #21 |
 | 17. Color de tu equipo (Pro) | Elegir el color principal de la app | ✅ | #22 |
 | 18. Tu ficha de jugador | Posición, pie hábil, número y equipo favorito, visible para amigos | ✅ | #23 |
-| 19. Publicación | App en TestFlight y en las tiendas | ⏳ Pendiente | — |
+| 19. Spoiler en el login | Carrusel animado con pantallas reales de la app antes de entrar | 🔄 En prueba | rama `feature/login-tour` |
+| 20. Publicación | App en TestFlight y en las tiendas | ⏳ Pendiente | — |
 
-Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026, de la 10 a la 17 el 2 de noviembre y la 18 el 3 de noviembre.
+Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026, de la 10 a la 17 el 2 de noviembre y la 18 y 19 el 3 de noviembre.
 
 ---
 
@@ -345,9 +346,24 @@ Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026, de la 10 a la 17 el 2 de
 
 ---
 
+## Etapa 19: Spoiler en el login (en prueba)
+
+**Objetivo:** que antes de entrar con Google la persona vea lo que hay adentro de la app, como un spoiler, y le den ganas de entrar.
+
+**Qué se hizo:**
+- La pantalla de login ahora tiene arriba el logo y el nombre (más chicos), en el medio un **celular dibujado que va pasando pantallas de la app** y abajo el botón de Google, siempre a la vista.
+- Son cinco pantallas, cada una con su frase: Partidos (*"Anotá cada partido que jugás"*), Inicio (*"Mirá cómo venís en la cancha"*), el perfil de un amigo (*"Compará con tus amigos"*), Tus gráficos y Tu año en Doparti (estas dos con la etiqueta PRO).
+- **Animación:** cada pantalla queda unos 4 segundos; mientras tanto su contenido baja despacio para mostrar más, y después pasa sola a la siguiente. El celular flota apenas. También se puede deslizar con el dedo, y unos puntitos marcan en cuál estás.
+- **Decisión:** se usan las **pantallas reales** de la app, achicadas, con partidos de ejemplo (`src/demoData.js`), en vez de capturas. Así el spoiler se actualiza solo cuando cambia la app y respeta el modo oscuro. Las fechas de ejemplo son relativas a hoy, para que los gráficos y el resumen del año siempre se vean llenos.
+- El carrusel está en `src/LoginTour.js`.
+
+**Cómo se probó:** en el navegador con la app real (sin sesión abre el login): que cada pantalla baje su contenido, que pase sola a la siguiente y que se vean las cinco, en claro y en oscuro.
+
+---
+
 ## Próximas etapas
 
-**Etapa 19: Publicación** (necesita la cuenta de desarrollador de Apple, USD 99 por año)
+**Etapa 20: Publicación** (necesita la cuenta de desarrollador de Apple, USD 99 por año)
 - Compilar la app con **EAS** (el servicio de Expo que compila en la nube).
 - Login nativo de Google y **"Continuar con Apple"**.
 - **Aviso push "te sumaron a un partido"** en el momento (Expo Go no soporta push).

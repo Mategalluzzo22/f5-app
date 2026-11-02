@@ -2,18 +2,13 @@ import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import LoginTour from './LoginTour';
 import PitchBackground from './PitchBackground';
 import PressableScale from './PressableScale';
 import { FONTS } from './fonts';
 import { signInWithGoogle } from './googleAuth';
 
 const LOGO = require('../assets/splash-icon.png');
-
-const FEATURES = [
-  ['football', 'Anotá cada partido que jugás'],
-  ['stats-chart', 'Llevá tus números y tus récords'],
-  ['people', 'Compartilos con tus amigos'],
-];
 
 // Login with Google only: Google already proves the account is yours, so there
 // are no codes or passwords to handle. "Continue with Apple" joins when publishing.
@@ -36,25 +31,19 @@ export default function LoginScreen() {
   }
 
   return (
-    <View style={[styles.screen, { paddingTop: insets.top + 24, paddingBottom: insets.bottom + 24 }]}>
+    <View style={[styles.screen, { paddingTop: insets.top + 12, paddingBottom: insets.bottom + 16 }]}>
       <PitchBackground centered />
 
       <View style={styles.hero}>
         <Image source={LOGO} style={styles.logo} accessibilityLabel="Logo de Doparti" />
-        <Text style={styles.title}>Doparti</Text>
-        <Text style={styles.tagline}>Tu historial futbolístico</Text>
+        <View>
+          <Text style={styles.title}>Doparti</Text>
+          <Text style={styles.tagline}>Tu historial futbolístico</Text>
+        </View>
       </View>
 
-      <View style={styles.features}>
-        {FEATURES.map(([icon, text]) => (
-          <View key={icon} style={styles.feature}>
-            <View style={styles.featureIcon}>
-              <Ionicons name={icon} size={20} color="#fff" />
-            </View>
-            <Text style={styles.featureText}>{text}</Text>
-          </View>
-        ))}
-      </View>
+      {/* A preview of the app before signing in. */}
+      <LoginTour />
 
       <View>
         <PressableScale
@@ -78,28 +67,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     justifyContent: 'space-between',
   },
-  hero: { alignItems: 'center', marginTop: 32 },
+  // Logo and name side by side, small, so the tour gets the room.
+  hero: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 12 },
   // The splash image is the white logo tile with transparent space around it
   // (the tile is 600 of its 1024px); the negative margin trims that space.
-  logo: { width: 210, height: 210, margin: -44 },
-  title: { color: '#fff', fontSize: 64, fontFamily: FONTS.extraBold, marginTop: 16, lineHeight: 70 },
-  tagline: { color: '#cfeedd', fontSize: 18 },
-  features: {
-    backgroundColor: 'rgba(0,0,0,0.18)',
-    borderRadius: 18,
-    padding: 18,
-    gap: 14,
-  },
-  feature: { flexDirection: 'row', alignItems: 'center', gap: 14 },
-  featureIcon: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    backgroundColor: 'rgba(255,255,255,0.18)',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  featureText: { color: '#fff', fontSize: 17, fontWeight: '600', flex: 1 },
+  logo: { width: 100, height: 100, margin: -21 },
+  title: { color: '#fff', fontSize: 44, fontFamily: FONTS.extraBold, lineHeight: 50 },
+  tagline: { color: '#cfeedd', fontSize: 15, marginTop: -4 },
   googleButton: {
     flexDirection: 'row',
     alignItems: 'center',
