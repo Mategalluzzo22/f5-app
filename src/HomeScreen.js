@@ -33,12 +33,13 @@ export default function HomeScreen({ stats, matches, myId, username, onOpenPro }
               <StatCard icon="trending-up" value={stats.goalsPerMatch} label="goles por partido" />
             </View>
             <RecordsCard bestMatch={stats.bestMatch} winStreak={stats.winStreak} />
-            <FactsCard matches={matches} myId={myId} />
             <StatCard
               icon="calendar"
               value={stats.played}
               label={stats.played === 1 ? 'partido jugado' : 'partidos jugados'}
             />
+            {/* Free cards above, Pro cards below. */}
+            <FactsCard matches={matches} myId={myId} />
             <ProCard onOpen={onOpenPro} />
           </>
         )}
