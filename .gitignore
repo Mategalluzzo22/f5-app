@@ -42,3 +42,7 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+# private documents kept out of the public repo
+DOPARTI_Product_Brief_Market_Study.pdf
+.......txt

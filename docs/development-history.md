@@ -19,8 +19,9 @@ Repositorio: https://github.com/Mategalluzzo22/f5-app
 | 4. Cuentas y nube | Login y partidos guardados en internet | ✅ | #7 |
 | 5. Amigos | Buscar, agregar y ver partidos de amigos | ✅ | #8 |
 | 6. Identidad Doparti | Nombre, estudio de mercado y login solo con Google | ✅ | #9 |
-| 7. Partido compartido | Marcador, equipos, jugadores y confirmaciones | ✅ Probado | rama `feature/shared-matches` |
-| 8. Publicación | App en TestFlight y en las tiendas | ⏳ Pendiente | — |
+| 7. Partido compartido | Marcador, equipos, jugadores y confirmaciones | ✅ | #10 |
+| 8. Perfil de amigos y foto | Estadísticas de un amigo, mano a mano, comparación y foto de perfil | 🔄 En prueba | ramas `feature/friend-profile` y `feature/profile-photo` |
+| 9. Publicación | App en TestFlight y en las tiendas | ⏳ Pendiente | — |
 
 Todas las etapas se hicieron el 1 de noviembre de 2026.
 
@@ -153,9 +154,26 @@ Todas las etapas se hicieron el 1 de noviembre de 2026.
 
 ---
 
+## Etapa 8: Perfil de amigos y foto (en prueba)
+
+**Objetivo:** la parte divertida de tener amigos en la app: compararse. Es una de las funciones diferenciales del documento de producto.
+
+**Qué se hizo**
+- Lista **"Tus amigos"** en la pestaña Amigos. Tocando un amigo, o un partido suyo en el feed, se abre su perfil.
+- **Su tarjeta:** inicial, usuario, cuántos partidos tienen en común y sus números (partidos, % victorias, goles y mejor racha). La misma tarjeta se usa en tu propio Perfil.
+- **Mano a mano:** los partidos que **los dos confirmaron**, separados en **en contra** (cuántos ganaste vos, cuántos él y empates) y **juntos** (% de victorias en el mismo equipo).
+- **Comparación** lado a lado, con el mejor número de cada fila resaltado.
+- **Sus últimos 5 partidos.**
+- **Eliminar amigo**, con confirmación.
+- **Foto de perfil:** en tu Perfil tocás tu círculo y elegís una foto de la galería, recortada en cuadrado. La app la achica a 512×512 antes de subirla y la guarda en **Supabase Storage**, en una carpeta por usuario: cada uno solo puede cambiar la suya. Se ve en tu perfil, en el de tus amigos y en la pestaña Amigos. Sin foto, se muestra la inicial.
+
+**Cómo se probó:** pruebas automáticas del mano a mano (incluido que un partido que el amigo no confirmó no cuenta) y revisión de las pantallas en el navegador con datos de ejemplo, con y sin foto.
+
+---
+
 ## Próximas etapas
 
-**Etapa 8: Publicación** (necesita la cuenta de desarrollador de Apple, USD 99 por año)
+**Etapa 9: Publicación** (necesita la cuenta de desarrollador de Apple, USD 99 por año)
 - Ícono y pantalla de carga de Doparti.
 - Compilar la app con **EAS** (el servicio de Expo que compila en la nube).
 - Login nativo de Google y **"Continuar con Apple"**.
@@ -165,7 +183,6 @@ Todas las etapas se hicieron el 1 de noviembre de 2026.
 **Ideas del documento de producto para después**
 - **Invitados sin cuenta:** sumar a un partido a alguien que no tiene la app, que después reclama su historial.
 - **Disputas y correcciones**, con historial de cambios.
-- **Perfil de un amigo** con sus estadísticas, comparación entre dos amigos y "partidos en común".
 - **Privacidad:** elegir quién ve tu perfil.
 - **Asistencias** opcionales.
 - **Tarjetas para compartir** en WhatsApp e Instagram.
@@ -186,9 +203,9 @@ Todas las etapas se hicieron el 1 de noviembre de 2026.
 **Archivos clave**
 - `App.js`: navegación entre pantallas y carga de datos.
 - `src/api.js`: todo lo que habla con Supabase.
-- `src/matches.js` y `src/stats.js`: cálculos (resultado de cada jugador, estadísticas y récords).
+- `src/matches.js`, `src/stats.js` y `src/compare.js`: cálculos (resultado de cada jugador, estadísticas, récords y mano a mano).
 - `src/reminders.js`: qué recordatorios programar.
-- `supabase/*.sql`: la base de datos. Se corren en orden: `schema.sql` → `friends.sql` → `shared-matches.sql` → `match-validation.sql`.
+- `supabase/*.sql`: la base de datos. Se corren en orden: `schema.sql` → `friends.sql` → `shared-matches.sql` → `match-validation.sql` → `avatars.sql`.
 - `docs/`: guías de configuración de Supabase y Google, y este documento.
 
 **Para correr la app en desarrollo**
