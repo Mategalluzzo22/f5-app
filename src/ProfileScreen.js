@@ -11,6 +11,7 @@ import { todayISO } from './dates';
 import { FONTS } from './fonts';
 import { GOAL_STEP, goalsForYear } from './goals';
 import { pickSquarePhoto } from './photo';
+import { TEAM_COLORS } from './teamColors';
 import { loadFunnyReminders, loadYearGoals, saveFunnyReminders, saveYearGoals } from './settings';
 import { useColors, useStyles, useTheme } from './theme';
 
@@ -30,7 +31,7 @@ export default function ProfileScreen({
 }) {
   const styles = useStyles(makeStyles);
   const colors = useColors();
-  const { mode, setMode } = useTheme();
+  const { mode, setMode, teamColor, setTeamColor } = useTheme();
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
   // null until the saved preference is loaded.
@@ -102,7 +103,7 @@ export default function ProfileScreen({
               value={funnyReminders ?? true}
               onValueChange={toggleFunnyReminders}
               disabled={funnyReminders === null}
-              trackColor={{ true: colors.win, false: colors.border }}
+              trackColor={{ true: colors.bright, false: colors.border }}
             />
           </View>
           {funnyReminders === false ? (
@@ -135,6 +136,29 @@ export default function ProfileScreen({
           {mode === 'auto' ? (
             <Text style={styles.modeHelp}>Automático usa el mismo modo que tu celular.</Text>
           ) : null}
+
+          <View style={[styles.titleRow, styles.teamTitle]}>
+            <Text style={styles.settingLabel}>Color de tu equipo</Text>
+            <ProBadge />
+          </View>
+          <View style={styles.teamRow}>
+            {TEAM_COLORS.map((team) => {
+              const selected = teamColor === team.id;
+              return (
+                <PressableScale
+                  key={team.id}
+                  style={[styles.teamSwatch, { backgroundColor: team.color }, selected && styles.teamSelected]}
+                  onPress={() => {
+                    Haptics.selectionAsync();
+                    setTeamColor(team.id);
+                  }}
+                  accessibilityLabel={team.name}
+                >
+                  {selected ? <Ionicons name="checkmark" size={20} color="#ffffff" /> : null}
+                </PressableScale>
+              );
+            })}
+          </View>
         </View>
 
         <PressableScale style={styles.signOutButton} onPress={onSignOut}>
@@ -279,6 +303,10 @@ const makeStyles = (c) => StyleSheet.create({
   modeText: { fontSize: 14, fontWeight: '700', color: c.textSoft },
   modeTextSelected: { color: c.onPrimary },
   modeHelp: { fontSize: 13, color: c.muted, marginTop: 10 },
+  teamTitle: { marginTop: 18, marginBottom: 10 },
+  teamRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  teamSwatch: { width: 34, height: 34, borderRadius: 17, alignItems: 'center', justifyContent: 'center' },
+  teamSelected: { borderWidth: 3, borderColor: c.text },
   signOutButton: {
     flexDirection: 'row',
     alignItems: 'center',

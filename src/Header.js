@@ -4,13 +4,15 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import PitchBackground from './PitchBackground';
 import PressableScale from './PressableScale';
 import { FONTS } from './fonts';
+import { useColors } from './theme';
 
 // Green band at the top of the screens, drawn like a football pitch.
 // Cards below it overlap it a bit.
 export default function Header({ title, subtitle, onBack }) {
   const insets = useSafeAreaInsets();
+  const colors = useColors();
   return (
-    <View style={[styles.header, { paddingTop: insets.top + 16 }]}>
+    <View style={[styles.header, { paddingTop: insets.top + 16, backgroundColor: colors.header }]}>
       <PitchBackground />
 
       {onBack ? (
@@ -27,7 +29,6 @@ export default function Header({ title, subtitle, onBack }) {
 
 const styles = StyleSheet.create({
   header: {
-    backgroundColor: '#1f7a4d',
     paddingHorizontal: 20,
     paddingBottom: 52,
     overflow: 'hidden',

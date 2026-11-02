@@ -39,3 +39,14 @@ export async function loadYearGoals() {
 export async function saveYearGoals(yearGoals) {
   await AsyncStorage.setItem(YEAR_GOALS_KEY, JSON.stringify(yearGoals));
 }
+
+const TEAM_COLOR_KEY = 'settings.teamColor';
+
+// The id of a color in teamColors.js; Doparti green by default.
+export async function loadTeamColor() {
+  return (await AsyncStorage.getItem(TEAM_COLOR_KEY)) ?? 'green';
+}
+
+export async function saveTeamColor(id) {
+  await AsyncStorage.setItem(TEAM_COLOR_KEY, id);
+}
