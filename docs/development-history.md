@@ -30,7 +30,7 @@ Repositorio: https://github.com/Mategalluzzo22/f5-app
 | 15. Datos sobre vos (Pro) | Frases sobre cómo jugás, armadas con tus partidos | ✅ | #20 |
 | 16. Metas personales (Pro) | Metas de goles y partidos del año, con barra de progreso | ✅ | #21 |
 | 17. Color de tu equipo (Pro) | Elegir el color principal de la app | ✅ | #22 |
-| 18. Tu ficha de jugador | Posición, pie hábil, número y equipo favorito, visible para amigos | 🔄 En prueba | rama `feature/player-card` |
+| 18. Tu ficha de jugador | Posición, pie hábil, número y equipo favorito, visible para amigos | ✅ | #23 |
 | 19. Publicación | App en TestFlight y en las tiendas | ⏳ Pendiente | — |
 
 Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026, de la 10 a la 17 el 2 de noviembre y la 18 el 3 de noviembre.
@@ -329,7 +329,7 @@ Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026, de la 10 a la 17 el 2 de
 
 ---
 
-## Etapa 18: Tu ficha de jugador (en prueba)
+## Etapa 18: Tu ficha de jugador
 
 **Objetivo:** que tu perfil diga cómo jugás y que tus amigos lo vean. Última de las cinco etapas de gráficos y personalización, y la única **gratis**: es social y ayuda a que la app crezca.
 
