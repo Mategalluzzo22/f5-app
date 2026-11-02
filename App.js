@@ -84,7 +84,7 @@ export default function App() {
     ]);
     setMatches(mine);
     setPending(waiting);
-    rescheduleReminders(mine);
+    rescheduleReminders(mine, waiting);
   }
 
   // If saving fails this throws, and MatchForm shows the error.
@@ -226,6 +226,7 @@ export default function App() {
             email={session.user.email}
             stats={computeStats(matches)}
             onAvatarChange={(url) => setProfile({ ...profile, avatar_url: url })}
+            onRemindersChange={() => rescheduleReminders(matches, pending)}
             onSignOut={handleSignOut}
           />
         ) : (

@@ -38,6 +38,15 @@ export function maxGoals(match) {
   return match.scoreFor === null ? Infinity : match.scoreFor;
 }
 
+// Shown when someone tries to put more goals than their team scored.
+export function goalsLimitText(teamGoals) {
+  const teamPart =
+    teamGoals === 0
+      ? 'Tu equipo no hizo goles, no podés tener ninguno.'
+      : `Tu equipo hizo ${teamGoals} ${teamGoals === 1 ? 'gol' : 'goles'}, no podés tener más.`;
+  return `${teamPart} ¿Te ganó el deseo? 😅`;
+}
+
 export function goalsText(goals) {
   if (goals === null) return 'goles sin dato';
   return `${goals} ${goals === 1 ? 'gol' : 'goles'}`;

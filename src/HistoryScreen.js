@@ -6,7 +6,7 @@ import Header from './Header';
 import PressableScale from './PressableScale';
 import { isoToDisplay } from './dates';
 import { FONTS } from './fonts';
-import { goalsText, maxGoals, scoreText } from './matches';
+import { goalsLimitText, goalsText, maxGoals, scoreText } from './matches';
 import { RESULTS } from './results';
 
 export default function HistoryScreen({ matches, pending, onSelect, onConfirm, onLeave }) {
@@ -95,7 +95,7 @@ function PendingCard({ match, onConfirm, onLeave }) {
   function changeGoals(value) {
     if (value > limit) {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
-      setHint(`Tu equipo hizo ${limit} ${limit === 1 ? 'gol' : 'goles'}: no podés haber hecho más.`);
+      setHint(goalsLimitText(limit));
       return;
     }
     Haptics.selectionAsync();
