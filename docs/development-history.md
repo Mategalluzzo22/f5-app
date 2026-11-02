@@ -32,7 +32,7 @@ Repositorio: https://github.com/Mategalluzzo22/f5-app
 | 17. Color de tu equipo (Pro) | Elegir el color principal de la app | ✅ | #22 |
 | 18. Tu ficha de jugador | Posición, pie hábil, número y equipo favorito, visible para amigos | ✅ | #23 |
 | 19. Spoiler en el login | Carrusel animado con pantallas reales de la app antes de entrar | ✅ | #24 |
-| 20. Datos sobre vos, versión 2 | Frases con humor, cuatro datos nuevos y de a 3 por vez | 🔄 En prueba | rama `feature/funnier-facts` |
+| 20. Datos sobre vos, versión 2 | Frases con humor, cuatro datos nuevos y de a 3 por vez | ✅ | #25 |
 | 21. Publicación | App en TestFlight y en las tiendas | ⏳ Pendiente | — |
 
 Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026, de la 10 a la 17 el 2 de noviembre y de la 18 a la 20 el 3 de noviembre.
@@ -362,7 +362,7 @@ Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026, de la 10 a la 17 el 2 de
 
 ---
 
-## Etapa 20: Datos sobre vos, versión 2 (en prueba)
+## Etapa 20: Datos sobre vos, versión 2
 
 **Objetivo:** el fundador quiso revisar las frases de la etapa 15: que tengan más humor, que haya más y que no aparezcan todas juntas.
 
