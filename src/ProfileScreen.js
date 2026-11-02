@@ -80,7 +80,7 @@ export default function ProfileScreen({
             <View style={styles.settingInfo}>
               <Text style={styles.settingLabel}>Mantenerte conectado a la app</Text>
               <Text style={styles.settingHelp}>
-                Envía notificaciones para hacerte acordar de anotar los partidos.
+                Te avisamos si un amigo te suma a un partido y te hacemos acordar de anotar tus partidos.
               </Text>
             </View>
             <Switch
@@ -90,11 +90,11 @@ export default function ProfileScreen({
               trackColor={{ true: '#1f9d55', false: '#d0d4da' }}
             />
           </View>
-          <Text style={styles.settingNote}>
-            {funnyReminders === false
-              ? 'Apagado: solo te avisamos cuando un amigo te suma a un partido.'
-              : 'Siempre te avisamos cuando un amigo te suma a un partido.'}
-          </Text>
+          {funnyReminders === false ? (
+            <Text style={styles.settingNote}>
+              Apagado: solo te avisamos cuando un amigo te suma a un partido.
+            </Text>
+          ) : null}
         </View>
 
         <PressableScale style={styles.signOutButton} onPress={onSignOut}>
