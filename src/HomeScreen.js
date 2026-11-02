@@ -68,6 +68,7 @@ function FormCard({ matches }) {
 
 const PRO_SCREENS = [
   ['monthly', 'calendar-number', 'Tu mes a mes', 'Tus mejores meses y un calendario de tus partidos'],
+  ['charts', 'stats-chart', 'Tus gráficos', 'Tu evolución en la cancha'],
   ['groups', 'people', 'Tus grupos', 'Cómo te va con cada grupo'],
   ['year', 'sparkles', 'Tu año en Doparti', 'El resumen de tu año futbolero'],
 ];
