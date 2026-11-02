@@ -3,12 +3,15 @@ import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import Header from './Header';
 import PressableScale from './PressableScale';
 import { createProfile } from './api';
+import { useInputProps, useStyles } from './theme';
 
 // Same rule as the database check in supabase/schema.sql.
 const USERNAME_PATTERN = /^[a-z0-9_]{3,20}$/;
 const UNIQUE_VIOLATION = '23505';
 
 export default function UsernameScreen({ userId, onCreated }) {
+  const styles = useStyles(makeStyles);
+  const inputProps = useInputProps();
   const [username, setUsername] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -43,6 +46,7 @@ export default function UsernameScreen({ userId, onCreated }) {
             value={username}
             onChangeText={(text) => setUsername(text.toLowerCase().replace(/\s/g, ''))}
             placeholder="tu_usuario"
+            {...inputProps}
             autoCapitalize="none"
             autoCorrect={false}
             maxLength={20}
@@ -63,13 +67,13 @@ export default function UsernameScreen({ userId, onCreated }) {
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (c) => StyleSheet.create({
   screen: { flex: 1 },
   card: {
     marginTop: -32,
     marginHorizontal: 20,
     padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: c.card,
     borderRadius: 16,
     shadowColor: '#000',
     shadowOpacity: 0.06,
@@ -77,25 +81,25 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     elevation: 2,
   },
-  label: { fontSize: 15, fontWeight: '600', color: '#444', marginBottom: 8 },
+  label: { fontSize: 15, fontWeight: '600', color: c.textSoft, marginBottom: 8 },
   inputRow: {
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#d0d4da',
+    borderColor: c.border,
     borderRadius: 10,
     paddingHorizontal: 12,
   },
-  at: { fontSize: 18, color: '#1f7a4d', fontWeight: '700', marginRight: 4 },
-  input: { flex: 1, paddingVertical: 12, fontSize: 16 },
-  error: { color: '#d64545', marginTop: 14, fontSize: 15 },
+  at: { fontSize: 18, color: c.accent, fontWeight: '700', marginRight: 4 },
+  input: { flex: 1, paddingVertical: 12, fontSize: 16, color: c.text },
+  error: { color: c.danger, marginTop: 14, fontSize: 15 },
   button: {
-    backgroundColor: '#1f7a4d',
+    backgroundColor: c.primary,
     borderRadius: 12,
     paddingVertical: 16,
     alignItems: 'center',
     marginTop: 20,
   },
   buttonDisabled: { opacity: 0.6 },
-  buttonText: { color: '#fff', fontSize: 17, fontWeight: '700' },
+  buttonText: { color: c.onPrimary, fontSize: 17, fontWeight: '700' },
 });

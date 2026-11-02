@@ -3,9 +3,11 @@ import * as Haptics from 'expo-haptics';
 import { StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import PressableScale from './PressableScale';
+import { useColors, useStyles } from './theme';
 
 // Tab bar with a raised round "+" button in the middle (like Mercado Pago's QR button).
 export default function BottomBar({ current, onNavigate, onAdd }) {
+  const styles = useStyles(makeStyles);
   const insets = useSafeAreaInsets();
 
   function handleAdd() {
@@ -46,7 +48,9 @@ export default function BottomBar({ current, onNavigate, onAdd }) {
 }
 
 function Tab({ icon, label, active, onPress }) {
-  const color = active ? '#1f7a4d' : '#8a8f98';
+  const styles = useStyles(makeStyles);
+  const colors = useColors();
+  const color = active ? colors.accent : colors.faint;
   return (
     <PressableScale style={styles.tab} onPress={onPress}>
       <Ionicons name={active ? icon : `${icon}-outline`} size={26} color={color} />
@@ -55,13 +59,13 @@ function Tab({ icon, label, active, onPress }) {
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (c) => StyleSheet.create({
   bar: {
     flexDirection: 'row',
-    backgroundColor: '#fff',
+    backgroundColor: c.card,
     paddingTop: 8,
     borderTopWidth: 1,
-    borderTopColor: '#e6e8eb',
+    borderTopColor: c.divider,
   },
   tab: { flex: 1, alignItems: 'center', justifyContent: 'center' },
   tabLabel: { fontSize: 12, fontWeight: '600', marginTop: 2 },
@@ -72,7 +76,7 @@ const styles = StyleSheet.create({
     width: 76,
     height: 76,
     borderRadius: 38,
-    backgroundColor: '#d4eedf',
+    backgroundColor: c.tintStrong,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -80,7 +84,7 @@ const styles = StyleSheet.create({
     width: 62,
     height: 62,
     borderRadius: 31,
-    backgroundColor: '#1f9d55',
+    backgroundColor: c.win,
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: '#1f7a4d',

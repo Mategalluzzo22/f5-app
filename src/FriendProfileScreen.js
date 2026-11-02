@@ -11,6 +11,7 @@ import { FONTS } from './fonts';
 import { goalsText, scoreText } from './matches';
 import { RESULTS } from './results';
 import { computeStats } from './stats';
+import { useColors, useStyles } from './theme';
 
 const RECENT_MATCHES = 5;
 
@@ -38,6 +39,8 @@ export default function FriendProfileScreen({ friend, myMatches, onBack, onRemov
 }
 
 export function FriendProfileView({ friend, myMatches, friendMatches, error, onBack, onRemove }) {
+  const styles = useStyles(makeStyles);
+  const colors = useColors();
   // Removing a friend asks for confirmation first.
   const [confirmingRemove, setConfirmingRemove] = useState(false);
 
@@ -47,7 +50,7 @@ export function FriendProfileView({ friend, myMatches, friendMatches, error, onB
   } else if (friendMatches === null) {
     content = (
       <View style={[styles.card, styles.loading]}>
-        <ActivityIndicator size="large" color="#1f7a4d" />
+        <ActivityIndicator size="large" color={colors.accent} />
       </View>
     );
   } else {
@@ -97,7 +100,7 @@ export function FriendProfileView({ friend, myMatches, friendMatches, error, onB
           </View>
         ) : (
           <PressableScale style={styles.removeButton} onPress={() => setConfirmingRemove(true)}>
-            <Ionicons name="person-remove-outline" size={20} color="#d64545" />
+            <Ionicons name="person-remove-outline" size={20} color={colors.danger} />
             <Text style={styles.removeText}>Eliminar amigo</Text>
           </PressableScale>
         )}
@@ -108,6 +111,7 @@ export function FriendProfileView({ friend, myMatches, friendMatches, error, onB
 
 // Matches you both confirmed: against each other, and on the same team.
 function HeadToHeadCard({ h2h, username }) {
+  const styles = useStyles(makeStyles);
   const { against, together } = h2h;
   return (
     <View style={styles.card}>
@@ -164,6 +168,7 @@ function HeadToHeadCard({ h2h, username }) {
 }
 
 function VersusNumber({ value, label, color }) {
+  const styles = useStyles(makeStyles);
   return (
     <View style={styles.versusItem}>
       <Text style={[styles.versusValue, { color }]}>{value}</Text>
@@ -176,6 +181,7 @@ function VersusNumber({ value, label, color }) {
 
 // Your numbers next to your friend's, with the better one highlighted.
 function CompareCard({ mine, theirs, username }) {
+  const styles = useStyles(makeStyles);
   const asNumber = (value) => (value === '–' ? -1 : Number(value));
   const rows = [
     ['Partidos', mine.played, theirs.played],
@@ -214,6 +220,7 @@ function CompareCard({ mine, theirs, username }) {
 }
 
 function RecentCard({ matches, username }) {
+  const styles = useStyles(makeStyles);
   const recent = [...matches].sort((a, b) => b.date.localeCompare(a.date)).slice(0, RECENT_MATCHES);
   return (
     <View style={styles.card}>
@@ -245,11 +252,11 @@ function RecentCard({ matches, username }) {
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (c) => StyleSheet.create({
   screen: { flex: 1 },
   cards: { marginTop: -32, paddingHorizontal: 20, paddingBottom: 32, gap: 14 },
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: c.card,
     borderRadius: 18,
     padding: 20,
     shadowColor: '#000',
@@ -259,14 +266,14 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   loading: { paddingVertical: 48, alignItems: 'center' },
-  error: { color: '#d64545', fontSize: 15, textAlign: 'center', marginTop: 48 },
-  cardTitle: { fontSize: 24, fontFamily: FONTS.bold, marginBottom: 6 },
-  muted: { color: '#666', fontSize: 15, marginTop: 4 },
-  sectionLabel: { fontSize: 14, fontWeight: '700', color: '#666', marginTop: 12, marginBottom: 8 },
+  error: { color: c.danger, fontSize: 15, textAlign: 'center', marginTop: 48 },
+  cardTitle: { fontSize: 24, fontFamily: FONTS.bold, marginBottom: 6, color: c.text },
+  muted: { color: c.muted, fontSize: 15, marginTop: 4 },
+  sectionLabel: { fontSize: 14, fontWeight: '700', color: c.muted, marginTop: 12, marginBottom: 8 },
   versusRow: { flexDirection: 'row' },
   versusItem: { flex: 1, alignItems: 'center' },
-  versusValue: { fontSize: 48, fontFamily: FONTS.extraBold, lineHeight: 52 },
-  versusLabel: { fontSize: 14, color: '#444', fontWeight: '600', maxWidth: '90%' },
+  versusValue: { fontSize: 48, fontFamily: FONTS.extraBold, lineHeight: 52, color: c.text },
+  versusLabel: { fontSize: 14, color: c.textSoft, fontWeight: '600', maxWidth: '90%' },
   bar: {
     flexDirection: 'row',
     height: 10,
@@ -276,28 +283,28 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   togetherRow: { flexDirection: 'row', alignItems: 'center', gap: 14 },
-  togetherRate: { fontSize: 48, fontFamily: FONTS.extraBold, color: '#1f7a4d', lineHeight: 52 },
-  togetherText: { flex: 1, fontSize: 15, color: '#444', lineHeight: 21 },
+  togetherRate: { fontSize: 48, fontFamily: FONTS.extraBold, color: c.accent, lineHeight: 52 },
+  togetherText: { flex: 1, fontSize: 15, color: c.textSoft, lineHeight: 21 },
   compareHeader: { flexDirection: 'row', alignItems: 'center', marginTop: 4, marginBottom: 4 },
-  compareName: { flex: 1, fontSize: 15, fontWeight: '700', color: '#1f7a4d' },
+  compareName: { flex: 1, fontSize: 15, fontWeight: '700', color: c.accent },
   compareRow: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 9,
     borderTopWidth: 1,
-    borderTopColor: '#eef0f2',
+    borderTopColor: c.divider,
   },
   compareLeft: { textAlign: 'left' },
   compareRight: { textAlign: 'right' },
-  compareValue: { flex: 1, fontSize: 24, fontFamily: FONTS.bold, color: '#8a8f98' },
-  winner: { color: '#1f7a4d', fontFamily: FONTS.extraBold },
-  compareLabel: { flex: 1.3, fontSize: 14, color: '#444', textAlign: 'center' },
+  compareValue: { flex: 1, fontSize: 24, fontFamily: FONTS.bold, color: c.faint },
+  winner: { color: c.accent, fontFamily: FONTS.extraBold },
+  compareLabel: { flex: 1.3, fontSize: 14, color: c.textSoft, textAlign: 'center' },
   matchRow: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 10,
     borderTopWidth: 1,
-    borderTopColor: '#eef0f2',
+    borderTopColor: c.divider,
   },
   badge: {
     width: 38,
@@ -307,11 +314,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginRight: 12,
   },
-  badgeText: { color: '#fff', fontFamily: FONTS.extraBold, fontSize: 20 },
+  badgeText: { color: c.onPrimary, fontFamily: FONTS.extraBold, fontSize: 20 },
   matchInfo: { flex: 1, marginRight: 8 },
-  matchTitle: { fontSize: 16, fontWeight: '700' },
-  matchDetails: { fontSize: 13, color: '#666', marginTop: 2 },
-  matchGoals: { fontSize: 14, fontWeight: '700', color: '#1f7a4d' },
+  matchTitle: { fontSize: 16, fontWeight: '700', color: c.text },
+  matchDetails: { fontSize: 13, color: c.muted, marginTop: 2 },
+  matchGoals: { fontSize: 14, fontWeight: '700', color: c.accent },
   removeButton: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -320,26 +327,26 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     borderRadius: 12,
     borderWidth: 1.5,
-    borderColor: '#d64545',
-    backgroundColor: '#fff',
+    borderColor: c.danger,
+    backgroundColor: c.card,
   },
-  removeText: { color: '#d64545', fontSize: 16, fontWeight: '700' },
-  confirmText: { fontSize: 16, fontWeight: '600', textAlign: 'center' },
+  removeText: { color: c.danger, fontSize: 16, fontWeight: '700' },
+  confirmText: { fontSize: 16, fontWeight: '600', textAlign: 'center', color: c.text },
   confirmButtons: { flexDirection: 'row', gap: 10, marginTop: 16 },
   cancelButton: {
     flex: 1,
     paddingVertical: 13,
     borderRadius: 12,
-    backgroundColor: '#eef0f2',
+    backgroundColor: c.neutral,
     alignItems: 'center',
   },
-  cancelText: { fontSize: 16, fontWeight: '600', color: '#333' },
+  cancelText: { fontSize: 16, fontWeight: '600', color: c.textSoft },
   removeConfirmButton: {
     flex: 1,
     paddingVertical: 13,
     borderRadius: 12,
-    backgroundColor: '#d64545',
+    backgroundColor: c.danger,
     alignItems: 'center',
   },
-  removeConfirmText: { fontSize: 16, fontWeight: '700', color: '#fff' },
+  removeConfirmText: { fontSize: 16, fontWeight: '700', color: c.onPrimary },
 });

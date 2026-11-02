@@ -9,11 +9,15 @@ import { dateToISO, isoToDisplay, todayISO } from './dates';
 import { FONTS } from './fonts';
 import { goalsLimitText } from './matches';
 import { RESULTS } from './results';
+import { useColors, useInputProps, useStyles } from './theme';
 
 const MAX_SUGGESTIONS = 6;
 const FORMATS = [5, 7, 8, 11];
 
 export default function MatchForm({ myId, groups, onSave, onCancel }) {
+  const styles = useStyles(makeStyles);
+  const colors = useColors();
+  const inputProps = useInputProps();
   const [date, setDate] = useState(new Date());
   const [format, setFormat] = useState(5);
   const [group, setGroup] = useState('');
@@ -116,7 +120,7 @@ export default function MatchForm({ myId, groups, onSave, onCancel }) {
             maximumDate={new Date()}
             onChange={handleDateChange}
             locale="es-AR"
-            themeVariant="light"
+            themeVariant={colors.dark ? 'dark' : 'light'}
             style={styles.datePicker}
           />
         ) : (
@@ -201,6 +205,7 @@ export default function MatchForm({ myId, groups, onSave, onCancel }) {
           value={group}
           onChangeText={setGroup}
           placeholder="Ej: Los del martes"
+          {...inputProps}
           maxLength={60}
         />
         {suggestions.length > 0 && (
@@ -264,6 +269,7 @@ export default function MatchForm({ myId, groups, onSave, onCancel }) {
 
 // Number picker with − and +. Going past `max` doesn't change the value; it calls onLimit.
 function Stepper({ value, onChange, max = Infinity, onLimit, disabled = false }) {
+  const styles = useStyles(makeStyles);
   function change(newValue) {
     if (newValue > max) {
       onLimit?.();
@@ -286,6 +292,7 @@ function Stepper({ value, onChange, max = Infinity, onLimit, disabled = false })
 }
 
 function ScoreStepper({ label, value, onChange }) {
+  const styles = useStyles(makeStyles);
   return (
     <View style={styles.scoreSide}>
       <Text style={styles.scoreLabel}>{label}</Text>
@@ -294,14 +301,14 @@ function ScoreStepper({ label, value, onChange }) {
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (c) => StyleSheet.create({
   screen: { flex: 1 },
   card: {
     marginTop: -32,
     marginHorizontal: 20,
     marginBottom: 40,
     padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: c.card,
     borderRadius: 16,
     shadowColor: '#000',
     shadowOpacity: 0.06,
@@ -309,35 +316,36 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     elevation: 2,
   },
-  label: { fontSize: 15, fontWeight: '600', color: '#444', marginTop: 20, marginBottom: 8 },
+  label: { fontSize: 15, fontWeight: '600', color: c.textSoft, marginTop: 20, marginBottom: 8 },
   firstLabel: { marginTop: 0 },
-  optional: { fontWeight: '400', color: '#8a8f98' },
+  optional: { fontWeight: '400', color: c.faint },
   input: {
     borderWidth: 1,
-    borderColor: '#d0d4da',
+    borderColor: c.border,
     borderRadius: 10,
     padding: 12,
     fontSize: 16,
-    backgroundColor: '#fff',
+    backgroundColor: c.card,
+    color: c.text,
   },
   datePicker: { alignSelf: 'flex-start' },
-  dateText: { fontSize: 16 },
+  dateText: { fontSize: 16, color: c.text },
   row: { flexDirection: 'row', gap: 8 },
   option: {
     flex: 1,
     borderWidth: 2,
-    borderColor: '#d0d4da',
+    borderColor: c.border,
     borderRadius: 10,
     paddingVertical: 10,
     alignItems: 'center',
   },
-  optionSelected: { backgroundColor: '#1f7a4d', borderColor: '#1f7a4d' },
-  optionText: { fontSize: 15, fontWeight: '700', color: '#444' },
-  optionTextSelected: { color: '#fff' },
+  optionSelected: { backgroundColor: c.primary, borderColor: c.primary },
+  optionText: { fontSize: 15, fontWeight: '700', color: c.textSoft },
+  optionTextSelected: { color: c.onPrimary },
   scoreRow: { flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between' },
   scoreSide: { alignItems: 'center' },
-  scoreLabel: { fontSize: 13, color: '#666', marginBottom: 6 },
-  scoreDash: { fontSize: 32, fontFamily: FONTS.extraBold, color: '#8a8f98', marginBottom: 6 },
+  scoreLabel: { fontSize: 13, color: c.muted, marginBottom: 6 },
+  scoreDash: { fontSize: 32, fontFamily: FONTS.extraBold, color: c.faint, marginBottom: 6 },
   goalsRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   stepper: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   disabled: { opacity: 0.4 },
@@ -345,45 +353,45 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#e8f3ec',
+    backgroundColor: c.tint,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  stepText: { fontSize: 22, color: '#1f7a4d', fontWeight: '600' },
-  stepValue: { fontSize: 40, fontFamily: FONTS.extraBold, minWidth: 36, textAlign: 'center' },
+  stepText: { fontSize: 22, color: c.accent, fontWeight: '600' },
+  stepValue: { fontSize: 40, fontFamily: FONTS.extraBold, minWidth: 36, textAlign: 'center', color: c.text },
   unknownChip: {
     borderWidth: 2,
-    borderColor: '#d0d4da',
+    borderColor: c.border,
     borderRadius: 16,
     paddingVertical: 7,
     paddingHorizontal: 14,
   },
-  unknownText: { fontSize: 14, fontWeight: '700', color: '#444' },
+  unknownText: { fontSize: 14, fontWeight: '700', color: c.textSoft },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 10 },
-  chip: { backgroundColor: '#e8f3ec', borderRadius: 16, paddingVertical: 7, paddingHorizontal: 14 },
-  chipText: { color: '#1f7a4d', fontSize: 14, fontWeight: '600' },
-  muted: { color: '#666', fontSize: 14, marginBottom: 4 },
+  chip: { backgroundColor: c.tint, borderRadius: 16, paddingVertical: 7, paddingHorizontal: 14 },
+  chipText: { color: c.accent, fontSize: 14, fontWeight: '600' },
+  muted: { color: c.muted, fontSize: 14, marginBottom: 4 },
   friendRow: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingVertical: 8 },
-  friendName: { flex: 1, fontSize: 15, fontWeight: '600' },
+  friendName: { flex: 1, fontSize: 15, fontWeight: '600', color: c.text },
   teamChip: {
     borderWidth: 2,
-    borderColor: '#d0d4da',
+    borderColor: c.border,
     borderRadius: 14,
     paddingVertical: 5,
     paddingHorizontal: 10,
   },
-  teamChipText: { fontSize: 13, fontWeight: '700', color: '#444' },
+  teamChipText: { fontSize: 13, fontWeight: '700', color: c.textSoft },
   linkButton: { alignSelf: 'center', paddingVertical: 10, paddingHorizontal: 12, marginTop: 4 },
-  linkText: { color: '#1f7a4d', fontSize: 15, fontWeight: '700' },
-  hint: { color: '#b7791f', fontSize: 14, marginTop: 8 },
-  error: { color: '#d64545', marginTop: 16, fontSize: 15 },
+  linkText: { color: c.accent, fontSize: 15, fontWeight: '700' },
+  hint: { color: c.warning, fontSize: 14, marginTop: 8 },
+  error: { color: c.danger, marginTop: 16, fontSize: 15 },
   saveButton: {
-    backgroundColor: '#1f7a4d',
+    backgroundColor: c.primary,
     borderRadius: 12,
     paddingVertical: 16,
     alignItems: 'center',
     marginTop: 28,
   },
   saveButtonDisabled: { opacity: 0.6 },
-  saveText: { color: '#fff', fontSize: 17, fontWeight: '700' },
+  saveText: { color: c.onPrimary, fontSize: 17, fontWeight: '700' },
 });

@@ -30,8 +30,20 @@ import { recentGroups } from './src/groups';
 import { requestNotificationPermission, rescheduleReminders } from './src/notifications';
 import { bestGoalsMatch, computeStats } from './src/stats';
 import { supabase } from './src/supabase';
+import { ThemeProvider, useColors, useStyles } from './src/theme';
 
 export default function App() {
+  return (
+    <SafeAreaProvider>
+      <ThemeProvider>
+        <Main />
+      </ThemeProvider>
+    </SafeAreaProvider>
+  );
+}
+
+function Main() {
+  const styles = useStyles(makeStyles);
   const [fontsLoaded] = useFonts(FONT_FILES);
   // undefined = still checking; null = logged out / no profile yet.
   const [session, setSession] = useState(undefined);
@@ -238,22 +250,25 @@ export default function App() {
   }
 
   return (
-    <SafeAreaProvider>
+    <>
       <View style={styles.container}>{content}</View>
       <StatusBar style="light" />
-    </SafeAreaProvider>
+    </>
   );
 }
 
 function Loading() {
+  const styles = useStyles(makeStyles);
+  const colors = useColors();
   return (
     <View style={styles.center}>
-      <ActivityIndicator size="large" color="#1f7a4d" />
+      <ActivityIndicator size="large" color={colors.accent} />
     </View>
   );
 }
 
 function LoadError({ onRetry }) {
+  const styles = useStyles(makeStyles);
   return (
     <View style={styles.center}>
       <Text style={styles.errorTitle}>No pudimos cargar tus partidos</Text>
@@ -265,17 +280,17 @@ function LoadError({ onRetry }) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f4f6f8' },
+const makeStyles = (c) => StyleSheet.create({
+  container: { flex: 1, backgroundColor: c.background },
   center: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 },
-  errorTitle: { fontSize: 18, fontWeight: '700', textAlign: 'center' },
-  errorText: { fontSize: 15, color: '#666', marginTop: 6, textAlign: 'center' },
+  errorTitle: { fontSize: 18, fontWeight: '700', textAlign: 'center', color: c.text },
+  errorText: { fontSize: 15, color: c.muted, marginTop: 6, textAlign: 'center' },
   retryButton: {
-    backgroundColor: '#1f7a4d',
+    backgroundColor: c.primary,
     borderRadius: 12,
     paddingVertical: 14,
     paddingHorizontal: 32,
     marginTop: 20,
   },
-  retryText: { color: '#fff', fontSize: 16, fontWeight: '700' },
+  retryText: { color: c.onPrimary, fontSize: 16, fontWeight: '700' },
 });

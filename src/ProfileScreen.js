@@ -9,6 +9,13 @@ import { uploadAvatar } from './api';
 import { FONTS } from './fonts';
 import { pickSquarePhoto } from './photo';
 import { loadFunnyReminders, saveFunnyReminders } from './settings';
+import { useColors, useStyles, useTheme } from './theme';
+
+const THEME_MODES = [
+  ['auto', 'Automático', 'phone-portrait-outline'],
+  ['light', 'Claro', 'sunny-outline'],
+  ['dark', 'Oscuro', 'moon-outline'],
+];
 
 export default function ProfileScreen({
   profile,
@@ -18,6 +25,9 @@ export default function ProfileScreen({
   onRemindersChange,
   onSignOut,
 }) {
+  const styles = useStyles(makeStyles);
+  const colors = useColors();
+  const { mode, setMode } = useTheme();
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
   // null until the saved preference is loaded.
@@ -75,7 +85,7 @@ export default function ProfileScreen({
           <Text style={styles.cardTitle}>Notificaciones</Text>
           <View style={styles.settingRow}>
             <View style={styles.settingIcon}>
-              <Ionicons name="happy-outline" size={22} color="#1f7a4d" />
+              <Ionicons name="happy-outline" size={22} color={colors.accent} />
             </View>
             <View style={styles.settingInfo}>
               <Text style={styles.settingLabel}>Mantenerte conectado a la app</Text>
@@ -87,7 +97,7 @@ export default function ProfileScreen({
               value={funnyReminders ?? true}
               onValueChange={toggleFunnyReminders}
               disabled={funnyReminders === null}
-              trackColor={{ true: '#1f9d55', false: '#d0d4da' }}
+              trackColor={{ true: colors.win, false: colors.border }}
             />
           </View>
           {funnyReminders === false ? (
@@ -97,8 +107,33 @@ export default function ProfileScreen({
           ) : null}
         </View>
 
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>Apariencia</Text>
+          <View style={styles.modeRow}>
+            {THEME_MODES.map(([value, label, icon]) => {
+              const selected = mode === value;
+              return (
+                <PressableScale
+                  key={value}
+                  style={[styles.modeOption, selected && styles.modeSelected]}
+                  onPress={() => {
+                    Haptics.selectionAsync();
+                    setMode(value);
+                  }}
+                >
+                  <Ionicons name={icon} size={20} color={selected ? colors.onPrimary : colors.textSoft} />
+                  <Text style={[styles.modeText, selected && styles.modeTextSelected]}>{label}</Text>
+                </PressableScale>
+              );
+            })}
+          </View>
+          {mode === 'auto' ? (
+            <Text style={styles.modeHelp}>Automático usa el mismo modo que tu celular.</Text>
+          ) : null}
+        </View>
+
         <PressableScale style={styles.signOutButton} onPress={onSignOut}>
-          <Ionicons name="log-out-outline" size={20} color="#d64545" />
+          <Ionicons name="log-out-outline" size={20} color={colors.danger} />
           <Text style={styles.signOutText}>Cerrar sesión</Text>
         </PressableScale>
       </View>
@@ -106,12 +141,12 @@ export default function ProfileScreen({
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (c) => StyleSheet.create({
   screen: { flex: 1 },
   cards: { marginTop: -32, paddingHorizontal: 20, paddingBottom: 24, gap: 14 },
-  error: { color: '#d64545', fontSize: 15, textAlign: 'center' },
+  error: { color: c.danger, fontSize: 15, textAlign: 'center' },
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: c.card,
     borderRadius: 18,
     padding: 20,
     shadowColor: '#000',
@@ -120,27 +155,41 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     elevation: 2,
   },
-  cardTitle: { fontSize: 24, fontFamily: FONTS.bold, marginBottom: 10 },
+  cardTitle: { fontSize: 24, fontFamily: FONTS.bold, marginBottom: 10, color: c.text },
   settingRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   settingIcon: {
     width: 42,
     height: 42,
     borderRadius: 21,
-    backgroundColor: '#e8f3ec',
+    backgroundColor: c.tint,
     alignItems: 'center',
     justifyContent: 'center',
   },
   settingInfo: { flex: 1 },
-  settingLabel: { fontSize: 16, fontWeight: '700' },
-  settingHelp: { fontSize: 13, color: '#666', marginTop: 2 },
+  settingLabel: { fontSize: 16, fontWeight: '700', color: c.text },
+  settingHelp: { fontSize: 13, color: c.muted, marginTop: 2 },
   settingNote: {
     fontSize: 13,
-    color: '#666',
+    color: c.muted,
     marginTop: 14,
     paddingTop: 12,
     borderTopWidth: 1,
-    borderTopColor: '#eef0f2',
+    borderTopColor: c.divider,
   },
+  modeRow: { flexDirection: 'row', gap: 8 },
+  modeOption: {
+    flex: 1,
+    alignItems: 'center',
+    gap: 4,
+    paddingVertical: 12,
+    borderRadius: 12,
+    borderWidth: 1.5,
+    borderColor: c.border,
+  },
+  modeSelected: { backgroundColor: c.primary, borderColor: c.primary },
+  modeText: { fontSize: 14, fontWeight: '700', color: c.textSoft },
+  modeTextSelected: { color: c.onPrimary },
+  modeHelp: { fontSize: 13, color: c.muted, marginTop: 10 },
   signOutButton: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -149,8 +198,8 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     borderRadius: 12,
     borderWidth: 1.5,
-    borderColor: '#d64545',
-    backgroundColor: '#fff',
+    borderColor: c.danger,
+    backgroundColor: c.card,
   },
-  signOutText: { color: '#d64545', fontSize: 16, fontWeight: '700' },
+  signOutText: { color: c.danger, fontSize: 16, fontWeight: '700' },
 });
