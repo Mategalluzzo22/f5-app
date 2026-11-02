@@ -23,10 +23,11 @@ Repositorio: https://github.com/Mategalluzzo22/f5-app
 | 8. Perfil de amigos y foto | Estadísticas de un amigo, mano a mano, comparación y foto de perfil | ✅ | #11 |
 | 9. Recordatorios con humor | Avisos graciosos para mantener el hábito de cargar partidos | ✅ | #12, #13, #15 |
 | 10. Logo | La "D del área": ícono, pantalla de carga y login | ✅ | #14 |
-| 11. Modo claro y oscuro | La app en los dos modos, con selector en Perfil | 🔄 En prueba | rama `feature/dark-mode` |
-| 12. Publicación | App en TestFlight y en las tiendas | ⏳ Pendiente | — |
+| 11. Modo claro y oscuro | La app en los dos modos, con selector en Perfil | ✅ | #16 |
+| 12. Tu mes a mes (Pro) | Mejores meses, calendario de partidos y grupos por mes | 🔄 En prueba | rama `feature/monthly-stats` |
+| 13. Publicación | App en TestFlight y en las tiendas | ⏳ Pendiente | — |
 
-Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026 y las 10 y 11 el 2 de noviembre.
+Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026 y de la 10 a la 12 el 2 de noviembre.
 
 ---
 
@@ -207,7 +208,7 @@ Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026 y las 10 y 11 el 2 de nov
 
 ---
 
-## Etapa 11: Modo claro y oscuro (en prueba)
+## Etapa 11: Modo claro y oscuro
 
 **Objetivo:** que la app se vea bien de noche y respete cómo cada uno usa el celular.
 
@@ -219,13 +220,29 @@ Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026 y las 10 y 11 el 2 de nov
 - Se agregó `expo-system-ui`, que Android necesita para respetar el modo del celular.
 - **Decisión:** la elección se maneja dentro de la app (un contexto de React) en vez de pedirle al sistema que cambie de modo, porque así funciona igual en el celular y en la web.
 
-**Cómo se probó:** recorrido de las pantallas en el navegador con datos de ejemplo, con el sistema en claro y en oscuro, y forzando cada modo desde el selector (incluido que la elección siga después de recargar).
+**Cómo se probó:** recorrido de las pantallas en el navegador con datos de ejemplo, con el sistema en claro y en oscuro, y forzando cada modo desde el selector (incluido que la elección siga después de recargar). Después, en el iPhone.
+
+---
+
+## Etapa 12: Tu mes a mes (Pro, en prueba)
+
+**Objetivo:** el primer análisis del plan pago. El fundador lo pidió así: ver cuántas veces jugaste por mes, cuántos goles hiciste, cuál fue tu mejor mes y con qué grupo jugaste más.
+
+**Qué se hizo:**
+- Pantalla **"Tu mes a mes"**, que se abre desde una tarjeta en Inicio con la etiqueta **PRO**:
+  - **Tus mejores meses:** el de más partidos y el de más goles (si empatan, gana el más reciente).
+  - **Calendario** del mes, empezando el lunes, con flechas para ir de un mes a otro (desde tu primer partido hasta hoy). Los días que jugaste se pintan con el color del resultado: verde si ganaste, gris si empataste, rojo si perdiste. Hoy aparece con un anillo.
+  - **Resumen del mes:** partidos, goles y ganados-empatados-perdidos, y una frase como *"En octubre jugaste más con Los del martes (3 veces) que con Fútbol del laburo (1 vez)."*
+- Los cálculos están en `src/monthly.js`, aparte de la pantalla, para poder probarlos.
+- **Decisión sobre Pro:** todavía no se puede cobrar (los pagos dentro de la app llegan con la publicación), así que por ahora las funciones Pro están abiertas para todos, con la etiqueta. Al publicar se bloquean para quien no pague.
+
+**Cómo se probó:** pruebas automáticas de los cálculos (goles sin cargar que no cuentan como 0, grupos con mayúsculas distintas, empates entre meses, cambio de año) y la pantalla en el navegador con partidos de ejemplo, en claro y en oscuro.
 
 ---
 
 ## Próximas etapas
 
-**Etapa 12: Publicación** (necesita la cuenta de desarrollador de Apple, USD 99 por año)
+**Etapa 13: Publicación** (necesita la cuenta de desarrollador de Apple, USD 99 por año)
 - Compilar la app con **EAS** (el servicio de Expo que compila en la nube).
 - Login nativo de Google y **"Continuar con Apple"**.
 - **Aviso push "te sumaron a un partido"** en el momento (Expo Go no soporta push).
@@ -239,7 +256,7 @@ Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026 y las 10 y 11 el 2 de nov
 - **Privacidad:** elegir quién ve tu perfil.
 - **Asistencias** opcionales.
 - **Tarjetas para compartir** en WhatsApp e Instagram.
-- **Plan Pro.**
+- **Plan Pro:** cobrar con pagos dentro de la app (por ejemplo con RevenueCat) y bloquear las funciones Pro para quien no pague. "Tu mes a mes" es la primera.
 
 ---
 

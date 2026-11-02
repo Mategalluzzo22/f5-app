@@ -1,13 +1,15 @@
 import { Ionicons } from '@expo/vector-icons';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import Header from './Header';
+import ProBadge from './ProBadge';
+import PressableScale from './PressableScale';
 import { isoToDisplay } from './dates';
 import { FONTS } from './fonts';
 import { scoreText } from './matches';
 import { RESULTS } from './results';
 import { useColors, useStyles } from './theme';
 
-export default function HomeScreen({ stats, username }) {
+export default function HomeScreen({ stats, username, onOpenMonthly }) {
   const styles = useStyles(makeStyles);
   const colors = useColors();
   return (
@@ -28,6 +30,19 @@ export default function HomeScreen({ stats, username }) {
               <StatCard icon="trending-up" value={stats.goalsPerMatch} label="goles por partido" />
             </View>
             <RecordsCard bestMatch={stats.bestMatch} winStreak={stats.winStreak} />
+            <PressableScale style={[styles.card, styles.monthlyCard]} onPress={onOpenMonthly}>
+              <View style={styles.recordIcon}>
+                <Ionicons name="calendar-number" size={22} color={colors.accent} />
+              </View>
+              <View style={styles.recordInfo}>
+                <View style={styles.monthlyTitleRow}>
+                  <Text style={styles.recordLabel}>Tu mes a mes</Text>
+                  <ProBadge />
+                </View>
+                <Text style={styles.recordDetail}>Tus mejores meses y un calendario de tus partidos</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={20} color={colors.faint} />
+            </PressableScale>
             <StatCard
               icon="calendar"
               value={stats.played}
@@ -174,6 +189,8 @@ const makeStyles = (c) => StyleSheet.create({
   recordDetail: { fontSize: 13, color: c.muted, marginTop: 2 },
   recordValue: { fontSize: 40, fontFamily: FONTS.extraBold, color: c.accent },
   divider: { height: 1, backgroundColor: c.divider, marginVertical: 12 },
+  monthlyCard: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  monthlyTitleRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   statCard: { flex: 1 },
   statValue: { fontSize: 44, fontFamily: FONTS.extraBold, marginTop: 6, lineHeight: 48, color: c.text },
   emptyCard: { alignItems: 'center', paddingVertical: 32 },
