@@ -14,7 +14,15 @@ export default function ProfileScreen({ profile, email, stats, onAvatarChange, o
 
   async function changePhoto() {
     setError('');
-    const fileUri = await pickSquarePhoto().catch(() => null);
+    let fileUri;
+    try {
+      fileUri = await pickSquarePhoto();
+    } catch (e) {
+      if (__DEV__) console.warn('[photo] picking failed:', e?.message ?? e);
+      setError('No pudimos abrir la foto. Probá con otra.');
+      return;
+    }
+    if (__DEV__) console.log('[photo] picked:', fileUri);
     if (!fileUri) return;
     setUploading(true);
     try {
