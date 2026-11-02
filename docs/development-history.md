@@ -29,9 +29,10 @@ Repositorio: https://github.com/Mategalluzzo22/f5-app
 | 14. Tus gráficos (Pro) | Partidos y goles por mes, evolución del %, goles por partido y por formato | ✅ | #19 |
 | 15. Datos sobre vos (Pro) | Frases sobre cómo jugás, armadas con tus partidos | ✅ | #20 |
 | 16. Metas personales (Pro) | Metas de goles y partidos del año, con barra de progreso | ✅ | #21 |
-| 17. Publicación | App en TestFlight y en las tiendas | ⏳ Pendiente | — |
+| 17. Color de tu equipo (Pro) | Elegir el color principal de la app | ✅ | #22 |
+| 18. Publicación | App en TestFlight y en las tiendas | ⏳ Pendiente | — |
 
-Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026 y de la 10 a la 16 el 2 de noviembre.
+Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026 y de la 10 a la 17 el 2 de noviembre.
 
 ---
 
@@ -312,9 +313,24 @@ Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026 y de la 10 a la 16 el 2 d
 
 ---
 
+## Etapa 17: Color de tu equipo (Pro)
+
+**Objetivo:** que la app tenga los colores de tu equipo. Cuarta de las cinco etapas de gráficos y personalización.
+
+**Qué se hizo:**
+- **Perfil → Apariencia → Color de tu equipo** (PRO): siete colores (verde Doparti, azul, celeste, rojo, violeta, naranja y negro). Se guarda en el celular.
+- El color cambia el encabezado con la cancha, el botón "+", los botones y chips elegidos, los números grandes, los íconos, los fondos suaves, las fotos sin imagen y el interruptor de Perfil.
+- **No cambian** los colores de los resultados (ganado, empatado y perdido), para que se sigan entendiendo, ni el login y el festejo de récord, que quedan con el verde de la marca.
+- Cada color genera solo sus tonos para modo claro y oscuro: en oscuro, los textos de color se aclaran para que se lean. El verde mantiene exactamente la paleta que ya tenía.
+- Los cálculos de los tonos están en `src/teamColors.js`, con pruebas.
+
+**Cómo se probó:** pruebas automáticas de las mezclas de color y de que el verde no cambie, y en el navegador: elegir azul en Perfil, ver Inicio y que el color quede guardado al recargar, y rojo en modo oscuro.
+
+---
+
 ## Próximas etapas
 
-**Etapa 17: Publicación** (necesita la cuenta de desarrollador de Apple, USD 99 por año)
+**Etapa 18: Publicación** (necesita la cuenta de desarrollador de Apple, USD 99 por año)
 - Compilar la app con **EAS** (el servicio de Expo que compila en la nube).
 - Login nativo de Google y **"Continuar con Apple"**.
 - **Aviso push "te sumaron a un partido"** en el momento (Expo Go no soporta push).
@@ -328,7 +344,7 @@ Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026 y de la 10 a la 16 el 2 d
 - **Privacidad:** elegir quién ve tu perfil.
 - **Asistencias** opcionales.
 - **Tarjetas para compartir** en WhatsApp e Instagram.
-- **Plan Pro:** cobrar con pagos dentro de la app (por ejemplo con RevenueCat) y bloquear las funciones Pro para quien no pague. Hoy son Tu mes a mes, Tus gráficos, Datos sobre vos, Tus metas, Tus grupos y Tu año. Al activar los pagos, pasarle a Tu año los meses pagos de cada usuario.
+- **Plan Pro:** cobrar con pagos dentro de la app (por ejemplo con RevenueCat) y bloquear las funciones Pro para quien no pague. Hoy son Tu mes a mes, Tus gráficos, Datos sobre vos, Tus metas, Tus grupos, Tu año y Color de tu equipo. Al activar los pagos, pasarle a Tu año los meses pagos de cada usuario.
 
 ---
 

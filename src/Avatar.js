@@ -23,6 +23,6 @@ export default function Avatar({ username, url, size = 40, ring = false }) {
 
 const makeStyles = (c) => StyleSheet.create({
   photo: { backgroundColor: c.tint },
-  initial: { backgroundColor: c.win, alignItems: 'center', justifyContent: 'center' },
+  initial: { backgroundColor: c.bright, alignItems: 'center', justifyContent: 'center' },
   initialText: { color: '#fff', fontFamily: FONTS.extraBold },
 });

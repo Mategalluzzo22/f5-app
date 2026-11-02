@@ -1,9 +1,11 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { useColorScheme } from 'react-native';
-import { loadThemeMode, saveThemeMode } from './settings';
+import { loadTeamColor, loadThemeMode, saveTeamColor, saveThemeMode } from './settings';
+import { teamOverrides } from './teamColors';
 
 // Colors by what they are used for, so each screen works in light and dark mode.
-// The green header, login and record screens keep their brand colors in both.
+// The main color (primary, accent, tints, header) follows the team color picked
+// in Profile (see teamColors.js); login and record screens keep the brand green.
 const LIGHT = {
   dark: false,
   background: '#f4f6f8',
@@ -17,6 +19,8 @@ const LIGHT = {
   neutral: '#eef0f2', // background of secondary buttons like "Cancelar"
   primary: '#1f7a4d', // green backgrounds (buttons, selected chips)
   accent: '#1f7a4d', // green text and icons on cards
+  header: '#1f7a4d', // the pitch band at the top of the screens
+  bright: '#1f9d55', // the "+" button and avatar initials
   tint: '#e8f3ec', // light green backgrounds (steppers, chips, icons)
   tintStrong: '#d4eedf',
   tintBorder: '#bfe5cf',
@@ -40,6 +44,8 @@ const DARK = {
   neutral: '#2a3430',
   primary: '#1f7a4d',
   accent: '#5fd394',
+  header: '#1f7a4d',
+  bright: '#1f9d55',
   tint: '#1c3528',
   tintStrong: '#23503a',
   tintBorder: '#2f6b4c',
@@ -50,28 +56,41 @@ const DARK = {
   onPrimary: '#ffffff',
 };
 
-const ThemeContext = createContext({ colors: LIGHT, mode: 'auto', setMode: () => {} });
+const ThemeContext = createContext({
+  colors: LIGHT,
+  mode: 'auto',
+  setMode: () => {},
+  teamColor: 'green',
+  setTeamColor: () => {},
+});
 
 // mode is what the person picked in Profile: 'auto' follows the phone.
 export function ThemeProvider({ children }) {
   const system = useColorScheme();
   const [mode, setModeState] = useState('auto');
+  const [teamColor, setTeamColorState] = useState('green');
 
   useEffect(() => {
     loadThemeMode().then(setModeState);
+    loadTeamColor().then(setTeamColorState);
   }, []);
 
   const value = useMemo(() => {
-    const scheme = mode === 'auto' ? system : mode;
+    const base = (mode === 'auto' ? system : mode) === 'dark' ? DARK : LIGHT;
     return {
-      colors: scheme === 'dark' ? DARK : LIGHT,
+      colors: { ...base, ...teamOverrides(teamColor, base.dark, base.background) },
       mode,
       setMode: (next) => {
         setModeState(next);
         saveThemeMode(next);
       },
+      teamColor,
+      setTeamColor: (next) => {
+        setTeamColorState(next);
+        saveTeamColor(next);
+      },
     };
-  }, [mode, system]);
+  }, [mode, system, teamColor]);
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }
