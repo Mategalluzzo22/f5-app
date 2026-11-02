@@ -30,9 +30,10 @@ Repositorio: https://github.com/Mategalluzzo22/f5-app
 | 15. Datos sobre vos (Pro) | Frases sobre cómo jugás, armadas con tus partidos | ✅ | #20 |
 | 16. Metas personales (Pro) | Metas de goles y partidos del año, con barra de progreso | ✅ | #21 |
 | 17. Color de tu equipo (Pro) | Elegir el color principal de la app | ✅ | #22 |
-| 18. Publicación | App en TestFlight y en las tiendas | ⏳ Pendiente | — |
+| 18. Tu ficha de jugador | Posición, pie hábil, número y equipo favorito, visible para amigos | ✅ | #23 |
+| 19. Publicación | App en TestFlight y en las tiendas | ⏳ Pendiente | — |
 
-Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026 y de la 10 a la 17 el 2 de noviembre.
+Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026, de la 10 a la 17 el 2 de noviembre y la 18 el 3 de noviembre.
 
 ---
 
@@ -328,9 +329,25 @@ Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026 y de la 10 a la 17 el 2 d
 
 ---
 
+## Etapa 18: Tu ficha de jugador
+
+**Objetivo:** que tu perfil diga cómo jugás y que tus amigos lo vean. Última de las cinco etapas de gráficos y personalización, y la única **gratis**: es social y ayuda a que la app crezca.
+
+**Qué se hizo:**
+- **Perfil → Tu ficha:** posición (arquero, defensor, mediocampista o delantero), pie hábil (diestro, zurdo o ambidiestro), número de camiseta (0 a 99) y equipo favorito. Todo opcional: tocar una opción elegida la borra. Se guarda con "Guardar ficha".
+- La ficha aparece como etiquetas en tu tarjeta de jugador (*Delantero · Zurdo · #9 · Hincha de Racing*) y en la de tus amigos cuando ven tu perfil.
+- **Base de datos:** `supabase/player-card.sql` agrega cuatro columnas a `profiles`, con controles (solo valores válidos, número de 0 a 99, equipo de hasta 40 letras). No hizo falta tocar permisos: los perfiles ya los pueden leer todos los usuarios con sesión y cada uno edita solo el suyo.
+- Las validaciones y etiquetas están en `src/playerInfo.js`, con pruebas.
+
+**Ojo:** la app ahora pide esas columnas al cargar el perfil, así que el SQL tiene que estar corrido antes de usar esta versión.
+
+**Cómo se probó:** pruebas automáticas (número inválido, equipo largo, campos vacíos, perfil sin las columnas) y en el navegador tu perfil con la ficha, el formulario y el perfil de un amigo, en claro y en oscuro.
+
+---
+
 ## Próximas etapas
 
-**Etapa 18: Publicación** (necesita la cuenta de desarrollador de Apple, USD 99 por año)
+**Etapa 19: Publicación** (necesita la cuenta de desarrollador de Apple, USD 99 por año)
 - Compilar la app con **EAS** (el servicio de Expo que compila en la nube).
 - Login nativo de Google y **"Continuar con Apple"**.
 - **Aviso push "te sumaron a un partido"** en el momento (Expo Go no soporta push).
@@ -363,7 +380,7 @@ Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026 y de la 10 a la 17 el 2 d
 - `src/api.js`: todo lo que habla con Supabase.
 - `src/matches.js`, `src/stats.js` y `src/compare.js`: cálculos (resultado de cada jugador, estadísticas, récords y mano a mano).
 - `src/reminders.js`: qué recordatorios programar.
-- `supabase/*.sql`: la base de datos. Se corren en orden: `schema.sql` → `friends.sql` → `shared-matches.sql` → `match-validation.sql` → `avatars.sql`.
+- `supabase/*.sql`: la base de datos. Se corren en orden: `schema.sql` → `friends.sql` → `shared-matches.sql` → `match-validation.sql` → `avatars.sql` → `player-card.sql`.
 - `docs/`: guías de configuración de Supabase y Google, y este documento.
 
 **Para correr la app en desarrollo**

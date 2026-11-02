@@ -7,7 +7,8 @@ function unwrap({ data, error }) {
   return data;
 }
 
-const PROFILE_COLUMNS = 'id, username, avatar_url';
+// The player card fields (position, foot, shirt_number, favorite_team) need supabase/player-card.sql.
+const PROFILE_COLUMNS = 'id, username, avatar_url, position, foot, shirt_number, favorite_team';
 
 export async function fetchProfile(userId) {
   return unwrap(await supabase.from('profiles').select(PROFILE_COLUMNS).eq('id', userId).maybeSingle());
@@ -17,6 +18,11 @@ export async function createProfile(userId, username) {
   return unwrap(
     await supabase.from('profiles').insert({ id: userId, username }).select(PROFILE_COLUMNS).single(),
   );
+}
+
+// Saves the player card fields (see playerInfo.js) and returns the updated profile.
+export async function saveProfileCard(userId, card) {
+  return unwrap(await supabase.from('profiles').update(card).eq('id', userId).select(PROFILE_COLUMNS).single());
 }
 
 // Uploads a JPEG (local file uri) as the user's photo and saves its public link.

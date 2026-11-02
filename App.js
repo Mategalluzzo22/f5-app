@@ -250,6 +250,7 @@ function Main() {
             email={session.user.email}
             stats={computeStats(matches)}
             onAvatarChange={(url) => setProfile({ ...profile, avatar_url: url })}
+            onProfileChange={setProfile}
             onRemindersChange={() => rescheduleReminders(matches, pending)}
             onSignOut={handleSignOut}
           />
