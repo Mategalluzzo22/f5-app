@@ -32,9 +32,10 @@ Repositorio: https://github.com/Mategalluzzo22/f5-app
 | 17. Color de tu equipo (Pro) | Elegir el color principal de la app | ✅ | #22 |
 | 18. Tu ficha de jugador | Posición, pie hábil, número y equipo favorito, visible para amigos | ✅ | #23 |
 | 19. Spoiler en el login | Carrusel animado con pantallas reales de la app antes de entrar | ✅ | #24 |
-| 20. Publicación | App en TestFlight y en las tiendas | ⏳ Pendiente | — |
+| 20. Datos sobre vos, versión 2 | Frases con humor, cuatro datos nuevos y de a 3 por vez | ✅ | #25 |
+| 21. Publicación | App en TestFlight y en las tiendas | ⏳ Pendiente | — |
 
-Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026, de la 10 a la 17 el 2 de noviembre y la 18 y 19 el 3 de noviembre.
+Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026, de la 10 a la 17 el 2 de noviembre y de la 18 a la 20 el 3 de noviembre.
 
 ---
 
@@ -361,9 +362,26 @@ Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026, de la 10 a la 17 el 2 de
 
 ---
 
+## Etapa 20: Datos sobre vos, versión 2
+
+**Objetivo:** el fundador quiso revisar las frases de la etapa 15: que tengan más humor, que haya más y que no aparezcan todas juntas.
+
+**Qué se hizo:**
+- **Humor:** cada frase mantiene el dato y suma un remate, con 2 o 3 versiones que rotan. Por ejemplo: *"Los martes ganás el 75% de tus partidos. **Pedí que todos los partidos sean los martes 😏**"*. El remate de los partidos parejos depende de si los ganás o los perdés (*"Sangre fría en los finales 🧊"* o *"Hay que cerrar mejor esos partidos 😬"*).
+- **Cuatro datos nuevos:**
+  - **Tu mejor mes:** *"Tu mejor mes fue octubre: 6 partidos y 13 goles. Ese mes estabas imparable."*
+  - **Goleadas:** las veces que ganaste por 3 goles o más (desde 2).
+  - **Tu verdugo:** el amigo que más te ganó jugando en contra (al menos 3 partidos y solo si te ganó más veces de las que le ganaste).
+  - **Hat-tricks:** los partidos en los que hiciste 3 goles o más.
+- **De a 3:** la tarjeta muestra 3 frases al azar; al tocarla aparecen otras 3 (*"Tocá para ver otros datos"*).
+
+**Cómo se probó:** pruebas automáticas de las diez frases (incluidos los casos en que no tienen que aparecer y los remates que rotan) y la tarjeta en el navegador con los partidos de ejemplo del spoiler, tocándola para cambiar las frases.
+
+---
+
 ## Próximas etapas
 
-**Etapa 20: Publicación** (necesita la cuenta de desarrollador de Apple, USD 99 por año)
+**Etapa 21: Publicación** (necesita la cuenta de desarrollador de Apple, USD 99 por año)
 - Compilar la app con **EAS** (el servicio de Expo que compila en la nube).
 - Login nativo de Google y **"Continuar con Apple"**.
 - **Aviso push "te sumaron a un partido"** en el momento (Expo Go no soporta push).
