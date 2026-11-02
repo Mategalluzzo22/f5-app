@@ -25,7 +25,7 @@ Repositorio: https://github.com/Mategalluzzo22/f5-app
 | 10. Logo | La "D del área": ícono, pantalla de carga y login | ✅ | #14 |
 | 11. Modo claro y oscuro | La app en los dos modos, con selector en Perfil | ✅ | #16 |
 | 12. Tu mes a mes (Pro) | Mejores meses, calendario de partidos y grupos por mes | ✅ | #17 |
-| 13. Más análisis Pro | Tu forma, Tus grupos y Tu año en Doparti | 🔄 En prueba | rama `feature/pro-insights` |
+| 13. Más análisis | Tu forma (gratis), Tus grupos y Tu año en Doparti (Pro) | ✅ | #18 |
 | 14. Publicación | App en TestFlight y en las tiendas | ⏳ Pendiente | — |
 
 Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026 y de la 10 a la 13 el 2 de noviembre.
@@ -241,14 +241,15 @@ Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026 y de la 10 a la 13 el 2 d
 
 ---
 
-## Etapa 13: Más análisis Pro (en prueba)
+## Etapa 13: Más análisis (Tu forma gratis, el resto Pro)
 
 **Objetivo:** sumar al plan pago más formas de mirar tus partidos. El fundador eligió tres de la lista del plan Pro.
 
 **Qué se hizo:**
-- **Tu forma** (tarjeta en Inicio): tus últimos 5 resultados como fichas G/E/P, del más viejo al más nuevo, y la racha en la que estás: *"Llevás 3 partidos ganando 🔥"* o *"Llevás 2 partidos sin ganar"* (empates y derrotas cuentan como "sin ganar").
+- **Tu forma** (tarjeta en Inicio, **gratis**: el fundador decidió que suma mucho como para cobrarla): tus últimos 5 resultados como fichas G/E/P, del más viejo al más nuevo, y la racha en la que estás: *"Llevás 3 partidos ganando 🔥"* o *"Llevás 2 partidos sin ganar"* (empates y derrotas cuentan como "sin ganar").
 - **Tus grupos:** una tarjeta por grupo con partidos, % de victorias, goles, goles por partido y una barra de resultados. Los grupos se ordenan por cuánto jugaste con cada uno.
 - **Tu año en Doparti:** el resumen del año (partidos, goles, % de victorias), tu mejor partido, el mes que más jugaste, el mes que más goles hiciste, tu grupo del año, el amigo con el que más compartiste cancha (solo partidos que los dos confirmaron) y tu mejor racha. Con flechas para ver años anteriores.
+  - **Solo cuentan los meses con Pro** (decisión del fundador): así el resumen queda completo solo si pagaste todo el año, y eso invita a mantener la suscripción. El cálculo ya recibe la lista de meses pagos y la pantalla avisa cuántos cuentan; mientras no haya pagos, cuentan todos. Idea para después: mostrar cuántos meses faltan para tener el resumen completo.
 - **Inicio:** las pantallas Pro se juntan en una sola tarjeta **Doparti PRO** (Tu mes a mes, Tus grupos y Tu año), para que Inicio no se llene de tarjetas.
 - Los cálculos están en `src/insights.js`, con pruebas.
 
@@ -272,7 +273,7 @@ Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026 y de la 10 a la 13 el 2 d
 - **Privacidad:** elegir quién ve tu perfil.
 - **Asistencias** opcionales.
 - **Tarjetas para compartir** en WhatsApp e Instagram.
-- **Plan Pro:** cobrar con pagos dentro de la app (por ejemplo con RevenueCat) y bloquear las funciones Pro para quien no pague. Hoy son Tu mes a mes, Tu forma, Tus grupos y Tu año.
+- **Plan Pro:** cobrar con pagos dentro de la app (por ejemplo con RevenueCat) y bloquear las funciones Pro para quien no pague. Hoy son Tu mes a mes, Tus grupos y Tu año. Al activar los pagos, pasarle a Tu año los meses pagos de cada usuario.
 
 ---
 

@@ -45,7 +45,7 @@ export default function HomeScreen({ stats, matches, username, onOpenPro }) {
   );
 }
 
-// Pro: your last 5 results and the streak you're on.
+// Your last 5 results and the streak you're on (free for everyone).
 function FormCard({ matches }) {
   const styles = useStyles(makeStyles);
   const { last, streak } = recentForm(matches);
@@ -53,7 +53,6 @@ function FormCard({ matches }) {
     <View style={styles.card}>
       <View style={styles.titleRow}>
         <Text style={styles.cardTitle}>Tu forma</Text>
-        <ProBadge />
       </View>
       <View style={styles.formRow}>
         {last.map((result, i) => (

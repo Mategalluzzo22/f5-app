@@ -1,8 +1,8 @@
-import { bestMonths } from './monthly';
+import { bestMonths, monthKey } from './monthly';
 import { computeStats } from './stats';
 
-// Numbers for the Pro features: your current form, stats per group and the
-// year in review. All take matches as seen from your side (see playerView).
+// Numbers for your current form (free) and the Pro features: stats per group
+// and the year in review. All take matches as seen from your side (see playerView).
 
 function byDate(matches) {
   return [...matches].sort((a, b) => a.date.localeCompare(b.date) || a.id.localeCompare(b.id));
@@ -52,8 +52,12 @@ export function matchYears(matches) {
 
 // The year in review: totals, best match and month, the group you played with
 // most and the friend you shared the most matches with (both confirmed).
-export function yearSummary(matches, year, myId) {
-  const inYear = matches.filter((m) => m.date.startsWith(year));
+// Only months you had Pro count: proMonths is a Set of 'YYYY-MM' keys, or null
+// while Pro is open to everyone (until in-app payments arrive).
+export function yearSummary(matches, year, myId, proMonths = null) {
+  const inYear = matches.filter(
+    (m) => m.date.startsWith(year) && (!proMonths || proMonths.has(monthKey(m.date))),
+  );
 
   const friends = new Map();
   for (const match of inYear) {
@@ -73,5 +77,6 @@ export function yearSummary(matches, year, myId) {
     busiestMonth: bestMonths(inYear).byMatches,
     topGroup: groupStats(inYear)[0] ?? null,
     topFriend,
+    proMonthCount: proMonths ? [...proMonths].filter((key) => key.startsWith(year)).length : null,
   };
 }

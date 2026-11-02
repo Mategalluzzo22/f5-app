@@ -11,12 +11,13 @@ import { monthLabel } from './monthly';
 import { useColors, useStyles } from './theme';
 
 // "Tu año en Doparti" (Pro): the year in review, with arrows to past years.
-export default function YearScreen({ matches, myId, onBack }) {
+// proMonths: the months the user paid Pro (see yearSummary); null = all count.
+export default function YearScreen({ matches, myId, proMonths = null, onBack }) {
   const styles = useStyles(makeStyles);
   const years = matchYears(matches);
   const [year, setYear] = useState(years[0] ?? todayISO().slice(0, 4));
   const index = years.indexOf(year);
-  const summary = yearSummary(matches, year, myId);
+  const summary = yearSummary(matches, year, myId, proMonths);
   const best = summary.bestMatch;
 
   return (
@@ -34,6 +35,11 @@ export default function YearScreen({ matches, myId, onBack }) {
             <Big value={summary.goals} label={summary.goals === 1 ? 'gol' : 'goles'} />
             <Big value={`${summary.winRate}%`} label="victorias" />
           </View>
+          {summary.proMonthCount !== null ? (
+            <Text style={styles.proNote}>
+              Cuentan solo los meses con Doparti Pro ({summary.proMonthCount} de 12).
+            </Text>
+          ) : null}
           <Text style={styles.record}>
             {plural(summary.wins, 'ganado', 'ganados')} · {plural(summary.draws, 'empatado', 'empatados')} ·{' '}
             {plural(summary.losses, 'perdido', 'perdidos')}
@@ -155,6 +161,7 @@ const makeStyles = (c) => StyleSheet.create({
   bigValue: { fontSize: 40, fontFamily: FONTS.extraBold, color: c.accent, lineHeight: 44 },
   bigLabel: { fontSize: 13, color: c.muted },
   record: { fontSize: 13, color: c.muted, textAlign: 'center', marginTop: 12 },
+  proNote: { fontSize: 13, color: c.warning, textAlign: 'center', marginTop: 12 },
   highlight: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 12 },
   highlightBorder: { borderBottomWidth: 1, borderBottomColor: c.divider },
   icon: {
