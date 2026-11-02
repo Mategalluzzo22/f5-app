@@ -28,7 +28,7 @@ Repositorio: https://github.com/Mategalluzzo22/f5-app
 | 13. Más análisis | Tu forma (gratis), Tus grupos y Tu año en Doparti (Pro) | ✅ | #18 |
 | 14. Tus gráficos (Pro) | Partidos y goles por mes, evolución del %, goles por partido y por formato | ✅ | #19 |
 | 15. Datos sobre vos (Pro) | Frases sobre cómo jugás, armadas con tus partidos | ✅ | #20 |
-| 16. Metas personales (Pro) | Metas de goles y partidos del año, con barra de progreso | 🔄 En prueba | rama `feature/year-goals` |
+| 16. Metas personales (Pro) | Metas de goles y partidos del año, con barra de progreso | ✅ | #21 |
 | 17. Publicación | App en TestFlight y en las tiendas | ⏳ Pendiente | — |
 
 Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026 y de la 10 a la 16 el 2 de noviembre.
@@ -295,7 +295,7 @@ Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026 y de la 10 a la 16 el 2 d
 
 ---
 
-## Etapa 16: Metas personales (Pro, en prueba)
+## Etapa 16: Metas personales (Pro)
 
 **Objetivo:** darte un objetivo para el año y que tengas ganas de cargar cada partido para verlo avanzar. Tercera de las cinco etapas de gráficos y personalización.
 
