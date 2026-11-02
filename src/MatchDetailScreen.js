@@ -7,8 +7,11 @@ import { isoToLongDisplay } from './dates';
 import { FONTS } from './fonts';
 import { scoreText } from './matches';
 import { RESULTS } from './results';
+import { useColors, useStyles } from './theme';
 
 export default function MatchDetailScreen({ match, myId, onBack, onDelete, onLeave }) {
+  const styles = useStyles(makeStyles);
+  const colors = useColors();
   // Deleting or leaving asks for confirmation first, so a stray tap can't lose a match.
   const [confirming, setConfirming] = useState(false);
   const result = RESULTS[match.result];
@@ -32,7 +35,7 @@ export default function MatchDetailScreen({ match, myId, onBack, onDelete, onLea
         </View>
 
         <View style={[styles.card, styles.goalsCard]}>
-          <Ionicons name="football" size={28} color="#1f7a4d" />
+          <Ionicons name="football" size={28} color={colors.accent} />
           <Text style={styles.goalsNumber}>{match.goals === null ? '–' : match.goals}</Text>
           <Text style={styles.cardLabel}>
             {match.goals === null ? 'Goles sin dato' : match.goals === 1 ? 'Tu gol' : 'Tus goles'}
@@ -40,7 +43,7 @@ export default function MatchDetailScreen({ match, myId, onBack, onDelete, onLea
         </View>
 
         <View style={[styles.card, styles.dateCard]}>
-          <Ionicons name="calendar" size={24} color="#1f7a4d" />
+          <Ionicons name="calendar" size={24} color={colors.accent} />
           <Text style={styles.dateText}>{isoToLongDisplay(match.date)}</Text>
         </View>
 
@@ -72,7 +75,7 @@ export default function MatchDetailScreen({ match, myId, onBack, onDelete, onLea
           </View>
         ) : (
           <PressableScale style={styles.deleteButton} onPress={() => setConfirming(true)}>
-            <Ionicons name={isCreator ? 'trash-outline' : 'exit-outline'} size={20} color="#d64545" />
+            <Ionicons name={isCreator ? 'trash-outline' : 'exit-outline'} size={20} color={colors.danger} />
             <Text style={styles.deleteText}>{isCreator ? 'Eliminar partido' : 'No jugué este partido'}</Text>
           </PressableScale>
         )}
@@ -82,6 +85,7 @@ export default function MatchDetailScreen({ match, myId, onBack, onDelete, onLea
 }
 
 function TeamList({ title, players, myId }) {
+  const styles = useStyles(makeStyles);
   return (
     <View style={styles.team}>
       <Text style={styles.teamTitle}>{title}</Text>
@@ -106,12 +110,12 @@ function TeamList({ title, players, myId }) {
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (c) => StyleSheet.create({
   screen: { flex: 1 },
   content: { marginTop: -32 },
   contentInner: { paddingHorizontal: 20, paddingBottom: 40, gap: 12 },
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: c.card,
     borderRadius: 16,
     padding: 20,
     shadowColor: '#000',
@@ -128,19 +132,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  resultBadgeText: { color: '#fff', fontSize: 34, fontFamily: FONTS.extraBold },
-  resultLabel: { fontSize: 40, fontFamily: FONTS.extraBold },
+  resultBadgeText: { color: c.onPrimary, fontSize: 34, fontFamily: FONTS.extraBold },
+  resultLabel: { fontSize: 40, fontFamily: FONTS.extraBold, color: c.text },
   goalsCard: { alignItems: 'center', paddingVertical: 28 },
-  goalsNumber: { fontSize: 88, fontFamily: FONTS.extraBold, lineHeight: 94, marginTop: 4 },
-  cardLabel: { fontSize: 15, color: '#666' },
+  goalsNumber: { fontSize: 88, fontFamily: FONTS.extraBold, lineHeight: 94, marginTop: 4, color: c.text },
+  cardLabel: { fontSize: 15, color: c.muted },
   dateCard: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  dateText: { fontSize: 17, fontWeight: '600', flex: 1 },
+  dateText: { fontSize: 17, fontWeight: '600', flex: 1, color: c.text },
   team: { marginBottom: 8 },
-  teamTitle: { fontSize: 22, fontFamily: FONTS.bold, marginBottom: 4 },
+  teamTitle: { fontSize: 22, fontFamily: FONTS.bold, marginBottom: 4, color: c.text },
   playerRow: { flexDirection: 'row', alignItems: 'center', paddingVertical: 6 },
-  playerName: { flex: 1, fontSize: 15, fontWeight: '600' },
-  playerGoals: { fontSize: 14, fontWeight: '600', color: '#1f7a4d' },
-  pendingText: { fontSize: 13, fontWeight: '600', color: '#8a8f98' },
+  playerName: { flex: 1, fontSize: 15, fontWeight: '600', color: c.text },
+  playerGoals: { fontSize: 14, fontWeight: '600', color: c.accent },
+  pendingText: { fontSize: 13, fontWeight: '600', color: c.faint },
   deleteButton: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -150,26 +154,26 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     borderRadius: 12,
     borderWidth: 1.5,
-    borderColor: '#d64545',
+    borderColor: c.danger,
   },
-  deleteText: { color: '#d64545', fontSize: 16, fontWeight: '700' },
+  deleteText: { color: c.danger, fontSize: 16, fontWeight: '700' },
   confirmCard: { marginTop: 12 },
-  confirmText: { fontSize: 16, fontWeight: '600', textAlign: 'center' },
+  confirmText: { fontSize: 16, fontWeight: '600', textAlign: 'center', color: c.text },
   confirmButtons: { flexDirection: 'row', gap: 10, marginTop: 16 },
   cancelButton: {
     flex: 1,
     paddingVertical: 13,
     borderRadius: 12,
-    backgroundColor: '#eef0f2',
+    backgroundColor: c.neutral,
     alignItems: 'center',
   },
-  cancelText: { fontSize: 16, fontWeight: '600', color: '#333' },
+  cancelText: { fontSize: 16, fontWeight: '600', color: c.textSoft },
   confirmDeleteButton: {
     flex: 1,
     paddingVertical: 13,
     borderRadius: 12,
-    backgroundColor: '#d64545',
+    backgroundColor: c.danger,
     alignItems: 'center',
   },
-  confirmDeleteText: { fontSize: 16, fontWeight: '700', color: '#fff' },
+  confirmDeleteText: { fontSize: 16, fontWeight: '700', color: c.onPrimary },
 });

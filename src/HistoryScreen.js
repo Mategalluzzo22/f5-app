@@ -8,8 +8,11 @@ import { isoToDisplay } from './dates';
 import { FONTS } from './fonts';
 import { goalsLimitText, goalsText, maxGoals, scoreText } from './matches';
 import { RESULTS } from './results';
+import { useColors, useStyles } from './theme';
 
 export default function HistoryScreen({ matches, pending, onSelect, onConfirm, onLeave }) {
+  const styles = useStyles(makeStyles);
+  const colors = useColors();
   // Newest first.
   const sortedMatches = [...matches].sort((a, b) => b.date.localeCompare(a.date));
   const count = `${matches.length} ${matches.length === 1 ? 'partido' : 'partidos'}`;
@@ -37,7 +40,7 @@ export default function HistoryScreen({ matches, pending, onSelect, onConfirm, o
         }
         ListEmptyComponent={
           <View style={[styles.card, styles.emptyCard]}>
-            <Ionicons name="football" size={36} color="#1f7a4d" />
+            <Ionicons name="football" size={36} color={colors.accent} />
             <Text style={styles.emptyText}>Todavía no cargaste partidos.</Text>
           </View>
         }
@@ -53,6 +56,8 @@ function matchDetails(match) {
 }
 
 function MatchRow({ match, onPress }) {
+  const styles = useStyles(makeStyles);
+  const colors = useColors();
   const result = RESULTS[match.result];
   return (
     <PressableScale style={[styles.card, styles.matchRow]} onPress={onPress}>
@@ -68,13 +73,15 @@ function MatchRow({ match, onPress }) {
         </Text>
       </View>
       <Text style={styles.matchGoals}>{match.goals === null ? '–' : goalsText(match.goals)}</Text>
-      <Ionicons name="chevron-forward" size={18} color="#b0b5bc" style={styles.chevron} />
+      <Ionicons name="chevron-forward" size={18} color={colors.faint} style={styles.chevron} />
     </PressableScale>
   );
 }
 
 // A match a friend added you to: confirm you played (and your goals) or say you didn't.
 function PendingCard({ match, onConfirm, onLeave }) {
+  const styles = useStyles(makeStyles);
+  const colors = useColors();
   const [goals, setGoals] = useState(0);
   const [busy, setBusy] = useState(false);
   const [hint, setHint] = useState('');
@@ -107,7 +114,7 @@ function PendingCard({ match, onConfirm, onLeave }) {
     <View style={[styles.card, styles.pendingCard]}>
       <View style={styles.pendingTop}>
         <View style={styles.pendingTag}>
-          <Ionicons name="time-outline" size={14} color="#1f7a4d" />
+          <Ionicons name="time-outline" size={14} color={colors.accent} />
           <Text style={styles.pendingTagText}>Para confirmar</Text>
         </View>
         <Text style={styles.pendingFrom} numberOfLines={1}>
@@ -160,12 +167,12 @@ function PendingCard({ match, onConfirm, onLeave }) {
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (c) => StyleSheet.create({
   screen: { flex: 1 },
   list: { marginTop: -32 },
   listContent: { paddingHorizontal: 20, paddingBottom: 24 },
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: c.card,
     borderRadius: 16,
     padding: 16,
     marginBottom: 10,
@@ -176,8 +183,8 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   emptyCard: { alignItems: 'center', paddingVertical: 32, gap: 10 },
-  emptyText: { color: '#666', fontSize: 15 },
-  sectionTitle: { fontSize: 24, fontFamily: FONTS.bold, marginTop: 10, marginBottom: 10 },
+  emptyText: { color: c.muted, fontSize: 15 },
+  sectionTitle: { fontSize: 24, fontFamily: FONTS.bold, marginTop: 10, marginBottom: 10, color: c.text },
   matchRow: { flexDirection: 'row', alignItems: 'center' },
   badge: {
     width: 44,
@@ -187,63 +194,63 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginRight: 12,
   },
-  badgeText: { color: '#fff', fontFamily: FONTS.extraBold, fontSize: 22 },
+  badgeText: { color: c.onPrimary, fontFamily: FONTS.extraBold, fontSize: 22 },
   matchInfo: { flex: 1, marginRight: 8 },
-  title: { fontSize: 17, fontWeight: '700' },
-  details: { fontSize: 14, color: '#666', marginTop: 3 },
-  matchGoals: { fontSize: 15, fontWeight: '700', color: '#1f7a4d' },
+  title: { fontSize: 17, fontWeight: '700', color: c.text },
+  details: { fontSize: 14, color: c.muted, marginTop: 3 },
+  matchGoals: { fontSize: 15, fontWeight: '700', color: c.accent },
   chevron: { marginLeft: 6 },
-  pendingCard: { padding: 18, borderWidth: 2, borderColor: '#bfe5cf' },
+  pendingCard: { padding: 18, borderWidth: 2, borderColor: c.tintBorder },
   pendingTop: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   pendingTag: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    backgroundColor: '#e8f3ec',
+    backgroundColor: c.tint,
     borderRadius: 12,
     paddingVertical: 4,
     paddingHorizontal: 10,
   },
-  pendingTagText: { fontSize: 13, fontWeight: '700', color: '#1f7a4d' },
-  pendingFrom: { flex: 1, fontSize: 14, color: '#444', fontWeight: '600' },
+  pendingTagText: { fontSize: 13, fontWeight: '700', color: c.accent },
+  pendingFrom: { flex: 1, fontSize: 14, color: c.textSoft, fontWeight: '600' },
   pendingScoreRow: { flexDirection: 'row', alignItems: 'center', gap: 12, marginTop: 14 },
-  pendingScore: { fontSize: 48, fontFamily: FONTS.extraBold, lineHeight: 52 },
+  pendingScore: { fontSize: 48, fontFamily: FONTS.extraBold, lineHeight: 52, color: c.text },
   resultChip: { borderRadius: 14, paddingVertical: 5, paddingHorizontal: 12 },
-  resultChipText: { color: '#fff', fontSize: 15, fontWeight: '700' },
-  divider: { height: 1, backgroundColor: '#eef0f2', marginVertical: 14 },
+  resultChipText: { color: c.onPrimary, fontSize: 15, fontWeight: '700' },
+  divider: { height: 1, backgroundColor: c.divider, marginVertical: 14 },
   pendingGoals: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  pendingLabel: { flex: 1, fontSize: 16, fontWeight: '600', color: '#222' },
+  pendingLabel: { flex: 1, fontSize: 16, fontWeight: '600', color: c.text },
   stepButton: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#e8f3ec',
+    backgroundColor: c.tint,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  stepText: { fontSize: 22, color: '#1f7a4d', fontWeight: '600' },
-  stepValue: { fontSize: 32, fontFamily: FONTS.extraBold, minWidth: 30, textAlign: 'center' },
-  hint: { color: '#b7791f', fontSize: 14, marginTop: 8 },
+  stepText: { fontSize: 22, color: c.accent, fontWeight: '600' },
+  stepValue: { fontSize: 32, fontFamily: FONTS.extraBold, minWidth: 30, textAlign: 'center', color: c.text },
+  hint: { color: c.warning, fontSize: 14, marginTop: 8 },
   pendingButtons: { flexDirection: 'row', gap: 10, marginTop: 16 },
   leaveButton: {
     flex: 1,
     paddingVertical: 14,
     borderRadius: 12,
-    backgroundColor: '#eef0f2',
+    backgroundColor: c.neutral,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  leaveText: { fontSize: 16, fontWeight: '600', color: '#333' },
+  leaveText: { fontSize: 16, fontWeight: '600', color: c.textSoft },
   confirmButton: {
     flex: 1,
     flexDirection: 'row',
     gap: 6,
     paddingVertical: 14,
     borderRadius: 12,
-    backgroundColor: '#1f7a4d',
+    backgroundColor: c.primary,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  confirmText: { fontSize: 16, fontWeight: '700', color: '#fff' },
+  confirmText: { fontSize: 16, fontWeight: '700', color: c.onPrimary },
   busy: { opacity: 0.6 },
 });

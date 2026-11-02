@@ -21,11 +21,12 @@ Repositorio: https://github.com/Mategalluzzo22/f5-app
 | 6. Identidad Doparti | Nombre, estudio de mercado y login solo con Google | ✅ | #9 |
 | 7. Partido compartido | Marcador, equipos, jugadores y confirmaciones | ✅ | #10 |
 | 8. Perfil de amigos y foto | Estadísticas de un amigo, mano a mano, comparación y foto de perfil | ✅ | #11 |
-| 9. Recordatorios con humor | Avisos graciosos para mantener el hábito de cargar partidos | ✅ | #12, #13 |
-| 10. Logo | La "D del área": ícono, pantalla de carga y login | 🔄 En prueba | rama `feature/brand-logo` |
-| 11. Publicación | App en TestFlight y en las tiendas | ⏳ Pendiente | — |
+| 9. Recordatorios con humor | Avisos graciosos para mantener el hábito de cargar partidos | ✅ | #12, #13, #15 |
+| 10. Logo | La "D del área": ícono, pantalla de carga y login | ✅ | #14 |
+| 11. Modo claro y oscuro | La app en los dos modos, con selector en Perfil | 🔄 En prueba | rama `feature/dark-mode` |
+| 12. Publicación | App en TestFlight y en las tiendas | ⏳ Pendiente | — |
 
-Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026 y la 10 el 2 de noviembre.
+Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026 y las 10 y 11 el 2 de noviembre.
 
 ---
 
@@ -191,7 +192,7 @@ Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026 y la 10 el 2 de noviembre
 
 ---
 
-## Etapa 10: Logo (en prueba)
+## Etapa 10: Logo
 
 **Objetivo:** que Doparti tenga una cara propia antes de publicarla.
 
@@ -206,9 +207,25 @@ Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026 y la 10 el 2 de noviembre
 
 ---
 
+## Etapa 11: Modo claro y oscuro (en prueba)
+
+**Objetivo:** que la app se vea bien de noche y respete cómo cada uno usa el celular.
+
+**Qué se hizo:**
+- **Dos paletas de colores** en `src/theme.js`, con nombres por uso (fondo, tarjeta, texto, borde, verde, rojo) en vez de colores escritos a mano en cada pantalla. En oscuro, el verde de los textos es más claro para que se lea.
+- **Todas las pantallas** toman los colores de la paleta activa. La cancha verde de arriba, el login y el festejo de récord quedan iguales en los dos modos porque son la marca.
+- **Perfil → Apariencia:** Automático (sigue al celular), Claro u Oscuro. La elección se guarda en el celu.
+- El calendario de la fecha, el teclado y los textos de ejemplo de los campos también siguen el modo.
+- Se agregó `expo-system-ui`, que Android necesita para respetar el modo del celular.
+- **Decisión:** la elección se maneja dentro de la app (un contexto de React) en vez de pedirle al sistema que cambie de modo, porque así funciona igual en el celular y en la web.
+
+**Cómo se probó:** recorrido de las pantallas en el navegador con datos de ejemplo, con el sistema en claro y en oscuro, y forzando cada modo desde el selector (incluido que la elección siga después de recargar).
+
+---
+
 ## Próximas etapas
 
-**Etapa 11: Publicación** (necesita la cuenta de desarrollador de Apple, USD 99 por año)
+**Etapa 12: Publicación** (necesita la cuenta de desarrollador de Apple, USD 99 por año)
 - Compilar la app con **EAS** (el servicio de Expo que compila en la nube).
 - Login nativo de Google y **"Continuar con Apple"**.
 - **Aviso push "te sumaron a un partido"** en el momento (Expo Go no soporta push).

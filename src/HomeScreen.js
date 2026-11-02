@@ -5,15 +5,18 @@ import { isoToDisplay } from './dates';
 import { FONTS } from './fonts';
 import { scoreText } from './matches';
 import { RESULTS } from './results';
+import { useColors, useStyles } from './theme';
 
 export default function HomeScreen({ stats, username }) {
+  const styles = useStyles(makeStyles);
+  const colors = useColors();
   return (
     <ScrollView style={styles.screen}>
       <Header title="Hola 👋" subtitle={`@${username} · Así venís en la cancha`} />
       <View style={styles.cards}>
         {stats.played === 0 ? (
           <View style={[styles.card, styles.emptyCard]}>
-            <Ionicons name="football" size={40} color="#1f7a4d" />
+            <Ionicons name="football" size={40} color={colors.accent} />
             <Text style={styles.emptyTitle}>Todavía no cargaste partidos</Text>
             <Text style={styles.emptyText}>Tocá el botón verde de abajo para cargar el primero.</Text>
           </View>
@@ -38,6 +41,7 @@ export default function HomeScreen({ stats, username }) {
 }
 
 function WinRateCard({ stats }) {
+  const styles = useStyles(makeStyles);
   const counts = { win: stats.wins, draw: stats.draws, loss: stats.losses };
   return (
     <View style={styles.card}>
@@ -69,6 +73,7 @@ function WinRateCard({ stats }) {
 }
 
 function RecordsCard({ bestMatch, winStreak }) {
+  const styles = useStyles(makeStyles);
   return (
     <View style={styles.card}>
       <View style={styles.recordsTitleRow}>
@@ -97,10 +102,12 @@ function RecordsCard({ bestMatch, winStreak }) {
 }
 
 function RecordRow({ icon, value, label, detail }) {
+  const styles = useStyles(makeStyles);
+  const colors = useColors();
   return (
     <View style={styles.recordRow}>
       <View style={styles.recordIcon}>
-        <Ionicons name={icon} size={22} color="#1f7a4d" />
+        <Ionicons name={icon} size={22} color={colors.accent} />
       </View>
       <View style={styles.recordInfo}>
         <Text style={styles.recordLabel}>{label}</Text>
@@ -112,21 +119,23 @@ function RecordRow({ icon, value, label, detail }) {
 }
 
 function StatCard({ icon, value, label }) {
+  const styles = useStyles(makeStyles);
+  const colors = useColors();
   return (
     <View style={[styles.card, styles.statCard]}>
-      <Ionicons name={icon} size={22} color="#1f7a4d" />
+      <Ionicons name={icon} size={22} color={colors.accent} />
       <Text style={styles.statValue}>{value}</Text>
       <Text style={styles.cardLabel}>{label}</Text>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (c) => StyleSheet.create({
   screen: { flex: 1 },
   cards: { marginTop: -32, paddingHorizontal: 20, paddingBottom: 24, gap: 12 },
   row: { flexDirection: 'row', gap: 12 },
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: c.card,
     borderRadius: 16,
     padding: 18,
     shadowColor: '#000',
@@ -135,8 +144,8 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     elevation: 2,
   },
-  bigNumber: { fontSize: 64, fontFamily: FONTS.extraBold, color: '#1f7a4d', lineHeight: 68 },
-  cardLabel: { fontSize: 14, color: '#666' },
+  bigNumber: { fontSize: 64, fontFamily: FONTS.extraBold, color: c.accent, lineHeight: 68 },
+  cardLabel: { fontSize: 14, color: c.muted },
   bar: {
     flexDirection: 'row',
     height: 12,
@@ -148,26 +157,26 @@ const styles = StyleSheet.create({
   legend: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 12 },
   legendItem: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   dot: { width: 10, height: 10, borderRadius: 5 },
-  legendText: { fontSize: 14, color: '#333' },
+  legendText: { fontSize: 14, color: c.textSoft },
   recordsTitleRow: { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 12 },
-  recordsTitle: { fontSize: 22, fontFamily: FONTS.bold },
+  recordsTitle: { fontSize: 22, fontFamily: FONTS.bold, color: c.text },
   recordRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   recordIcon: {
     width: 42,
     height: 42,
     borderRadius: 21,
-    backgroundColor: '#e8f3ec',
+    backgroundColor: c.tint,
     alignItems: 'center',
     justifyContent: 'center',
   },
   recordInfo: { flex: 1 },
-  recordLabel: { fontSize: 15, fontWeight: '600', color: '#222' },
-  recordDetail: { fontSize: 13, color: '#666', marginTop: 2 },
-  recordValue: { fontSize: 40, fontFamily: FONTS.extraBold, color: '#1f7a4d' },
-  divider: { height: 1, backgroundColor: '#eef0f2', marginVertical: 12 },
+  recordLabel: { fontSize: 15, fontWeight: '600', color: c.text },
+  recordDetail: { fontSize: 13, color: c.muted, marginTop: 2 },
+  recordValue: { fontSize: 40, fontFamily: FONTS.extraBold, color: c.accent },
+  divider: { height: 1, backgroundColor: c.divider, marginVertical: 12 },
   statCard: { flex: 1 },
-  statValue: { fontSize: 44, fontFamily: FONTS.extraBold, marginTop: 6, lineHeight: 48 },
+  statValue: { fontSize: 44, fontFamily: FONTS.extraBold, marginTop: 6, lineHeight: 48, color: c.text },
   emptyCard: { alignItems: 'center', paddingVertical: 32 },
-  emptyTitle: { fontSize: 24, fontFamily: FONTS.bold, marginTop: 12 },
-  emptyText: { fontSize: 15, color: '#666', marginTop: 6, textAlign: 'center' },
+  emptyTitle: { fontSize: 24, fontFamily: FONTS.bold, marginTop: 12, color: c.text },
+  emptyText: { fontSize: 15, color: c.muted, marginTop: 6, textAlign: 'center' },
 });

@@ -3,6 +3,7 @@ import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import Avatar from './Avatar';
 import PressableScale from './PressableScale';
 import { FONTS } from './fonts';
+import { useStyles } from './theme';
 
 const AVATAR_SIZE = 104;
 
@@ -10,6 +11,7 @@ const AVATAR_SIZE = 104;
 // and their main numbers. Used for your own profile and for a friend's.
 // With onAvatarPress, the photo shows a camera badge and can be tapped to change it.
 export default function PlayerCard({ username, avatarUrl, subtitle, stats, onAvatarPress, uploading = false }) {
+  const styles = useStyles(makeStyles);
   const avatar = <Avatar username={username} url={avatarUrl} size={AVATAR_SIZE} ring />;
 
   return (
@@ -45,6 +47,7 @@ export default function PlayerCard({ username, avatarUrl, subtitle, stats, onAva
 }
 
 function Stat({ value, label }) {
+  const styles = useStyles(makeStyles);
   return (
     <View style={styles.stat}>
       <Text style={styles.statValue}>{value}</Text>
@@ -53,9 +56,9 @@ function Stat({ value, label }) {
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (c) => StyleSheet.create({
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: c.card,
     borderRadius: 18,
     padding: 22,
     alignItems: 'center',
@@ -79,17 +82,17 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: '#1f7a4d',
+    backgroundColor: c.primary,
     borderWidth: 3,
-    borderColor: '#fff',
+    borderColor: c.card,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  username: { fontSize: 32, fontFamily: FONTS.extraBold, marginTop: 14 },
-  subtitle: { fontSize: 15, color: '#666', marginTop: 2 },
-  divider: { alignSelf: 'stretch', height: 1, backgroundColor: '#eef0f2', marginVertical: 20 },
+  username: { fontSize: 32, fontFamily: FONTS.extraBold, marginTop: 14, color: c.text },
+  subtitle: { fontSize: 15, color: c.muted, marginTop: 2 },
+  divider: { alignSelf: 'stretch', height: 1, backgroundColor: c.divider, marginVertical: 20 },
   statsGrid: { flexDirection: 'row', flexWrap: 'wrap', alignSelf: 'stretch', rowGap: 18 },
   stat: { width: '50%', alignItems: 'center' },
-  statValue: { fontSize: 40, fontFamily: FONTS.extraBold, color: '#1f7a4d', lineHeight: 44 },
-  statLabel: { fontSize: 14, color: '#666' },
+  statValue: { fontSize: 40, fontFamily: FONTS.extraBold, color: c.accent, lineHeight: 44 },
+  statLabel: { fontSize: 14, color: c.muted },
 });

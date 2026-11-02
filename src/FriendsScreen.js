@@ -18,8 +18,12 @@ import { isoToDisplay } from './dates';
 import { FONTS } from './fonts';
 import { goalsText, scoreText } from './matches';
 import { RESULTS } from './results';
+import { useColors, useInputProps, useStyles } from './theme';
 
 export default function FriendsScreen({ myId, onOpenFriend }) {
+  const styles = useStyles(makeStyles);
+  const colors = useColors();
+  const inputProps = useInputProps();
   const [friendships, setFriendships] = useState([]);
   const [feed, setFeed] = useState([]);
   const [query, setQuery] = useState('');
@@ -90,12 +94,13 @@ export default function FriendsScreen({ myId, onOpenFriend }) {
       <View style={styles.cards}>
         <View style={styles.card}>
           <View style={styles.searchRow}>
-            <Ionicons name="search" size={20} color="#8a8f98" />
+            <Ionicons name="search" size={20} color={colors.faint} />
             <TextInput
               style={styles.searchInput}
               value={query}
               onChangeText={(text) => setQuery(text.replace('@', ''))}
               placeholder="Buscar por usuario"
+              {...inputProps}
               autoCapitalize="none"
               autoCorrect={false}
             />
@@ -156,7 +161,7 @@ export default function FriendsScreen({ myId, onOpenFriend }) {
               >
                 <Avatar username={friend.username} url={friend.avatarUrl} size={40} />
                 <Text style={styles.username}>@{friend.username}</Text>
-                <Ionicons name="chevron-forward" size={18} color="#b0b5bc" />
+                <Ionicons name="chevron-forward" size={18} color={colors.faint} />
               </PressableScale>
             ))}
           </View>
@@ -190,6 +195,7 @@ export default function FriendsScreen({ myId, onOpenFriend }) {
 }
 
 function SearchResult({ profile, friendship, myId, onAdd, onAccept }) {
+  const styles = useStyles(makeStyles);
   let action;
   if (!friendship) {
     action = (
@@ -218,6 +224,8 @@ function SearchResult({ profile, friendship, myId, onAdd, onAccept }) {
 }
 
 function FeedRow({ match, username, onPress }) {
+  const styles = useStyles(makeStyles);
+  const colors = useColors();
   const result = RESULTS[match.result];
   return (
     <PressableScale style={styles.feedRow} onPress={onPress}>
@@ -236,11 +244,11 @@ function FeedRow({ match, username, onPress }) {
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (c) => StyleSheet.create({
   screen: { flex: 1 },
   cards: { marginTop: -32, paddingHorizontal: 20, paddingBottom: 24, gap: 12 },
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: c.card,
     borderRadius: 16,
     padding: 16,
     shadowColor: '#000',
@@ -249,45 +257,45 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     elevation: 2,
   },
-  cardTitle: { fontSize: 22, fontFamily: FONTS.bold, marginBottom: 6 },
+  cardTitle: { fontSize: 22, fontFamily: FONTS.bold, marginBottom: 6, color: c.text },
   searchRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
     borderWidth: 1,
-    borderColor: '#d0d4da',
+    borderColor: c.border,
     borderRadius: 10,
     paddingHorizontal: 12,
   },
-  searchInput: { flex: 1, paddingVertical: 12, fontSize: 16 },
-  muted: { color: '#666', fontSize: 15, marginTop: 10 },
-  error: { color: '#d64545', fontSize: 15, textAlign: 'center' },
+  searchInput: { flex: 1, paddingVertical: 12, fontSize: 16, color: c.text },
+  muted: { color: c.muted, fontSize: 15, marginTop: 10 },
+  error: { color: c.danger, fontSize: 15, textAlign: 'center' },
   personRow: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingVertical: 10 },
-  username: { flex: 1, fontSize: 16, fontWeight: '600' },
+  username: { flex: 1, fontSize: 16, fontWeight: '600', color: c.text },
   primaryPill: {
-    backgroundColor: '#1f7a4d',
+    backgroundColor: c.primary,
     borderRadius: 16,
     paddingVertical: 7,
     paddingHorizontal: 14,
   },
-  primaryPillText: { color: '#fff', fontSize: 14, fontWeight: '700' },
+  primaryPillText: { color: c.onPrimary, fontSize: 14, fontWeight: '700' },
   textPill: { paddingVertical: 7, paddingHorizontal: 8 },
-  textPillText: { color: '#8a8f98', fontSize: 14, fontWeight: '600' },
-  statusText: { color: '#1f7a4d', fontSize: 14, fontWeight: '600' },
+  textPillText: { color: c.faint, fontSize: 14, fontWeight: '600' },
+  statusText: { color: c.accent, fontSize: 14, fontWeight: '600' },
   friendRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
     paddingVertical: 10,
     borderTopWidth: 1,
-    borderTopColor: '#eef0f2',
+    borderTopColor: c.divider,
   },
   feedRow: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 10,
     borderTopWidth: 1,
-    borderTopColor: '#eef0f2',
+    borderTopColor: c.divider,
   },
   badge: {
     width: 36,
@@ -297,8 +305,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginRight: 12,
   },
-  badgeText: { color: '#fff', fontFamily: FONTS.extraBold, fontSize: 20 },
+  badgeText: { color: c.onPrimary, fontFamily: FONTS.extraBold, fontSize: 20 },
   feedInfo: { flex: 1 },
-  feedDetail: { fontSize: 13, color: '#666', marginTop: 2 },
-  feedGoals: { fontSize: 15, fontWeight: '600', color: '#1f7a4d' },
+  feedDetail: { fontSize: 13, color: c.muted, marginTop: 2 },
+  feedGoals: { fontSize: 15, fontWeight: '600', color: c.accent },
 });
