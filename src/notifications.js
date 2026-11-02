@@ -30,10 +30,11 @@ export async function requestNotificationPermission() {
 }
 
 // Replaces every scheduled reminder with a fresh set based on the current matches.
-export async function rescheduleReminders(matches) {
+// `pending` are matches friends added the user to that they haven't confirmed yet.
+export async function rescheduleReminders(matches, pending = []) {
   if (!SUPPORTED) return;
   await Notifications.cancelAllScheduledNotificationsAsync();
-  const reminders = planReminders(matches);
+  const reminders = planReminders(matches, { pending });
   for (const reminder of reminders) {
     await Notifications.scheduleNotificationAsync({
       content: { title: reminder.title, body: reminder.body },

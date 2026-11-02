@@ -7,6 +7,7 @@ import PressableScale from './PressableScale';
 import { fetchFriends } from './api';
 import { dateToISO, isoToDisplay, todayISO } from './dates';
 import { FONTS } from './fonts';
+import { goalsLimitText } from './matches';
 import { RESULTS } from './results';
 
 const MAX_SUGGESTIONS = 6;
@@ -44,9 +45,7 @@ export default function MatchForm({ myId, groups, onSave, onCancel }) {
 
   function showGoalsLimit() {
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
-    setGoalsHint(
-      `Tu equipo hizo ${scoreFor} ${scoreFor === 1 ? 'gol' : 'goles'}: no podés haber hecho más.`,
-    );
+    setGoalsHint(goalsLimitText(scoreFor));
   }
 
   // Past groups that match what was typed, hidden once one is fully chosen.

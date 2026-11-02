@@ -84,7 +84,7 @@ export default function App() {
     ]);
     setMatches(mine);
     setPending(waiting);
-    rescheduleReminders(mine);
+    rescheduleReminders(mine, waiting);
   }
 
   // If saving fails this throws, and MatchForm shows the error.
