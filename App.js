@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import BottomBar from './src/BottomBar';
+import ChartsScreen from './src/ChartsScreen';
 import FriendProfileScreen from './src/FriendProfileScreen';
 import FriendsScreen from './src/FriendsScreen';
 import GroupsScreen from './src/GroupsScreen';
@@ -56,7 +57,7 @@ function Main() {
   // Matches friends added you to, waiting for you to confirm.
   const [pending, setPending] = useState([]);
   const [loadFailed, setLoadFailed] = useState(false);
-  // 'home' | 'history' | 'friends' | 'profile' | 'new' | 'detail' | 'record' | 'friend' | 'monthly' | 'groups' | 'year'
+  // 'home' | 'history' | 'friends' | 'profile' | 'new' | 'detail' | 'record' | 'friend' | 'monthly' | 'groups' | 'year' | 'charts'
   const [screen, setScreen] = useState('home');
   const [selectedId, setSelectedId] = useState(null);
   // The friend whose profile is open: { id, username, friendshipId }
@@ -205,6 +206,8 @@ function Main() {
     );
   } else if (screen === 'monthly') {
     content = <MonthlyScreen matches={matches} onBack={() => setScreen('home')} />;
+  } else if (screen === 'charts') {
+    content = <ChartsScreen matches={matches} onBack={() => setScreen('home')} />;
   } else if (screen === 'groups') {
     content = <GroupsScreen matches={matches} onBack={() => setScreen('home')} />;
   } else if (screen === 'year') {

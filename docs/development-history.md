@@ -26,9 +26,10 @@ Repositorio: https://github.com/Mategalluzzo22/f5-app
 | 11. Modo claro y oscuro | La app en los dos modos, con selector en Perfil | ✅ | #16 |
 | 12. Tu mes a mes (Pro) | Mejores meses, calendario de partidos y grupos por mes | ✅ | #17 |
 | 13. Más análisis | Tu forma (gratis), Tus grupos y Tu año en Doparti (Pro) | ✅ | #18 |
-| 14. Publicación | App en TestFlight y en las tiendas | ⏳ Pendiente | — |
+| 14. Tus gráficos (Pro) | Partidos y goles por mes, evolución del %, goles por partido y por formato | ✅ | #19 |
+| 15. Publicación | App en TestFlight y en las tiendas | ⏳ Pendiente | — |
 
-Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026 y de la 10 a la 13 el 2 de noviembre.
+Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026 y de la 10 a la 14 el 2 de noviembre.
 
 ---
 
@@ -257,9 +258,25 @@ Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026 y de la 10 a la 13 el 2 d
 
 ---
 
+## Etapa 14: Tus gráficos (Pro)
+
+**Objetivo:** ver tu evolución de un vistazo. Es la primera de cinco etapas que pidió el fundador para sumar gráficos y personalización (después vienen frases sobre vos, metas personales, color de tu equipo y tu ficha de jugador).
+
+**Qué se hizo:** una pantalla **"Tus gráficos"**, desde la tarjeta Doparti PRO de Inicio, con cuatro gráficos:
+- **Partidos y goles por mes:** barras de los últimos 12 meses (verde = partidos, dorado = goles).
+- **Tu % de victorias:** una línea con cómo fue cambiando tu porcentaje después de cada partido, con una guía punteada en 50%.
+- **Tus goles:** una barra por cada uno de tus últimos 10 partidos (un guion si no cargaste los goles).
+- **Por formato:** para F5, F7, F8 y F11, una barra de resultados con partidos jugados y % de victorias.
+- La línea se dibuja con `react-native-svg` (viene incluido en Expo Go). Las barras son piezas simples de la pantalla, sin librerías de gráficos.
+- Se agregó un color dorado para los goles en las dos paletas.
+
+**Cómo se probó:** pruebas automáticas de los datos de cada gráfico (meses vacíos, goles sin cargar, orden por fecha, formatos) y la pantalla en el navegador con 22 partidos de ejemplo, en claro y en oscuro.
+
+---
+
 ## Próximas etapas
 
-**Etapa 14: Publicación** (necesita la cuenta de desarrollador de Apple, USD 99 por año)
+**Etapa 15: Publicación** (necesita la cuenta de desarrollador de Apple, USD 99 por año)
 - Compilar la app con **EAS** (el servicio de Expo que compila en la nube).
 - Login nativo de Google y **"Continuar con Apple"**.
 - **Aviso push "te sumaron a un partido"** en el momento (Expo Go no soporta push).
@@ -273,7 +290,7 @@ Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026 y de la 10 a la 13 el 2 d
 - **Privacidad:** elegir quién ve tu perfil.
 - **Asistencias** opcionales.
 - **Tarjetas para compartir** en WhatsApp e Instagram.
-- **Plan Pro:** cobrar con pagos dentro de la app (por ejemplo con RevenueCat) y bloquear las funciones Pro para quien no pague. Hoy son Tu mes a mes, Tus grupos y Tu año. Al activar los pagos, pasarle a Tu año los meses pagos de cada usuario.
+- **Plan Pro:** cobrar con pagos dentro de la app (por ejemplo con RevenueCat) y bloquear las funciones Pro para quien no pague. Hoy son Tu mes a mes, Tus gráficos, Tus grupos y Tu año. Al activar los pagos, pasarle a Tu año los meses pagos de cada usuario.
 
 ---
 

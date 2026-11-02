@@ -23,6 +23,7 @@ const LIGHT = {
   win: '#1f9d55',
   danger: '#d64545',
   warning: '#b7791f',
+  gold: '#d9a400', // goals in charts
   onPrimary: '#ffffff',
 };
 
@@ -45,6 +46,7 @@ const DARK = {
   win: '#1f9d55',
   danger: '#ef6b6b',
   warning: '#e0a84a',
+  gold: '#ffd54a',
   onPrimary: '#ffffff',
 };
 
