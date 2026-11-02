@@ -12,6 +12,7 @@ import HomeScreen from './src/HomeScreen';
 import LoginScreen from './src/LoginScreen';
 import MatchDetailScreen from './src/MatchDetailScreen';
 import MatchForm from './src/MatchForm';
+import MonthlyScreen from './src/MonthlyScreen';
 import PressableScale from './src/PressableScale';
 import ProfileScreen from './src/ProfileScreen';
 import RecordScreen from './src/RecordScreen';
@@ -53,7 +54,7 @@ function Main() {
   // Matches friends added you to, waiting for you to confirm.
   const [pending, setPending] = useState([]);
   const [loadFailed, setLoadFailed] = useState(false);
-  // 'home' | 'history' | 'friends' | 'profile' | 'new' | 'detail' | 'record' | 'friend'
+  // 'home' | 'history' | 'friends' | 'profile' | 'new' | 'detail' | 'record' | 'friend' | 'monthly'
   const [screen, setScreen] = useState('home');
   const [selectedId, setSelectedId] = useState(null);
   // The friend whose profile is open: { id, username, friendshipId }
@@ -200,6 +201,8 @@ function Main() {
         onClose={() => setScreen('home')}
       />
     );
+  } else if (screen === 'monthly') {
+    content = <MonthlyScreen matches={matches} onBack={() => setScreen('home')} />;
   } else if (screen === 'friend' && selectedFriend) {
     content = (
       <FriendProfileScreen
@@ -242,7 +245,11 @@ function Main() {
             onSignOut={handleSignOut}
           />
         ) : (
-          <HomeScreen stats={computeStats(matches)} username={profile.username} />
+          <HomeScreen
+            stats={computeStats(matches)}
+            username={profile.username}
+            onOpenMonthly={() => setScreen('monthly')}
+          />
         )}
         <BottomBar current={screen} onNavigate={setScreen} onAdd={() => setScreen('new')} />
       </>
