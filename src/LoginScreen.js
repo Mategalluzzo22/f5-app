@@ -1,11 +1,13 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import PitchBackground from './PitchBackground';
 import PressableScale from './PressableScale';
 import { FONTS } from './fonts';
 import { signInWithGoogle } from './googleAuth';
+
+const LOGO = require('../assets/splash-icon.png');
 
 const FEATURES = [
   ['football', 'Anotá cada partido que jugás'],
@@ -38,9 +40,7 @@ export default function LoginScreen() {
       <PitchBackground centered />
 
       <View style={styles.hero}>
-        <View style={styles.logo}>
-          <Ionicons name="football" size={56} color="#1f7a4d" />
-        </View>
+        <Image source={LOGO} style={styles.logo} accessibilityLabel="Logo de Doparti" />
         <Text style={styles.title}>Doparti</Text>
         <Text style={styles.tagline}>Tu historial futbolístico</Text>
       </View>
@@ -79,16 +79,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   hero: { alignItems: 'center', marginTop: 32 },
-  logo: {
-    width: 108,
-    height: 108,
-    borderRadius: 54,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 6,
-    borderColor: 'rgba(255,255,255,0.35)',
-  },
+  // The splash image is the white logo tile with transparent space around it
+  // (the tile is 600 of its 1024px); the negative margin trims that space.
+  logo: { width: 210, height: 210, margin: -44 },
   title: { color: '#fff', fontSize: 64, fontFamily: FONTS.extraBold, marginTop: 16, lineHeight: 70 },
   tagline: { color: '#cfeedd', fontSize: 18 },
   features: {

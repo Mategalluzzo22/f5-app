@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120">
+  <!-- Doparti logo: "la D del área" (the arc at the edge of the penalty box) with the penalty spot. -->
+  <rect width="120" height="120" rx="28" fill="#1f7a4d"/>
+  <line x1="44" y1="28" x2="44" y2="92" stroke="#ffffff" stroke-width="9" stroke-linecap="round"/>
+  <path d="M44 28 A32 32 0 0 1 44 92" fill="none" stroke="#ffffff" stroke-width="9" stroke-linecap="round"/>
+  <circle cx="58" cy="60" r="6" fill="#ffd54a"/>
+</svg>

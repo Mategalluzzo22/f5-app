@@ -21,10 +21,11 @@ Repositorio: https://github.com/Mategalluzzo22/f5-app
 | 6. Identidad Doparti | Nombre, estudio de mercado y login solo con Google | ✅ | #9 |
 | 7. Partido compartido | Marcador, equipos, jugadores y confirmaciones | ✅ | #10 |
 | 8. Perfil de amigos y foto | Estadísticas de un amigo, mano a mano, comparación y foto de perfil | ✅ | #11 |
-| 9. Recordatorios con humor | Avisos graciosos para mantener el hábito de cargar partidos | 🔄 En prueba | rama `feature/funny-reminders` |
-| 10. Publicación | App en TestFlight y en las tiendas | ⏳ Pendiente | — |
+| 9. Recordatorios con humor | Avisos graciosos para mantener el hábito de cargar partidos | ✅ | #12, #13 |
+| 10. Logo | La "D del área": ícono, pantalla de carga y login | 🔄 En prueba | rama `feature/brand-logo` |
+| 11. Publicación | App en TestFlight y en las tiendas | ⏳ Pendiente | — |
 
-Todas las etapas se hicieron el 1 de noviembre de 2026.
+Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026 y la 10 el 2 de noviembre.
 
 ---
 
@@ -172,7 +173,7 @@ Todas las etapas se hicieron el 1 de noviembre de 2026.
 
 ---
 
-## Etapa 9: Recordatorios con humor (en prueba)
+## Etapa 9: Recordatorios con humor
 
 **Objetivo:** que la gente cargue sus partidos todas las semanas. El hábito es lo que hace que la app valga la pena.
 
@@ -190,10 +191,24 @@ Todas las etapas se hicieron el 1 de noviembre de 2026.
 
 ---
 
+## Etapa 10: Logo (en prueba)
+
+**Objetivo:** que Doparti tenga una cara propia antes de publicarla.
+
+**Qué se hizo:**
+- Se eligió entre varias ideas la **"D del área"**: la D de Doparti dibujada como la medialuna del área, con el punto del penal en amarillo. Es simple, se reconoce chiquita y no es la típica pelota.
+- **Dos versiones** en `assets/brand/`: la principal (fondo verde, D blanca) para el ícono y una invertida (fondo blanco, D verde) para fondos claros.
+- **Ícono de la app** (iPhone y Android, incluido el ícono adaptable y el monocromático de Android) y **favicon** para la web, generados desde el mismo dibujo.
+- **Pantalla de carga** verde con el logo en un recuadro blanco (con el plugin `expo-splash-screen`).
+- La pelota de la **pantalla de login** se reemplazó por el logo, así ya se ve en Expo Go (el ícono y la pantalla de carga solo se ven en la app compilada).
+
+**Cómo se probó:** revisión de las imágenes generadas, validación de la configuración de la app y la pantalla de login en el navegador.
+
+---
+
 ## Próximas etapas
 
-**Etapa 10: Publicación** (necesita la cuenta de desarrollador de Apple, USD 99 por año)
-- Ícono y pantalla de carga de Doparti.
+**Etapa 11: Publicación** (necesita la cuenta de desarrollador de Apple, USD 99 por año)
 - Compilar la app con **EAS** (el servicio de Expo que compila en la nube).
 - Login nativo de Google y **"Continuar con Apple"**.
 - **Aviso push "te sumaron a un partido"** en el momento (Expo Go no soporta push).
