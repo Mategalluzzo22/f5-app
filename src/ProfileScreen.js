@@ -78,9 +78,9 @@ export default function ProfileScreen({
               <Ionicons name="happy-outline" size={22} color="#1f7a4d" />
             </View>
             <View style={styles.settingInfo}>
-              <Text style={styles.settingLabel}>Recordatorios graciosos</Text>
+              <Text style={styles.settingLabel}>Mantenerte conectado a la app</Text>
               <Text style={styles.settingHelp}>
-                Avisos con humor para que no te olvides de cargar tus partidos.
+                Envía notificaciones para hacerte acordar de anotar los partidos.
               </Text>
             </View>
             <Switch
@@ -92,7 +92,7 @@ export default function ProfileScreen({
           </View>
           <Text style={styles.settingNote}>
             {funnyReminders === false
-              ? 'Apagados: solo te avisamos cuando un amigo te suma a un partido.'
+              ? 'Apagado: solo te avisamos cuando un amigo te suma a un partido.'
               : 'Siempre te avisamos cuando un amigo te suma a un partido.'}
           </Text>
         </View>
