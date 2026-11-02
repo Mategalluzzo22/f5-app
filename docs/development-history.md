@@ -26,7 +26,7 @@ Repositorio: https://github.com/Mategalluzzo22/f5-app
 | 11. Modo claro y oscuro | La app en los dos modos, con selector en Perfil | ✅ | #16 |
 | 12. Tu mes a mes (Pro) | Mejores meses, calendario de partidos y grupos por mes | ✅ | #17 |
 | 13. Más análisis | Tu forma (gratis), Tus grupos y Tu año en Doparti (Pro) | ✅ | #18 |
-| 14. Tus gráficos (Pro) | Partidos y goles por mes, evolución del %, goles por partido y por formato | 🔄 En prueba | rama `feature/charts` |
+| 14. Tus gráficos (Pro) | Partidos y goles por mes, evolución del %, goles por partido y por formato | ✅ | #19 |
 | 15. Publicación | App en TestFlight y en las tiendas | ⏳ Pendiente | — |
 
 Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026 y de la 10 a la 14 el 2 de noviembre.
@@ -258,7 +258,7 @@ Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026 y de la 10 a la 14 el 2 d
 
 ---
 
-## Etapa 14: Tus gráficos (Pro, en prueba)
+## Etapa 14: Tus gráficos (Pro)
 
 **Objetivo:** ver tu evolución de un vistazo. Es la primera de cinco etapas que pidió el fundador para sumar gráficos y personalización (después vienen frases sobre vos, metas personales, color de tu equipo y tu ficha de jugador).
 
