@@ -1,6 +1,7 @@
 import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
 import { planReminders } from './reminders';
+import { loadFunnyReminders } from './settings';
 
 // Local notifications only exist on phones; on web these functions do nothing.
 const SUPPORTED = Platform.OS !== 'web';
@@ -34,7 +35,8 @@ export async function requestNotificationPermission() {
 export async function rescheduleReminders(matches, pending = []) {
   if (!SUPPORTED) return;
   await Notifications.cancelAllScheduledNotificationsAsync();
-  const reminders = planReminders(matches, { pending });
+  const funny = await loadFunnyReminders();
+  const reminders = planReminders(matches, { pending, funny });
   for (const reminder of reminders) {
     await Notifications.scheduleNotificationAsync({
       content: { title: reminder.title, body: reminder.body },

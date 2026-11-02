@@ -226,6 +226,7 @@ export default function App() {
             email={session.user.email}
             stats={computeStats(matches)}
             onAvatarChange={(url) => setProfile({ ...profile, avatar_url: url })}
+            onRemindersChange={() => rescheduleReminders(matches, pending)}
             onSignOut={handleSignOut}
           />
         ) : (

@@ -4,7 +4,7 @@
 // Kinds, from most to least important (only one reminder per day, the most important wins):
 //   1. pending: a friend added you to a match you haven't confirmed yet.
 //   2. matchDay: the night of the weekday you usually play, asking how it went.
-//   3. inactive: no match logged in 10, 17 and 30 days, getting cheekier each time.
+//   3. inactive: no match logged in 5, 10, 17 and 30 days, getting cheekier each time.
 //   4. group: a month without playing with a group you play with often.
 // Every kind has several texts and a different one is picked each time.
 
@@ -35,11 +35,19 @@ const MATCH_DAY_TEXTS = [
 
 const INACTIVE_STEPS = [
   {
+    days: 5,
+    texts: [
+      ['¿Jugaste algún partido estos días y no anotaste el resultado? ⚽', 'Hace 5 días que no cargás ninguno. ¡Anotalo!'],
+      ['Che, ¿colgaste los botines? 👟', 'Hace 5 días que no anotás un partido.'],
+      ['Tus estadísticas te extrañan 📉', 'Hace 5 días que no sumás partidos. Cargá el último picado.'],
+    ],
+  },
+  {
     days: 10,
     texts: [
-      ['¿Jugaste algún partido estos días y no anotaste el resultado? ⚽', 'Hace 10 días que no cargás ninguno. ¡Anotalo!'],
-      ['Che, ¿colgaste los botines? 👟', 'Hace 10 días que no anotás un partido.'],
-      ['Tus estadísticas te extrañan 📉', 'Hace 10 días que no sumás partidos. Cargá el último picado.'],
+      ['¿Te robaron la pelota? ⚽', 'Hace 10 días que no cargás un partido.'],
+      ['Tus amigos ya cargaron los suyos 👀', 'Hace 10 días que no sabemos cómo te fue. ¡No te quedes atrás!'],
+      ['El banco de suplentes te espera 🪑', 'Diez días sin partidos. Cargá el último y volvé a la titular.'],
     ],
   },
   {
@@ -96,8 +104,12 @@ export function usualMatchDay(matches) {
 }
 
 // options.pending: matches waiting for the user to confirm (seen from their side).
+// options.funny: false keeps only the "matches to confirm" reminder, with a plain text.
 // options.random: replaceable in tests, to pick predictable texts.
-export function planReminders(matches, { now = new Date(), pending = [], random = Math.random } = {}) {
+export function planReminders(
+  matches,
+  { now = new Date(), pending = [], funny = true, random = Math.random } = {},
+) {
   const pick = (texts) => texts[Math.floor(random() * texts.length)];
   const candidates = [];
   const add = (kind, date, [title, body]) => candidates.push({ kind, date, title, body });
@@ -107,15 +119,19 @@ export function planReminders(matches, { now = new Date(), pending = [], random 
     const tonight = dateAt(toISO(now), 0, [PENDING_HOUR, 0]);
     const date = tonight - now >= 60 * 60 * 1000 ? tonight : dateAt(toISO(now), 1, [PENDING_HOUR, 0]);
     const first = pending[0];
-    const creator = first.players.find((p) => p.user_id === first.createdBy);
-    const text =
-      pending.length > 1
-        ? [`Tenés ${pending.length} partidos para confirmar ✅`, 'Tus amigos te sumaron. Confirmalos y sumalos a tus números.']
-        : pick(PENDING_TEXTS)(creator?.profile.username ?? 'Un amigo', first.result);
+    const who = first.players.find((p) => p.user_id === first.createdBy)?.profile.username ?? 'Un amigo';
+    let text;
+    if (pending.length > 1) {
+      text = [`Tenés ${pending.length} partidos para confirmar ✅`, 'Tus amigos te sumaron. Confirmalos y sumalos a tus números.'];
+    } else if (funny) {
+      text = pick(PENDING_TEXTS)(who, first.result);
+    } else {
+      text = ['Tenés un partido para confirmar ✅', `@${who} te sumó a un partido. Confirmalo para que cuente en tus números.`];
+    }
     add('pending', date, text);
   }
 
-  if (matches.length > 0) {
+  if (funny && matches.length > 0) {
     const today = toISO(now);
     const lastDate = matches.reduce((latest, m) => (m.date > latest ? m.date : latest), matches[0].date);
 

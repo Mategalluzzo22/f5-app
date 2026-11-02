@@ -179,9 +179,11 @@ Todas las etapas se hicieron el 1 de noviembre de 2026.
 **Qué se hizo** (todos son locales, los programa el celu; **como máximo uno por día**, y si dos coinciden gana el más importante):
 1. **Partidos para confirmar:** si un amigo te sumó y no confirmaste, ese día a las 20 h: *"@labomba22 dice que jugaste 👀 — Y que ganaste. ¿Confirmás o te hacés el distraído?"*
 2. **Tu día de partido:** la app detecta qué día jugás habitualmente (al menos 3 partidos y el 40% en ese día) y esa noche a las 22:30 pregunta *"¿Y el de hoy? ⚽"*. Si ya lo cargaste, no molesta.
-3. **Escalada sin partidos:** a los 10 días (con el texto que eligió el fundador), a los 17 (*"¿Lesión o vagancia? 🤕"*) y a los 30 (*"Un mes sin partidos… ¿te pasaste al pádel? 🎾"*).
+3. **Escalada sin partidos:** a los 5 días (con el texto que eligió el fundador), a los 10 (*"¿Te robaron la pelota? ⚽"*), a los 17 (*"¿Lesión o vagancia? 🤕"*) y a los 30 (*"Un mes sin partidos… ¿te pasaste al pádel? 🎾"*).
 4. **Grupos:** a los 30 días sin jugar con un grupo frecuente (*"Los del martes te extraña 💔"*).
 - **Textos que rotan:** cada aviso tiene varias versiones y se elige una distinta cada vez.
+- **Preferencias en Perfil → Notificaciones:** un interruptor **"Recordatorios graciosos"**. Apagado, queda solo el aviso de partidos para confirmar, con un texto serio. La preferencia se guarda en el celu.
+- **Pendiente para la publicación:** el aviso **en el momento** en que alguien te suma a un partido. Necesita notificaciones *push* (las manda el servidor), y Expo Go no las soporta desde SDK 53, así que va con la app compilada. Ya está investigado: un SQL con `pg_net` le pide al servicio de push de Expo que mande el aviso cuando se inserta un jugador pendiente.
 - También el aviso del límite de goles pasó a tener humor: *"Tu equipo hizo 5 goles, no podés tener más. ¿Te ganó el deseo? 😅"*.
 
 **Cómo se probó:** pruebas automáticas con fechas simuladas: el orden y el tope de uno por día, la detección del día habitual, la rotación de textos, que no avise si el partido de esa noche ya está cargado y que el aviso de pendientes pase al día siguiente si faltan menos de una hora.
@@ -194,6 +196,8 @@ Todas las etapas se hicieron el 1 de noviembre de 2026.
 - Ícono y pantalla de carga de Doparti.
 - Compilar la app con **EAS** (el servicio de Expo que compila en la nube).
 - Login nativo de Google y **"Continuar con Apple"**.
+- **Aviso push "te sumaron a un partido"** en el momento (Expo Go no soporta push).
+- Ajustar el calendario de la fecha: su opción `onChange` va a cambiar en una próxima versión (hoy anda, solo avisa).
 - Subirla a **TestFlight** para probarla con amigos y después publicarla.
 - Antes de publicar: verificar que el nombre "Doparti" esté libre (dominio, tiendas, redes y marca).
 
