@@ -29,7 +29,7 @@ Repositorio: https://github.com/Mategalluzzo22/f5-app
 | 14. Tus gráficos (Pro) | Partidos y goles por mes, evolución del %, goles por partido y por formato | ✅ | #19 |
 | 15. Datos sobre vos (Pro) | Frases sobre cómo jugás, armadas con tus partidos | ✅ | #20 |
 | 16. Metas personales (Pro) | Metas de goles y partidos del año, con barra de progreso | ✅ | #21 |
-| 17. Color de tu equipo (Pro) | Elegir el color principal de la app | 🔄 En prueba | rama `feature/team-color` |
+| 17. Color de tu equipo (Pro) | Elegir el color principal de la app | ✅ | #22 |
 | 18. Publicación | App en TestFlight y en las tiendas | ⏳ Pendiente | — |
 
 Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026 y de la 10 a la 17 el 2 de noviembre.
@@ -313,7 +313,7 @@ Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026 y de la 10 a la 17 el 2 d
 
 ---
 
-## Etapa 17: Color de tu equipo (Pro, en prueba)
+## Etapa 17: Color de tu equipo (Pro)
 
 **Objetivo:** que la app tenga los colores de tu equipo. Cuarta de las cinco etapas de gráficos y personalización.
 
