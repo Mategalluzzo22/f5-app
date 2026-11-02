@@ -5,11 +5,12 @@ import ProBadge from './ProBadge';
 import PressableScale from './PressableScale';
 import { isoToDisplay } from './dates';
 import { FONTS } from './fonts';
+import { formSentence, recentForm } from './insights';
 import { scoreText } from './matches';
 import { RESULTS } from './results';
 import { useColors, useStyles } from './theme';
 
-export default function HomeScreen({ stats, username, onOpenMonthly }) {
+export default function HomeScreen({ stats, matches, username, onOpenPro }) {
   const styles = useStyles(makeStyles);
   const colors = useColors();
   return (
@@ -25,33 +26,79 @@ export default function HomeScreen({ stats, username, onOpenMonthly }) {
         ) : (
           <>
             <WinRateCard stats={stats} />
+            <FormCard matches={matches} />
             <View style={styles.row}>
               <StatCard icon="football" value={stats.goals} label={stats.goals === 1 ? 'gol' : 'goles'} />
               <StatCard icon="trending-up" value={stats.goalsPerMatch} label="goles por partido" />
             </View>
             <RecordsCard bestMatch={stats.bestMatch} winStreak={stats.winStreak} />
-            <PressableScale style={[styles.card, styles.monthlyCard]} onPress={onOpenMonthly}>
-              <View style={styles.recordIcon}>
-                <Ionicons name="calendar-number" size={22} color={colors.accent} />
-              </View>
-              <View style={styles.recordInfo}>
-                <View style={styles.monthlyTitleRow}>
-                  <Text style={styles.recordLabel}>Tu mes a mes</Text>
-                  <ProBadge />
-                </View>
-                <Text style={styles.recordDetail}>Tus mejores meses y un calendario de tus partidos</Text>
-              </View>
-              <Ionicons name="chevron-forward" size={20} color={colors.faint} />
-            </PressableScale>
             <StatCard
               icon="calendar"
               value={stats.played}
               label={stats.played === 1 ? 'partido jugado' : 'partidos jugados'}
             />
+            <ProCard onOpen={onOpenPro} />
           </>
         )}
       </View>
     </ScrollView>
+  );
+}
+
+// Pro: your last 5 results and the streak you're on.
+function FormCard({ matches }) {
+  const styles = useStyles(makeStyles);
+  const { last, streak } = recentForm(matches);
+  return (
+    <View style={styles.card}>
+      <View style={styles.titleRow}>
+        <Text style={styles.cardTitle}>Tu forma</Text>
+        <ProBadge />
+      </View>
+      <View style={styles.formRow}>
+        {last.map((result, i) => (
+          <View key={i} style={[styles.formBadge, { backgroundColor: RESULTS[result].color }]}>
+            <Text style={styles.formBadgeText}>{RESULTS[result].short}</Text>
+          </View>
+        ))}
+      </View>
+      <Text style={styles.formText}>{formSentence(streak)}</Text>
+    </View>
+  );
+}
+
+const PRO_SCREENS = [
+  ['monthly', 'calendar-number', 'Tu mes a mes', 'Tus mejores meses y un calendario de tus partidos'],
+  ['groups', 'people', 'Tus grupos', 'Cómo te va con cada grupo'],
+  ['year', 'sparkles', 'Tu año en Doparti', 'El resumen de tu año futbolero'],
+];
+
+// Pro: the screens with more analysis of your matches.
+function ProCard({ onOpen }) {
+  const styles = useStyles(makeStyles);
+  const colors = useColors();
+  return (
+    <View style={styles.card}>
+      <View style={styles.titleRow}>
+        <Text style={styles.cardTitle}>Doparti</Text>
+        <ProBadge />
+      </View>
+      {PRO_SCREENS.map(([screen, icon, label, detail], i) => (
+        <View key={screen}>
+          {i > 0 ? <View style={styles.divider} /> : null}
+          <PressableScale style={styles.recordRow} onPress={() => onOpen(screen)}>
+            <View style={styles.recordIcon}>
+              <Ionicons name={icon} size={22} color={colors.accent} />
+            </View>
+            <View style={styles.recordInfo}>
+              <Text style={styles.recordLabel}>{label}</Text>
+              <Text style={styles.recordDetail}>{detail}</Text>
+            </View>
+            <Ionicons name="chevron-forward" size={20} color={colors.faint} />
+          </PressableScale>
+        </View>
+      ))}
+    </View>
   );
 }
 
@@ -189,8 +236,12 @@ const makeStyles = (c) => StyleSheet.create({
   recordDetail: { fontSize: 13, color: c.muted, marginTop: 2 },
   recordValue: { fontSize: 40, fontFamily: FONTS.extraBold, color: c.accent },
   divider: { height: 1, backgroundColor: c.divider, marginVertical: 12 },
-  monthlyCard: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  monthlyTitleRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  titleRow: { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 12 },
+  cardTitle: { fontSize: 22, fontFamily: FONTS.bold, color: c.text },
+  formRow: { flexDirection: 'row', gap: 8 },
+  formBadge: { width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center' },
+  formBadgeText: { color: c.onPrimary, fontFamily: FONTS.extraBold, fontSize: 20 },
+  formText: { fontSize: 15, fontWeight: '600', color: c.textSoft, marginTop: 12 },
   statCard: { flex: 1 },
   statValue: { fontSize: 44, fontFamily: FONTS.extraBold, marginTop: 6, lineHeight: 48, color: c.text },
   emptyCard: { alignItems: 'center', paddingVertical: 32 },

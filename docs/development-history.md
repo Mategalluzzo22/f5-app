@@ -24,10 +24,11 @@ Repositorio: https://github.com/Mategalluzzo22/f5-app
 | 9. Recordatorios con humor | Avisos graciosos para mantener el hábito de cargar partidos | ✅ | #12, #13, #15 |
 | 10. Logo | La "D del área": ícono, pantalla de carga y login | ✅ | #14 |
 | 11. Modo claro y oscuro | La app en los dos modos, con selector en Perfil | ✅ | #16 |
-| 12. Tu mes a mes (Pro) | Mejores meses, calendario de partidos y grupos por mes | 🔄 En prueba | rama `feature/monthly-stats` |
-| 13. Publicación | App en TestFlight y en las tiendas | ⏳ Pendiente | — |
+| 12. Tu mes a mes (Pro) | Mejores meses, calendario de partidos y grupos por mes | ✅ | #17 |
+| 13. Más análisis Pro | Tu forma, Tus grupos y Tu año en Doparti | 🔄 En prueba | rama `feature/pro-insights` |
+| 14. Publicación | App en TestFlight y en las tiendas | ⏳ Pendiente | — |
 
-Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026 y de la 10 a la 12 el 2 de noviembre.
+Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026 y de la 10 a la 13 el 2 de noviembre.
 
 ---
 
@@ -224,7 +225,7 @@ Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026 y de la 10 a la 12 el 2 d
 
 ---
 
-## Etapa 12: Tu mes a mes (Pro, en prueba)
+## Etapa 12: Tu mes a mes (Pro)
 
 **Objetivo:** el primer análisis del plan pago. El fundador lo pidió así: ver cuántas veces jugaste por mes, cuántos goles hiciste, cuál fue tu mejor mes y con qué grupo jugaste más.
 
@@ -236,13 +237,28 @@ Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026 y de la 10 a la 12 el 2 d
 - Los cálculos están en `src/monthly.js`, aparte de la pantalla, para poder probarlos.
 - **Decisión sobre Pro:** todavía no se puede cobrar (los pagos dentro de la app llegan con la publicación), así que por ahora las funciones Pro están abiertas para todos, con la etiqueta. Al publicar se bloquean para quien no pague.
 
-**Cómo se probó:** pruebas automáticas de los cálculos (goles sin cargar que no cuentan como 0, grupos con mayúsculas distintas, empates entre meses, cambio de año) y la pantalla en el navegador con partidos de ejemplo, en claro y en oscuro.
+**Cómo se probó:** pruebas automáticas de los cálculos (goles sin cargar que no cuentan como 0, grupos con mayúsculas distintas, empates entre meses, cambio de año) y la pantalla en el navegador con partidos de ejemplo, en claro y en oscuro. Después, en el iPhone.
+
+---
+
+## Etapa 13: Más análisis Pro (en prueba)
+
+**Objetivo:** sumar al plan pago más formas de mirar tus partidos. El fundador eligió tres de la lista del plan Pro.
+
+**Qué se hizo:**
+- **Tu forma** (tarjeta en Inicio): tus últimos 5 resultados como fichas G/E/P, del más viejo al más nuevo, y la racha en la que estás: *"Llevás 3 partidos ganando 🔥"* o *"Llevás 2 partidos sin ganar"* (empates y derrotas cuentan como "sin ganar").
+- **Tus grupos:** una tarjeta por grupo con partidos, % de victorias, goles, goles por partido y una barra de resultados. Los grupos se ordenan por cuánto jugaste con cada uno.
+- **Tu año en Doparti:** el resumen del año (partidos, goles, % de victorias), tu mejor partido, el mes que más jugaste, el mes que más goles hiciste, tu grupo del año, el amigo con el que más compartiste cancha (solo partidos que los dos confirmaron) y tu mejor racha. Con flechas para ver años anteriores.
+- **Inicio:** las pantallas Pro se juntan en una sola tarjeta **Doparti PRO** (Tu mes a mes, Tus grupos y Tu año), para que Inicio no se llene de tarjetas.
+- Los cálculos están en `src/insights.js`, con pruebas.
+
+**Cómo se probó:** pruebas automáticas (racha con empates, partidos del mismo día, menos de 5 partidos, grupos con mayúsculas distintas, amigos con el partido sin confirmar, años sin grupo ni amigos) y las pantallas en el navegador con partidos de ejemplo, en claro y en oscuro. Ahí apareció un "1 perdidos", que se corrigió.
 
 ---
 
 ## Próximas etapas
 
-**Etapa 13: Publicación** (necesita la cuenta de desarrollador de Apple, USD 99 por año)
+**Etapa 14: Publicación** (necesita la cuenta de desarrollador de Apple, USD 99 por año)
 - Compilar la app con **EAS** (el servicio de Expo que compila en la nube).
 - Login nativo de Google y **"Continuar con Apple"**.
 - **Aviso push "te sumaron a un partido"** en el momento (Expo Go no soporta push).
@@ -256,7 +272,7 @@ Las etapas 0 a 9 se hicieron el 1 de noviembre de 2026 y de la 10 a la 12 el 2 d
 - **Privacidad:** elegir quién ve tu perfil.
 - **Asistencias** opcionales.
 - **Tarjetas para compartir** en WhatsApp e Instagram.
-- **Plan Pro:** cobrar con pagos dentro de la app (por ejemplo con RevenueCat) y bloquear las funciones Pro para quien no pague. "Tu mes a mes" es la primera.
+- **Plan Pro:** cobrar con pagos dentro de la app (por ejemplo con RevenueCat) y bloquear las funciones Pro para quien no pague. Hoy son Tu mes a mes, Tu forma, Tus grupos y Tu año.
 
 ---
 
